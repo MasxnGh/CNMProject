@@ -1,0 +1,11 @@
+.vercel
+node_modules/
+dist/
+test-results/
+playwright-report/
+blob-report/
+tmp-chrome-v2/
+.superpowers/
+*.log
+vite-*.log
+.worktrees/
