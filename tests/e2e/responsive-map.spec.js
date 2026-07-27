@@ -2,6 +2,9 @@ import { expect, test } from "@playwright/test";
 import { responsiveViewports, seedResponsiveProgress } from "./responsive-helpers";
 
 const viewportFor = (testInfo) => responsiveViewports.find((viewport) => viewport.name === testInfo.project.name);
+const routePixelTolerance = 2;
+const longThaiTitle = "ภารกิจฝึกออกเสียงภาษาจีนในสถานการณ์ชีวิตประจำวันอย่างมั่นใจและต่อเนื่อง";
+const longThaiDescription = "ฝึกอ่านคำศัพท์ บทสนทนา และการออกเสียงภาษาจีนอย่างละเอียดเพื่อใช้ในสถานการณ์ชีวิตประจำวันได้อย่างมั่นใจ ".repeat(6);
 
 async function openChapterSelect(page) {
   await page.goto("/");
@@ -15,7 +18,7 @@ async function openFirstMap(page) {
   await expect(page.locator(".v2-constellation-map")).toBeVisible();
 }
 
-test("chapter portals use 1/2/3 columns with equal row widths and content-driven height", async ({ page }, testInfo) => {
+test("chapter portals use 1/2/3 columns with equal row widths", async ({ page }, testInfo) => {
   const fixture = viewportFor(testInfo);
   await seedResponsiveProgress(page);
   await openChapterSelect(page);
@@ -31,8 +34,6 @@ test("chapter portals use 1/2/3 columns with equal row widths and content-driven
     });
     return {
       columns: style.gridTemplateColumns.split(" ").filter(Boolean).length,
-      minHeights: portals.map((portal) => window.getComputedStyle(portal).minHeight),
-      descriptionMinHeights: portals.map((portal) => window.getComputedStyle(portal.querySelector("p")).minHeight),
       rowWidths: [...rows.values()],
     };
   });
@@ -42,8 +43,35 @@ test("chapter portals use 1/2/3 columns with equal row widths and content-driven
   layout.rowWidths.filter((widths) => widths.length > 1).forEach((widths) => {
     expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(1);
   });
-  expect(layout.minHeights).toEqual(["auto", "auto", "auto"]);
-  expect(layout.descriptionMinHeights).toEqual(["auto", "auto", "auto"]);
+});
+
+test("chapter portal grows around long rendered copy without clipping", async ({ page }) => {
+  await seedResponsiveProgress(page);
+  await openChapterSelect(page);
+
+  const growth = await page.locator(".v2-chapter-portal").first().evaluate((portal, content) => {
+    const before = portal.getBoundingClientRect();
+    portal.querySelector("h2").textContent = content.title;
+    portal.querySelector("p").textContent = content.description;
+    const after = portal.getBoundingClientRect();
+    const elements = [portal.querySelector("h2"), portal.querySelector("p"), portal.querySelector(".v2-chapter-footer")];
+    const portalRect = portal.getBoundingClientRect();
+    return {
+      beforeHeight: before.height,
+      afterHeight: after.height,
+      clipped: portal.scrollHeight > portal.clientHeight + 1,
+      overflowingText: elements.some((element) => element.scrollWidth > element.clientWidth + 1),
+      outside: elements.some((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.left < portalRect.left - 1 || rect.right > portalRect.right + 1 || rect.top < portalRect.top - 1 || rect.bottom > portalRect.bottom + 1;
+      }),
+    };
+  }, { title: longThaiTitle, description: longThaiDescription });
+
+  expect(growth.afterHeight).toBeGreaterThan(growth.beforeHeight + 8);
+  expect(growth.clipped).toBe(false);
+  expect(growth.overflowingText).toBe(false);
+  expect(growth.outside).toBe(false);
 });
 
 test("locked chapter gate remains readable", async ({ page }) => {
@@ -58,13 +86,15 @@ test("locked chapter gate remains readable", async ({ page }) => {
   await expect(lockedGate).toHaveCSS("filter", "none");
 });
 
-test("map nodes remain contained and long Thai names wrap inside their cards", async ({ page }) => {
+test("map card and route grow around long Thai content without clipping", async ({ page }) => {
   await seedResponsiveProgress(page);
   await openFirstMap(page);
 
-  const mapLayout = await page.locator(".v2-constellation-map").evaluate((map) => {
-    const longName = "ภารกิจฝึกออกเสียงภาษาจีนในสถานการณ์ชีวิตประจำวันอย่างมั่นใจและต่อเนื่อง";
+  const mapLayout = await page.locator(".v2-constellation-map").evaluate((map, longName) => {
     const firstName = map.querySelector(".v2-level-island strong");
+    const card = firstName.closest(".v2-level-island");
+    const beforeMap = map.getBoundingClientRect();
+    const beforeCard = card.getBoundingClientRect();
     firstName.textContent = longName;
     const mapRect = map.getBoundingClientRect();
     const cards = [...map.querySelectorAll(".v2-level-island")].map((card) => {
@@ -75,9 +105,14 @@ test("map nodes remain contained and long Thai names wrap inside their cards", a
     return {
       map: { left: mapRect.left, right: mapRect.right, top: mapRect.top, bottom: mapRect.bottom },
       cards,
+      beforeMapHeight: beforeMap.height,
+      afterMapHeight: mapRect.height,
+      beforeCardHeight: beforeCard.height,
+      afterCardHeight: card.getBoundingClientRect().height,
+      cardClipped: card.scrollHeight > card.clientHeight + 1,
       name: { width: name.width, clientWidth: firstName.clientWidth, scrollWidth: firstName.scrollWidth, height: name.height },
     };
-  });
+  }, longThaiTitle.repeat(6));
 
   mapLayout.cards.forEach((card) => {
     expect(card.left).toBeGreaterThanOrEqual(mapLayout.map.left - 1);
@@ -87,6 +122,47 @@ test("map nodes remain contained and long Thai names wrap inside their cards", a
   });
   expect(mapLayout.name.scrollWidth).toBeLessThanOrEqual(mapLayout.name.clientWidth + 1);
   expect(mapLayout.name.height).toBeGreaterThan(24);
+  expect(mapLayout.afterCardHeight).toBeGreaterThan(mapLayout.beforeCardHeight + 8);
+  expect(mapLayout.afterMapHeight).toBeGreaterThan(mapLayout.beforeMapHeight + 8);
+  expect(mapLayout.cardClipped).toBe(false);
+});
+
+test("route beam points match rendered node centers", async ({ page }) => {
+  await seedResponsiveProgress(page);
+  await openFirstMap(page);
+
+  const beam = page.locator(".v2-route-beam polyline");
+  await expect.poll(async () => (await beam.getAttribute("points"))?.trim().split(/\s+/).length ?? 0).toBe(5);
+
+  const geometry = await page.locator(".v2-constellation-map").evaluate((map) => {
+    const svg = map.querySelector(".v2-route-beam");
+    const polyline = svg.querySelector("polyline");
+    const viewBox = svg.viewBox.baseVal;
+    const svgRect = svg.getBoundingClientRect();
+    const points = (polyline.getAttribute("points") ?? "").trim().split(/\s+/).map((pair) => pair.split(",").map(Number));
+    const nodeCenters = [...map.querySelectorAll(".v2-route-slot")].map((slot) => {
+      const rect = slot.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    });
+    return {
+      points: points.map(([x, y]) => ({
+        x: svgRect.left + x * (svgRect.width / viewBox.width),
+        y: svgRect.top + y * (svgRect.height / viewBox.height),
+      })),
+      nodeCenters,
+      viewBox: { width: viewBox.width, height: viewBox.height },
+    };
+  });
+
+  expect(geometry.viewBox.width).toBeGreaterThan(0);
+  expect(geometry.viewBox.height).toBeGreaterThan(0);
+  expect(geometry.points).toHaveLength(geometry.nodeCenters.length);
+  geometry.points.forEach((point, index) => {
+    expect(Number.isFinite(point.x)).toBe(true);
+    expect(Number.isFinite(point.y)).toBe(true);
+    expect(Math.abs(point.x - geometry.nodeCenters[index].x)).toBeLessThanOrEqual(routePixelTolerance);
+    expect(Math.abs(point.y - geometry.nodeCenters[index].y)).toBeLessThanOrEqual(routePixelTolerance);
+  });
 });
 
 test("phone map is a vertical, content-height route", async ({ page }, testInfo) => {
