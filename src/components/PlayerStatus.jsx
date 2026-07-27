@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { CircleDollarSign, Sparkles, Star, Trophy } from "lucide-react";
+import { useId } from "react";
 import ProgressBar from "./ProgressBar";
 
 export default function PlayerStatus({ progress, compact = false }) {
   const xpInLevel = progress.xp % 120;
+  const labelId = useId();
 
   return (
     <motion.div
@@ -13,12 +15,17 @@ export default function PlayerStatus({ progress, compact = false }) {
       exit={{ y: -16, opacity: 0 }}
       transition={{ type: "spring", stiffness: 180, damping: 18 }}
     >
-      <div className="v2-player-chip" aria-label={`Level ${progress.level}, Dujeen Explorer`}>
+      <div className="v2-player-chip">
         <span className="v2-player-avatar" aria-hidden="true">猫</span>
-        <div>
-          <strong>Lv. {progress.level}</strong>
-          <small>Dujeen Explorer</small>
-        </div>
+        <dl className="v2-player-details">
+          <div>
+            <dt className="sr-only" id={`${labelId}-level`}>Level</dt>
+            <dd aria-labelledby={`${labelId}-level`}>
+              <strong>Lv. {progress.level}</strong>
+              <small>Dujeen Explorer</small>
+            </dd>
+          </div>
+        </dl>
       </div>
       <div className="v2-xp-core" aria-label={`Experience points: ${progress.xp}`}>
         <div className="v2-xp-label">
@@ -27,20 +34,29 @@ export default function PlayerStatus({ progress, compact = false }) {
         </div>
         <ProgressBar value={xpInLevel} max={120} />
       </div>
-      <div className="v2-hud-stats" aria-label="Player statistics">
-        <div className="v2-stat-orb" aria-label={`Coins: ${progress.coins}`}>
-          <CircleDollarSign size={18} aria-hidden="true" />
-          <strong>{progress.coins}</strong>
+      <dl className="v2-hud-stats">
+        <div className="v2-stat-orb">
+          <dt className="sr-only" id={`${labelId}-coins`}>Coins</dt>
+          <dd aria-labelledby={`${labelId}-coins`}>
+            <CircleDollarSign size={18} aria-hidden="true" />
+            <strong>{progress.coins}</strong>
+          </dd>
         </div>
-        <div className="v2-stat-orb gold" aria-label={`Stars: ${progress.totalStars ?? 0}`}>
-          <Star size={18} fill="currentColor" aria-hidden="true" />
-          <strong>{progress.totalStars ?? 0}</strong>
+        <div className="v2-stat-orb gold">
+          <dt className="sr-only" id={`${labelId}-stars`}>Stars</dt>
+          <dd aria-labelledby={`${labelId}-stars`}>
+            <Star size={18} fill="currentColor" aria-hidden="true" />
+            <strong>{progress.totalStars ?? 0}</strong>
+          </dd>
         </div>
-        <div className="v2-stat-orb" aria-label={`Completed levels: ${progress.completedLevels.length} of 15`}>
-          <Sparkles size={18} aria-hidden="true" />
-          <strong>{progress.completedLevels.length}/15</strong>
+        <div className="v2-stat-orb">
+          <dt className="sr-only" id={`${labelId}-completed`}>Completed levels</dt>
+          <dd aria-labelledby={`${labelId}-completed`}>
+            <Sparkles size={18} aria-hidden="true" />
+            <strong>{progress.completedLevels.length}/15</strong>
+          </dd>
         </div>
-      </div>
+      </dl>
     </motion.div>
   );
 }

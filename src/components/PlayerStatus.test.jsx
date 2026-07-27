@@ -19,11 +19,12 @@ beforeEach(() => {
 });
 
 describe("PlayerStatus", () => {
-  it("provides accessible labels for compact icon statistics", () => {
+  it("exposes compact player values as named definitions", () => {
     render(<PlayerStatus progress={progress} compact />);
 
-    expect(screen.getByLabelText("Coins: 19")).toBeInTheDocument();
-    expect(screen.getByLabelText("Stars: 12")).toBeInTheDocument();
-    expect(screen.getByLabelText("Completed levels: 3 of 15")).toBeInTheDocument();
+    expect(screen.getByRole("definition", { name: "Level" })).toHaveTextContent("Lv. 4");
+    expect(screen.getByRole("definition", { name: "Coins" })).toHaveTextContent("19");
+    expect(screen.getByRole("definition", { name: "Stars" })).toHaveTextContent("12");
+    expect(screen.getByRole("definition", { name: "Completed levels" })).toHaveTextContent("3/15");
   });
 });

@@ -2815,6 +2815,18 @@ button:disabled {
   display: none;
 }
 
+.v2-player-details,
+.v2-player-details dd,
+.v2-stat-orb dd {
+  margin: 0;
+}
+
+.v2-stat-orb dd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .v2-xp-core {
   min-width: 0;
   grid-area: xp;
@@ -4582,7 +4594,7 @@ button:disabled {
   }
 }
 
-@media (orientation: landscape) and (max-height: 30rem) {
+@media (max-height: 500px) and (orientation: landscape) {
   .v2-home-grid {
     grid-template-columns: minmax(0, 1fr) minmax(200px, 0.72fr);
     gap: var(--dq-space-2);

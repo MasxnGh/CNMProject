@@ -22,6 +22,7 @@ Every V2 page root opts into `.dq-scene`; page content uses one of the container
 
 ## Exceptions
 
+- `@media (max-height: 500px) and (orientation: landscape)` is the single owner for short-landscape page layout. It compacts the Home composition without creating a separate breakpoint family. Task 9 extends this exact query when it needs additional short-landscape layout work.
 - Legacy `680px`, `900px`, and `960px` rules remain outside the V2 page foundation and are not ownership for this task.
 - The remaining V2 `max-width: 760px` block is a performance and decorative-art exception only: it hides expensive ambient elements and reduces paint work. It does not set page layout tracks, spacing, or container ownership.
 - Mini-game interaction internals remain owned by their existing component styles. This foundation preserves their prior mobile panel dimensions without redesigning their controls or mechanics.
