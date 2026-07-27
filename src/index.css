@@ -3136,7 +3136,8 @@ button:disabled {
 
 .v2-chapter-portal {
   position: relative;
-  min-height: 440px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--v2-border);
   border-radius: 34px;
@@ -3148,8 +3149,7 @@ button:disabled {
 }
 
 .v2-chapter-portal.locked {
-  filter: saturate(0.45);
-  opacity: 0.72;
+  opacity: 0.9;
 }
 
 .v2-portal-light {
@@ -3164,8 +3164,8 @@ button:disabled {
 .v2-chapter-emblem {
   position: relative;
   display: grid;
-  width: 84px;
-  height: 84px;
+  width: clamp(4rem, 12vw, 5.25rem);
+  aspect-ratio: 1;
   place-items: center;
   border: 1px solid rgba(255, 215, 107, 0.44);
   border-radius: 28px;
@@ -3192,7 +3192,6 @@ button:disabled {
 
 .v2-chapter-portal p {
   margin-top: 0.8rem;
-  min-height: 96px;
   color: var(--v2-muted);
   font-weight: 800;
   line-height: 1.65;
@@ -3219,7 +3218,8 @@ button:disabled {
   flex-direction: column;
   justify-content: space-between;
   gap: 0.7rem;
-  margin-top: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 .v2-chapter-footer > span {
@@ -3258,7 +3258,6 @@ button:disabled {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
-  min-height: 520px;
   margin-top: 1.4rem;
   border: 1px solid rgba(255, 215, 107, 0.16);
   border-radius: 34px;
@@ -3272,15 +3271,19 @@ button:disabled {
 
 .v2-route-beam {
   position: absolute;
-  left: 50%;
-  right: auto;
-  top: 5%;
-  bottom: 5%;
-  width: 8px;
-  height: auto;
-  border-radius: 999px;
-  background: linear-gradient(180deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
   box-shadow: 0 0 26px rgba(255, 215, 107, 0.38);
+}
+
+.v2-route-beam polyline {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .v2-route-slot {
@@ -3288,6 +3291,7 @@ button:disabled {
   z-index: 1;
   display: grid;
   align-items: center;
+  min-width: 0;
 }
 
 .v2-route-slot.slot-1,
@@ -3357,10 +3361,12 @@ button:disabled {
 }
 
 .v2-level-island strong {
+  min-width: 0;
   margin-top: 0.15rem;
   font-size: 1.25rem;
   font-weight: 1000;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .v2-level-island small {
@@ -4592,6 +4598,12 @@ button:disabled {
   .v2-badge-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .v2-constellation-map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 2.5rem 2rem;
+  }
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
@@ -4658,25 +4670,18 @@ button:disabled {
 
   .v2-constellation-map {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .v2-route-beam {
-    left: 8%;
-    right: 8%;
-    top: 50%;
-    bottom: auto;
-    width: auto;
-    height: 8px;
-    background: linear-gradient(90deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
+    align-items: center;
+    column-gap: 1.5rem;
+    padding-block: clamp(4.5rem, 7vw, 6rem);
   }
 
   .v2-route-slot.slot-1,
   .v2-route-slot.slot-3 {
-    transform: translateY(80px);
+    transform: translateY(clamp(2rem, 4vw, 3.5rem));
   }
 
   .v2-route-slot.slot-2 {
-    transform: translateY(-56px);
+    transform: translateY(clamp(-3.5rem, -4vw, -2rem));
   }
 
   .v2-level-island {

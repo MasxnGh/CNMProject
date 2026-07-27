@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Route, Star } from "lucide-react";
 import { getLevelsBySet, stageSets } from "../data/levels";
@@ -10,6 +11,37 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel }) {
   const setLevels = getLevelsBySet(setId);
   const currentLevelId = getCurrentLevelId(progress);
   const setStars = setLevels.reduce((total, level) => total + getLevelStars(progress, level.id), 0);
+  const mapRef = useRef(null);
+  const [route, setRoute] = useState({ width: 1, height: 1, points: "" });
+
+  useLayoutEffect(() => {
+    const map = mapRef.current;
+    if (!map) return undefined;
+
+    const syncRoute = () => {
+      const bounds = map.getBoundingClientRect();
+      const points = [...map.querySelectorAll(".v2-route-slot")]
+        .map((slot) => {
+          const rect = slot.getBoundingClientRect();
+          return `${Math.round(rect.left - bounds.left + rect.width / 2)},${Math.round(rect.top - bounds.top + rect.height / 2)}`;
+        })
+        .join(" ");
+      setRoute({ width: Math.max(1, Math.round(bounds.width)), height: Math.max(1, Math.round(bounds.height)), points });
+    };
+
+    const observer = new ResizeObserver(syncRoute);
+    observer.observe(map);
+    window.addEventListener("resize", syncRoute);
+    const initialFrame = requestAnimationFrame(syncRoute);
+    const settledRoute = window.setTimeout(syncRoute, 500);
+
+    return () => {
+      cancelAnimationFrame(initialFrame);
+      window.clearTimeout(settledRoute);
+      window.removeEventListener("resize", syncRoute);
+      observer.disconnect();
+    };
+  }, [setId]);
 
   return (
     <motion.section
@@ -35,8 +67,17 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel }) {
           <span><Route size={18} /> Constellation Route</span>
           <strong><Star size={18} fill="currentColor" /> {setStars}/{setLevels.length * 3} ดาว</strong>
         </div>
-        <div className="v2-constellation-map">
-          <div className="v2-route-beam" />
+        <div ref={mapRef} className="v2-constellation-map">
+          <svg className="v2-route-beam" viewBox={`0 0 ${route.width} ${route.height}`} aria-hidden="true">
+            <defs>
+              <linearGradient id={`route-beam-${set?.id ?? setId}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="rgba(53, 208, 172, 0.42)" />
+                <stop offset="0.5" stopColor="rgba(255, 215, 107, 0.92)" />
+                <stop offset="1" stopColor="rgba(53, 208, 172, 0.42)" />
+              </linearGradient>
+            </defs>
+            <polyline points={route.points} stroke={`url(#route-beam-${set?.id ?? setId})`} />
+          </svg>
           {setLevels.map((level, index) => (
             <div key={level.id} className={`v2-route-slot slot-${index}`}>
               <LevelCard

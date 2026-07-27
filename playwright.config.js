@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 import { responsiveViewports } from "./tests/e2e/responsive-helpers.js";
 
-const responsiveTestFiles = /responsive-(?:home|game)\.spec\.js/;
+const responsiveTestFiles = /responsive-(?:home|game|map)\.spec\.js/;
 
 export default defineConfig({
   testDir: "./tests/e2e",
