@@ -74,6 +74,32 @@ test("Home uses the shared minimum size for rendered compact and modal controls"
   await assertControlsMeetMinimumSize(page, { selector: ".v2-button.mini", viewportName: fixture.name });
 });
 
+test("Modal close target stays at least 44px throughout its entrance", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    window.modalCloseSamples = [];
+    const observer = new MutationObserver(() => {
+      const control = document.querySelector(".v2-modal-close");
+      if (!control || window.modalCloseObserverStarted) return;
+      window.modalCloseObserverStarted = true;
+      const sample = () => {
+        const bounds = control.getBoundingClientRect();
+        window.modalCloseSamples.push({ width: bounds.width, height: bounds.height });
+        if (window.modalCloseSamples.length < 24) requestAnimationFrame(sample);
+      };
+      sample();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  await page.getByRole("button", { name: "เริ่มใหม่" }).click();
+
+  await page.waitForFunction(() => window.modalCloseSamples.length === 24);
+  const sizes = await page.evaluate(() => window.modalCloseSamples);
+
+  expect(Math.min(...sizes.map(({ width }) => width))).toBeGreaterThanOrEqual(44);
+  expect(Math.min(...sizes.map(({ height }) => height))).toBeGreaterThanOrEqual(44);
+});
+
 test("Desktop preserves the library command and map legend layout contracts", async ({ page }, testInfo) => {
   const fixture = viewportFor(testInfo);
   test.skip(fixture.name !== "desktop-1440x900", "Desktop-only layout contract");

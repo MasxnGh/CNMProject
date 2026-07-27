@@ -19,7 +19,16 @@ export default function Modal({ open, title, children, confirmText, cancelText =
                 <h2>{title}</h2>
                 <p>{children}</p>
               </div>
-              <motion.button className="v2-modal-close" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={onCancel} aria-label="ปิด">
+              <motion.button
+                className="v2-modal-close"
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 1.05 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ opacity: 0.85 }}
+                onClick={onCancel}
+                aria-label="ปิด"
+              >
                 <X size={20} />
               </motion.button>
             </div>
