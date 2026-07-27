@@ -18,7 +18,7 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
 
   return (
     <motion.section
-      className={`scene v2-scene v2-result-scene min-h-screen px-4 py-8 sm:px-6 lg:px-10 ${passed ? "passed" : "failed"}`}
+      className={`scene dq-scene v2-scene v2-result-scene ${passed ? "passed" : "failed"}`}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.04 }}
@@ -26,7 +26,7 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
     >
       {passed ? <Confetti /> : null}
       <div className="v2-starry-field" aria-hidden="true" />
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="dq-game-container grid gap-6 lg:grid-cols-[360px_1fr]">
         <aside className="v2-reward-side">
           <div className="v2-reward-orb">
             <Trophy size={54} />

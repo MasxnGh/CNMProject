@@ -264,7 +264,7 @@ export default function GamePage({
     <motion.section
       ref={sceneRef}
       tabIndex={-1}
-      className={`scene v2-scene v2-game-scene theme-${level.backgroundTheme} min-h-screen px-4 py-5 sm:px-6 lg:px-10`}
+      className={`scene dq-scene v2-scene v2-game-scene theme-${level.backgroundTheme}`}
       initial={{ opacity: 0, y: reducedMotion ? 0 : 35 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: reducedMotion ? 0 : -35 }}
@@ -273,7 +273,7 @@ export default function GamePage({
       <div className="v2-starry-field" aria-hidden="true" />
       <div
         ref={backgroundRef}
-        className="mx-auto max-w-7xl"
+        className="dq-game-container"
         data-testid="game-background"
         aria-hidden={paused ? "true" : undefined}
         inert={paused ? "" : undefined}

@@ -10,14 +10,14 @@ const stageIcons = [Landmark, Scroll, Crown];
 export default function StageSelectPage({ progress, onOpenSet, onHome }) {
   return (
     <motion.section
-      className="scene v2-scene v2-stage-scene min-h-screen px-4 py-5 sm:px-6 lg:px-10"
+      className="scene dq-scene v2-scene v2-stage-scene"
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
       transition={{ duration: 0.42, ease: "easeOut" }}
     >
       <div className="v2-starry-field" aria-hidden="true" />
-      <div className="mx-auto max-w-7xl">
+      <div className="dq-container">
         <div className="v2-page-top">
           <motion.button className="v2-icon-button" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={onHome} aria-label="กลับหน้าแรก">
             <ArrowLeft size={23} />

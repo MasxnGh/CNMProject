@@ -23,9 +23,9 @@ export default function KnowledgeLibrary({ progress, onBack }) {
   }, [activeCategory, query]);
 
   return (
-    <motion.section className="scene v2-scene v2-library-scene min-h-screen px-4 py-5 sm:px-6 lg:px-10" initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -35 }}>
+    <motion.section className="scene dq-scene v2-scene v2-library-scene" initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -35 }}>
       <div className="v2-starry-field" aria-hidden="true" />
-      <div className="mx-auto max-w-7xl">
+      <div className="dq-container">
         <div className="v2-page-top">
           <motion.button className="v2-icon-button" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={onBack} aria-label="กลับ">
             <ArrowLeft size={23} />

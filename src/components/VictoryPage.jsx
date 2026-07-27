@@ -14,7 +14,7 @@ export default function VictoryPage({ progress, onHome, onReset }) {
 
   return (
     <motion.section
-      className="scene v2-scene v2-victory-scene min-h-screen overflow-hidden px-4 py-8 sm:px-6 lg:px-10"
+      className="scene dq-scene v2-scene v2-victory-scene overflow-hidden"
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.04 }}
@@ -23,7 +23,7 @@ export default function VictoryPage({ progress, onHome, onReset }) {
       <Confetti count={64} />
       <div className="v2-starry-field" aria-hidden="true" />
       <div className="v2-treasure-beam" />
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[.9fr_1.1fr]">
+      <div className="dq-game-container grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
         <div className="v2-final-chamber">
           <motion.div className="v2-arcane-chest" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 145, damping: 15 }}>
             <span className="lid" />

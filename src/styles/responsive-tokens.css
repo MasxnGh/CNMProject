@@ -1,0 +1,53 @@
+:root {
+  --dq-space-1: clamp(0.5rem, 0.45rem + 0.25vw, 0.75rem);
+  --dq-space-2: clamp(0.75rem, 0.65rem + 0.5vw, 1rem);
+  --dq-space-3: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --dq-space-4: clamp(1.5rem, 1.15rem + 1.75vw, 2.5rem);
+  --dq-radius-sm: clamp(0.75rem, 0.65rem + 0.5vw, 1rem);
+  --dq-radius-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --dq-radius-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --dq-text-sm: clamp(0.875rem, 0.84rem + 0.18vw, 1rem);
+  --dq-text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --dq-text-title: clamp(1.55rem, 1.2rem + 1.75vw, 2.35rem);
+  --dq-control-height: clamp(2.75rem, 2.5rem + 1vw, 3.375rem);
+  --dq-page-inline: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --dq-page-block: var(--dq-space-3);
+  --dq-content-max: 80rem;
+  --dq-game-content-max: 90rem;
+}
+
+html,
+body,
+#root {
+  min-width: 0;
+}
+
+:where(img, svg, video, canvas) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.dq-scene {
+  min-width: 0;
+  min-height: 100vh;
+  padding-block: var(--dq-page-block);
+  padding-inline: max(env(safe-area-inset-left), var(--dq-page-inline)) max(env(safe-area-inset-right), var(--dq-page-inline));
+}
+
+@supports (min-height: 100svh) {
+  .dq-scene {
+    min-height: 100svh;
+  }
+}
+
+.dq-container {
+  width: min(100%, var(--dq-content-max));
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.dq-game-container {
+  width: min(100%, var(--dq-game-content-max));
+  min-width: 0;
+  margin-inline: auto;
+}

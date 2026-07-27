@@ -6,7 +6,7 @@ import PlayerStatus from "./PlayerStatus";
 export default function HomePage({ progress, onStart, onLibrary, onBadges, onReset }) {
   return (
     <motion.section
-      className="scene v2-scene v2-home-scene min-h-screen overflow-hidden px-4 py-5 sm:px-6 lg:px-10"
+      className="scene dq-scene v2-scene v2-home-scene overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: -35 }}
@@ -14,7 +14,7 @@ export default function HomePage({ progress, onStart, onLibrary, onBadges, onRes
     >
       <div className="v2-starry-field" aria-hidden="true" />
       <div className="v2-dragon-silhouette" aria-hidden="true" />
-      <div className="mx-auto flex min-h-[calc(100vh-40px)] max-w-7xl flex-col">
+      <div className="dq-container flex min-h-[calc(100vh-40px)] flex-col">
         <PlayerStatus progress={progress} compact />
         <div className="v2-home-grid">
           <motion.div className="v2-hero-copy" initial={{ x: -34, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 150, damping: 18 }}>

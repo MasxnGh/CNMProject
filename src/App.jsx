@@ -22,7 +22,7 @@ const KnowledgeLibrary = lazy(loadKnowledgeLibrary);
 const VictoryPage = lazy(loadVictoryPage);
 
 function SceneFallback() {
-  return <div className="scene v2-scene grid min-h-screen place-items-center" aria-live="polite">กำลังเปิดหน้าผจญภัย...</div>;
+  return <div className="scene dq-scene v2-scene grid place-items-center" aria-live="polite">กำลังเปิดหน้าผจญภัย...</div>;
 }
 
 export default function App() {

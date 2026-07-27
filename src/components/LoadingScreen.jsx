@@ -46,7 +46,7 @@ export default function LoadingScreen({ onComplete }) {
 
   return (
     <motion.section
-      className="scene v2-scene v2-loading-scene grid min-h-screen place-items-center overflow-hidden px-5 py-10"
+      className="scene dq-scene v2-scene v2-loading-scene grid place-items-center overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.015 }}
@@ -57,7 +57,7 @@ export default function LoadingScreen({ onComplete }) {
       <div className="v2-floating-island island-a" />
       <div className="v2-floating-island island-b" />
       <motion.div
-        className="v2-loading-gate"
+        className="dq-container v2-loading-gate"
         initial={{ y: 38, opacity: 0, scale: 0.92 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 150, damping: 18 }}
