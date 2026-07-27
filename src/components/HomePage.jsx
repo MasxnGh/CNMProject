@@ -24,7 +24,7 @@ export default function HomePage({ progress, onStart, onLibrary, onBadges, onRes
             </motion.div>
             <h1>ภารกิจผจญภัยพิชิตภาษาจีน</h1>
             <p>เดินทางผ่านเกาะลอยแห่งแดนมังกร แก้ปริศนาพินอิน ฟังเสียง จับคู่คำศัพท์ เขียนฮั่นจื้อ และสะสมดาวเพื่อเปิดด่านใหม่</p>
-            <div className="v2-hero-actions">
+            <div className="v2-hero-actions" role="group" aria-label="Quest actions">
               <motion.button className="v2-button primary" whileHover={{ y: -4, scale: 1.02 }} whileTap={{ y: 4, scale: 0.98 }} onClick={onStart}>
                 <Play size={24} />
                 เริ่มการผจญภัย

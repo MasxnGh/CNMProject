@@ -2034,7 +2034,7 @@ button:disabled {
   }
 
   .sound-toggle {
-    min-height: 42px;
+    min-height: 44px;
     padding: 0.45rem 0.6rem;
   }
 
@@ -2757,14 +2757,17 @@ button:disabled {
 
 .v2-status-hud {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.7rem;
-  align-items: center;
+  grid-template-areas:
+    "player stats"
+    "xp xp";
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 0.6rem;
+  align-items: stretch;
   width: 100%;
   border: 1px solid var(--v2-border);
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(11, 35, 48, 0.82), rgba(10, 24, 38, 0.7));
-  padding: 0.7rem;
+  padding: 0.6rem;
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(18px);
 }
@@ -2777,20 +2780,20 @@ button:disabled {
 .v2-player-chip {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  grid-area: player;
+  gap: 0.45rem;
   min-width: 0;
-  grid-column: 1 / -1;
 }
 
 .v2-player-avatar {
   display: grid;
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border-radius: 16px;
   background: linear-gradient(180deg, #fff4c1, var(--v2-gold));
   color: #5b210b;
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 1000;
 }
 
@@ -2808,9 +2811,13 @@ button:disabled {
   font-weight: 900;
 }
 
+.v2-player-chip small {
+  display: none;
+}
+
 .v2-xp-core {
   min-width: 0;
-  grid-column: 1 / -1;
+  grid-area: xp;
 }
 
 .v2-xp-label {
@@ -2823,7 +2830,7 @@ button:disabled {
 .v2-stat-orb {
   display: inline-flex;
   min-height: 44px;
-  min-width: 62px;
+  min-width: 44px;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
@@ -2831,6 +2838,14 @@ button:disabled {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--v2-jade);
+}
+
+.v2-hud-stats {
+  display: grid;
+  grid-area: stats;
+  grid-template-columns: repeat(3, minmax(44px, 1fr));
+  gap: 0.25rem;
+  width: clamp(8.25rem, 44vw, 9.75rem);
 }
 
 .v2-stat-orb.gold {
@@ -2950,12 +2965,13 @@ button:disabled {
   display: grid;
   flex: 1;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
+  gap: var(--dq-space-3);
   align-items: center;
-  padding: 1.5rem 0;
+  padding: var(--dq-space-3) 0;
 }
 
 .v2-hero-copy {
+  min-width: 0;
   max-width: 720px;
 }
 
@@ -2970,12 +2986,12 @@ button:disabled {
 
 .v2-logo-mark span {
   color: var(--v2-gold);
-  font-size: 3rem;
+  font-size: calc(var(--dq-text-title) * 1.25);
   text-shadow: 0 9px 0 rgba(214, 53, 44, 0.32);
 }
 
 .v2-logo-mark strong {
-  font-size: 4rem;
+  font-size: calc(var(--dq-text-title) * 1.55);
   text-shadow: 0 9px 0 rgba(214, 53, 44, 0.36), 0 0 50px rgba(255, 215, 107, 0.35);
 }
 
@@ -3002,6 +3018,7 @@ button:disabled {
   gap: 0.8rem;
   margin-top: 1.6rem;
   max-width: 620px;
+  width: 100%;
 }
 
 .v2-hero-actions .primary {
@@ -3011,7 +3028,9 @@ button:disabled {
 .v2-hero-stage {
   position: relative;
   display: grid;
-  min-height: 430px;
+  width: 100%;
+  min-width: 0;
+  min-height: clamp(18.5rem, 68vw, 26.875rem);
   place-items: center;
   border: 1px solid var(--v2-border);
   border-radius: 36px;
@@ -3024,7 +3043,7 @@ button:disabled {
 
 .v2-orbit-map {
   position: absolute;
-  inset: 8%;
+  inset: clamp(0.75rem, 8%, 2rem);
 }
 
 .v2-orbit-ring {
@@ -3039,8 +3058,8 @@ button:disabled {
 .v2-map-island {
   position: absolute;
   display: grid;
-  width: 92px;
-  height: 76px;
+  width: clamp(3.5rem, 22vw, 5.75rem);
+  height: clamp(3rem, 18vw, 4.75rem);
   place-items: center;
   border: 1px solid rgba(255, 215, 107, 0.4);
   border-radius: 28px;
@@ -3068,8 +3087,8 @@ button:disabled {
 
 .v2-hero-stat-card {
   position: absolute;
-  right: 1.2rem;
-  top: 1.2rem;
+  right: var(--dq-space-2);
+  top: var(--dq-space-2);
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -3077,6 +3096,7 @@ button:disabled {
   border-radius: 20px;
   background: rgba(8, 30, 42, 0.78);
   padding: 0.85rem 1rem;
+  max-width: calc(100% - (var(--dq-space-2) * 2));
 }
 
 .v2-hero-stat-card svg {
@@ -4414,12 +4434,39 @@ button:disabled {
   }
 
   .v2-status-hud {
-    grid-template-columns: auto minmax(150px, 1fr) auto auto auto;
+    grid-template-areas: "player xp stats";
+    grid-template-columns: auto minmax(150px, 1fr) auto;
+    gap: 0.7rem;
+    align-items: center;
   }
 
   .v2-player-chip,
   .v2-xp-core {
     grid-column: auto;
+  }
+
+  .v2-player-chip {
+    gap: 0.65rem;
+  }
+
+  .v2-player-chip small {
+    display: block;
+  }
+
+  .v2-player-avatar {
+    width: 46px;
+    height: 46px;
+    font-size: 1.35rem;
+  }
+
+  .v2-hud-stats {
+    grid-template-columns: repeat(3, minmax(62px, auto));
+    gap: 0.7rem;
+    width: auto;
+  }
+
+  .v2-stat-orb {
+    min-width: 62px;
   }
 
   .v2-page-top,
@@ -4532,6 +4579,47 @@ button:disabled {
   .v2-knowledge-grid,
   .v2-badge-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 30rem) {
+  .v2-home-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 0.72fr);
+    gap: var(--dq-space-2);
+    align-items: stretch;
+    padding: var(--dq-space-2) 0;
+  }
+
+  .v2-logo-mark span {
+    font-size: 1.65rem;
+  }
+
+  .v2-logo-mark strong {
+    font-size: 2.35rem;
+  }
+
+  .v2-hero-copy h1 {
+    margin-top: 0.45rem;
+    font-size: 1.2rem;
+  }
+
+  .v2-hero-copy p {
+    display: none;
+  }
+
+  .v2-hero-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 0.7rem;
+  }
+
+  .v2-hero-actions .v2-button {
+    min-height: 44px;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .v2-hero-stage {
+    min-height: 0;
   }
 }
 

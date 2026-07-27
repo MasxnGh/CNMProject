@@ -14,8 +14,14 @@ const startAdventure = "เริ่มการผจญภัย";
 
 const viewportFor = (testInfo) => responsiveViewports.find((viewport) => viewport.name === testInfo.project.name);
 
-test("Home exposes the responsive scene and container foundation", async ({ page }) => {
+async function visitHome(page) {
   await page.goto("/");
+  await expect(page.locator(".v2-home-scene")).toBeVisible();
+  await page.waitForTimeout(500);
+}
+
+test("Home exposes the responsive scene and container foundation", async ({ page }) => {
+  await visitHome(page);
 
   const foundation = await page.locator(".dq-scene").evaluate((scene) => {
     const container = scene.querySelector(".dq-container");
@@ -38,7 +44,7 @@ test("Home exposes the responsive scene and container foundation", async ({ page
 });
 
 test("Home keeps a symmetric gutter when safe-area insets differ", async ({ page }) => {
-  await page.goto("/");
+  await visitHome(page);
 
   const gutter = await page.locator(".dq-scene").evaluate((scene) => {
     const container = scene.querySelector(".dq-container");
@@ -62,7 +68,7 @@ test("Home keeps a symmetric gutter when safe-area insets differ", async ({ page
 
 test("Home uses the shared minimum size for rendered compact and modal controls", async ({ page }, testInfo) => {
   const fixture = viewportFor(testInfo);
-  await page.goto("/");
+  await visitHome(page);
 
   await page.getByRole("button", { name: "เริ่มใหม่" }).click();
   await page.waitForTimeout(500);
@@ -75,7 +81,7 @@ test("Home uses the shared minimum size for rendered compact and modal controls"
 });
 
 test("Modal close target stays at least 44px throughout its entrance", async ({ page }) => {
-  await page.goto("/");
+  await visitHome(page);
   await page.evaluate(() => {
     window.modalCloseSamples = [];
     const observer = new MutationObserver(() => {
@@ -104,7 +110,7 @@ test("Desktop preserves the library command and map legend layout contracts", as
   const fixture = viewportFor(testInfo);
   test.skip(fixture.name !== "desktop-1440x900", "Desktop-only layout contract");
   await seedResponsiveProgress(page);
-  await page.goto("/");
+  await visitHome(page);
 
   await page.locator(".v2-hero-actions button").nth(1).click();
   await expect(page.locator(".v2-library-command")).toBeVisible();
@@ -123,7 +129,7 @@ test("Home content wrapper does not force its own viewport-height floor", async 
   const fixture = viewportFor(testInfo);
   test.skip(fixture.name !== "tablet-landscape-1024x768", "Tablet-landscape viewport contract");
   await seedResponsiveProgress(page);
-  await page.goto("/");
+  await visitHome(page);
 
   const bounds = await page.locator(".dq-scene").evaluate((scene) => {
     const container = scene.querySelector(".dq-container");
@@ -141,7 +147,7 @@ test("Home content wrapper does not force its own viewport-height floor", async 
 test("Home keeps the first adventure action usable without clipping", async ({ page }, testInfo) => {
   const fixture = viewportFor(testInfo);
   await seedResponsiveProgress(page);
-  await page.goto("/");
+  await visitHome(page);
 
   const primaryAction = page.getByRole("button", { name: startAdventure });
   await expect(primaryAction).toBeVisible();
@@ -159,4 +165,75 @@ test("Home keeps the first adventure action usable without clipping", async ({ p
     primarySelector: ".v2-hero-actions .primary",
     viewportName: fixture.name,
   });
+});
+
+test("Home keeps phone branding, actions, HUD, and hero contained", async ({ page }, testInfo) => {
+  const fixture = viewportFor(testInfo);
+  test.skip(!["mobile-320x568", "mobile-375x812", "mobile-390x844"].includes(fixture.name), "Phone viewport contract");
+  await seedResponsiveProgress(page);
+  await visitHome(page);
+
+  const layout = await page.locator(".v2-home-scene").evaluate((scene) => {
+    const container = scene.querySelector(".dq-container");
+    const pageBounds = container?.getBoundingClientRect();
+    const readBounds = (selector) => {
+      const element = scene.querySelector(selector);
+      const bounds = element?.getBoundingClientRect();
+      return bounds ? { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom, width: bounds.width } : null;
+    };
+    const actionBounds = [...scene.querySelectorAll(".v2-hero-actions button")].map((button) => {
+      const bounds = button.getBoundingClientRect();
+      return { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom };
+    });
+    return {
+      pageBounds: pageBounds ? { left: pageBounds.left, right: pageBounds.right } : null,
+      logo: readBounds(".v2-logo-mark"),
+      primary: readBounds(".v2-hero-actions .primary"),
+      stage: readBounds(".v2-hero-stage"),
+      actionBounds,
+    };
+  });
+
+  expect(layout.pageBounds).not.toBeNull();
+  expect(layout.logo.left).toBeGreaterThanOrEqual(layout.pageBounds.left - 1);
+  expect(layout.logo.right).toBeLessThanOrEqual(layout.pageBounds.right + 1);
+  expect(layout.primary.width).toBeGreaterThanOrEqual(layout.pageBounds.right - layout.pageBounds.left - 2);
+  expect(layout.stage.left).toBeGreaterThanOrEqual(layout.pageBounds.left - 1);
+  expect(layout.stage.right).toBeLessThanOrEqual(layout.pageBounds.right + 1);
+  expect(layout.actionBounds.some((action, index) => layout.actionBounds.slice(index + 1).some((other) => action.left < other.right && action.right > other.left && action.top < other.bottom && action.bottom > other.top))).toBe(false);
+
+  await assertMobileHudFits(page, { viewportName: fixture.name });
+  await assertControlsMeetMinimumSize(page, { selector: "button", viewportName: fixture.name });
+  await assertDocumentFitsViewport(page, fixture.name);
+});
+
+test("Home uses a balanced two-column composition on short large-phone landscape", async ({ page }, testInfo) => {
+  const fixture = viewportFor(testInfo);
+  test.skip(fixture.name !== "mobile-landscape-667x375", "Short large-phone landscape contract");
+  await seedResponsiveProgress(page);
+  await visitHome(page);
+
+  const composition = await page.locator(".v2-home-grid").evaluate((grid) => {
+    const bounds = grid.getBoundingClientRect();
+    const style = window.getComputedStyle(grid);
+    const primary = grid.querySelector(".v2-hero-actions .primary")?.getBoundingClientRect();
+    const stage = grid.querySelector(".v2-hero-stage")?.getBoundingClientRect();
+    return {
+      columns: style.gridTemplateColumns.split(" ").map(Number.parseFloat),
+      grid: { left: bounds.left, right: bounds.right },
+      primary: primary ? { left: primary.left, right: primary.right, top: primary.top, bottom: primary.bottom } : null,
+      stage: stage ? { left: stage.left, right: stage.right } : null,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(composition.columns).toHaveLength(2);
+  expect(composition.columns[0]).toBeGreaterThan(0);
+  expect(composition.columns[1]).toBeGreaterThan(0);
+  expect(composition.stage.left).toBeGreaterThanOrEqual(composition.grid.left);
+  expect(composition.stage.right).toBeLessThanOrEqual(composition.grid.right);
+  expect(composition.primary.bottom).toBeLessThanOrEqual(composition.viewportHeight);
+  await assertMobileHudFits(page, { viewportName: fixture.name });
+  await assertControlsMeetMinimumSize(page, { selector: "button", viewportName: fixture.name });
+  await assertDocumentFitsViewport(page, fixture.name);
 });

@@ -4,6 +4,7 @@ export const responsiveViewports = [
   { name: "mobile-320x568", viewport: { width: 320, height: 568 } },
   { name: "mobile-375x812", viewport: { width: 375, height: 812 } },
   { name: "mobile-390x844", viewport: { width: 390, height: 844 } },
+  { name: "mobile-landscape-667x375", viewport: { width: 667, height: 375 } },
   { name: "tablet-768x1024", viewport: { width: 768, height: 1024 } },
   { name: "tablet-landscape-1024x768", viewport: { width: 1024, height: 768 } },
   { name: "desktop-1440x900", viewport: { width: 1440, height: 900 } },
@@ -96,7 +97,7 @@ export async function assertFixedControlDoesNotOverlapPrimaryActions(page, { fix
   ).toEqual([]);
 }
 
-export async function assertMobileHudFits(page, { selector = ".v2-status-hud", viewportName, maxRows = 3, maxHeight = 220 }) {
+export async function assertMobileHudFits(page, { selector = ".v2-status-hud", viewportName, maxRows = 2, maxHeight = 220 }) {
   const [viewport, hudLocator] = await Promise.all([getViewport(page), page.locator(selector)]);
   await expect(
     hudLocator,
