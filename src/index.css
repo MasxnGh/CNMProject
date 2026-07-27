@@ -2756,7 +2756,7 @@ button:disabled {
 
 .v2-status-hud {
   display: grid;
-  grid-template-columns: auto minmax(150px, 1fr) auto auto auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.7rem;
   align-items: center;
   width: 100%;
@@ -2778,6 +2778,7 @@ button:disabled {
   align-items: center;
   gap: 0.65rem;
   min-width: 0;
+  grid-column: 1 / -1;
 }
 
 .v2-player-avatar {
@@ -2808,6 +2809,7 @@ button:disabled {
 
 .v2-xp-core {
   min-width: 0;
+  grid-column: 1 / -1;
 }
 
 .v2-xp-label {
@@ -2862,7 +2864,7 @@ button:disabled {
 .v2-page-top,
 .v2-game-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.9rem;
   margin-bottom: 1.1rem;
 }
@@ -2870,7 +2872,7 @@ button:disabled {
 .v2-page-top h1,
 .v2-game-header h1 {
   color: var(--v2-ink);
-  font-size: 2.35rem;
+  font-size: 1.55rem;
   font-weight: 1000;
   line-height: 1.08;
 }
@@ -2901,7 +2903,7 @@ button:disabled {
 .v2-loading-gate h1 {
   margin-top: 1rem;
   color: var(--v2-ink);
-  font-size: 4.3rem;
+  font-size: 3rem;
   font-weight: 1000;
   line-height: 0.9;
   text-shadow: 0 8px 0 rgba(214, 53, 44, 0.28), 0 0 42px rgba(255, 215, 107, 0.38);
@@ -2946,10 +2948,10 @@ button:disabled {
 .v2-home-grid {
   display: grid;
   flex: 1;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.92fr);
-  gap: 3rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
   align-items: center;
-  padding: 3rem 0 2rem;
+  padding: 1.5rem 0;
 }
 
 .v2-hero-copy {
@@ -2967,19 +2969,19 @@ button:disabled {
 
 .v2-logo-mark span {
   color: var(--v2-gold);
-  font-size: 4.4rem;
+  font-size: 3rem;
   text-shadow: 0 9px 0 rgba(214, 53, 44, 0.32);
 }
 
 .v2-logo-mark strong {
-  font-size: 6.2rem;
+  font-size: 4rem;
   text-shadow: 0 9px 0 rgba(214, 53, 44, 0.36), 0 0 50px rgba(255, 215, 107, 0.35);
 }
 
 .v2-hero-copy h1 {
   margin-top: 1.1rem;
   color: var(--v2-ink);
-  font-size: 2.35rem;
+  font-size: 1.9rem;
   font-weight: 1000;
   line-height: 1.12;
 }
@@ -2995,7 +2997,7 @@ button:disabled {
 
 .v2-hero-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.8rem;
   margin-top: 1.6rem;
   max-width: 620px;
@@ -3008,7 +3010,7 @@ button:disabled {
 .v2-hero-stage {
   position: relative;
   display: grid;
-  min-height: 560px;
+  min-height: 430px;
   place-items: center;
   border: 1px solid var(--v2-border);
   border-radius: 36px;
@@ -3094,7 +3096,7 @@ button:disabled {
 
 .v2-chapter-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.2rem;
   margin-top: 1.6rem;
 }
@@ -3180,7 +3182,8 @@ button:disabled {
 
 .v2-chapter-footer {
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  flex-direction: column;
   justify-content: space-between;
   gap: 0.7rem;
   margin-top: 1rem;
@@ -3194,7 +3197,8 @@ button:disabled {
 .v2-map-legend {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: stretch;
+  flex-direction: column;
   gap: 0.8rem;
   margin-top: 1rem;
   border: 1px solid var(--v2-border);
@@ -3219,7 +3223,7 @@ button:disabled {
 .v2-constellation-map {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   min-height: 520px;
   margin-top: 1.4rem;
@@ -3235,12 +3239,14 @@ button:disabled {
 
 .v2-route-beam {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 50%;
-  height: 8px;
+  left: 50%;
+  right: auto;
+  top: 5%;
+  bottom: 5%;
+  width: 8px;
+  height: auto;
   border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
+  background: linear-gradient(180deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
   box-shadow: 0 0 26px rgba(255, 215, 107, 0.38);
 }
 
@@ -3253,17 +3259,17 @@ button:disabled {
 
 .v2-route-slot.slot-1,
 .v2-route-slot.slot-3 {
-  transform: translateY(80px);
+  transform: none;
 }
 
 .v2-route-slot.slot-2 {
-  transform: translateY(-56px);
+  transform: none;
 }
 
 .v2-level-island {
   position: relative;
   display: grid;
-  min-height: 268px;
+  min-height: 230px;
   overflow: hidden;
   border: 1px solid rgba(255, 215, 107, 0.28);
   border-radius: 28px;
@@ -3365,7 +3371,7 @@ button:disabled {
 }
 
 .v2-mission-chip {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 0.4rem;
   border: 1px solid var(--v2-border);
@@ -3378,7 +3384,7 @@ button:disabled {
 
 .v2-game-layout {
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin-top: 1.1rem;
 }
@@ -3390,7 +3396,7 @@ button:disabled {
 .v2-victory-panel,
 .v2-final-chamber {
   border: 1px solid var(--v2-border);
-  border-radius: 30px;
+  border-radius: 22px;
   background: linear-gradient(180deg, rgba(13, 50, 63, 0.84), rgba(8, 23, 37, 0.82));
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(18px);
@@ -3400,7 +3406,7 @@ button:disabled {
   align-self: start;
   display: grid;
   gap: 0.8rem;
-  padding: 1rem;
+  padding: 0.9rem;
 }
 
 .v2-heart-row {
@@ -3438,7 +3444,7 @@ button:disabled {
 .v2-mission-arena {
   position: relative;
   min-width: 0;
-  padding: 1.2rem;
+  padding: 0.9rem;
   overflow: hidden;
 }
 
@@ -3457,7 +3463,8 @@ button:disabled {
 
 .v2-mission-progress > div {
   display: flex;
-  align-items: end;
+  align-items: stretch;
+  flex-direction: column;
   justify-content: space-between;
   gap: 0.8rem;
 }
@@ -3487,7 +3494,7 @@ button:disabled {
 .v2-quest-title h2 {
   margin-top: 0.2rem;
   color: var(--v2-ink);
-  font-size: 1.75rem;
+  font-size: 1.28rem;
   font-weight: 1000;
   line-height: 1.22;
 }
@@ -3643,7 +3650,7 @@ button:disabled {
 }
 
 .v2-result-panel {
-  padding: 1.3rem;
+  padding: 0.9rem;
 }
 
 .v2-reward-side {
@@ -3681,7 +3688,7 @@ button:disabled {
 .v2-result-title h1,
 .v2-victory-panel h1 {
   color: var(--v2-ink);
-  font-size: 3.2rem;
+  font-size: 1.9rem;
   font-weight: 1000;
   line-height: 1.04;
 }
@@ -3717,7 +3724,7 @@ button:disabled {
 .v2-reward-grid,
 .v2-victory-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.8rem;
   margin-top: 1.3rem;
 }
@@ -3760,7 +3767,7 @@ button:disabled {
 
 .v2-result-info {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9rem;
   margin-top: 1rem;
 }
@@ -3804,7 +3811,7 @@ button:disabled {
 
 .v2-result-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.8rem;
   margin-top: 1.2rem;
 }
@@ -3871,7 +3878,7 @@ button:disabled {
 }
 
 .v2-victory-panel {
-  padding: 1.5rem;
+  padding: 0.9rem;
   text-align: center;
 }
 
@@ -3888,7 +3895,7 @@ button:disabled {
 }
 
 .v2-victory-stats {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .v2-certificate {
@@ -3923,7 +3930,7 @@ button:disabled {
 
 .v2-library-command {
   display: grid;
-  grid-template-columns: auto minmax(240px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin-top: 1.4rem;
 }
@@ -3998,7 +4005,7 @@ button:disabled {
 .v2-knowledge-grid,
 .v2-badge-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin-top: 1.2rem;
 }
@@ -4139,7 +4146,8 @@ button:disabled {
   bottom: 1rem;
   z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
   margin-top: 1.2rem;
@@ -4229,7 +4237,7 @@ button:disabled {
 
 .v2-modal-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
   margin-top: 1.2rem;
 }
@@ -4399,11 +4407,113 @@ button:disabled {
   50% { opacity: 1; transform: scale(1.08); }
 }
 
-@media (max-width: 1100px) {
-  .v2-home-grid,
-  .v2-game-layout,
-  .v2-result-info {
-    grid-template-columns: 1fr;
+@media (min-width: 48rem) {
+  .v2-loading-gate h1 {
+    font-size: 4.3rem;
+  }
+
+  .v2-status-hud {
+    grid-template-columns: auto minmax(150px, 1fr) auto auto auto;
+  }
+
+  .v2-player-chip,
+  .v2-xp-core {
+    grid-column: auto;
+  }
+
+  .v2-page-top,
+  .v2-game-header {
+    align-items: center;
+  }
+
+  .v2-page-top h1,
+  .v2-game-header h1 {
+    font-size: 2.35rem;
+  }
+
+  .v2-logo-mark span {
+    font-size: 4.4rem;
+  }
+
+  .v2-logo-mark strong {
+    font-size: 6.2rem;
+  }
+
+  .v2-hero-copy h1,
+  .v2-page-top h1 {
+    font-size: 2.35rem;
+  }
+
+  .v2-result-title h1,
+  .v2-victory-panel h1 {
+    font-size: 3.2rem;
+  }
+
+  .v2-hero-stage {
+    min-height: 560px;
+  }
+
+  .v2-game-console,
+  .v2-mission-arena,
+  .v2-result-panel,
+  .v2-reward-side,
+  .v2-victory-panel,
+  .v2-final-chamber {
+    border-radius: 30px;
+  }
+
+  .v2-game-console {
+    padding: 1rem;
+  }
+
+  .v2-mission-arena {
+    padding: 1.2rem;
+  }
+
+  .v2-result-panel {
+    padding: 1.3rem;
+  }
+
+  .v2-victory-panel {
+    padding: 1.5rem;
+  }
+
+  .v2-quest-title h2 {
+    font-size: 1.75rem;
+  }
+
+  .v2-hero-actions,
+  .v2-library-command,
+  .v2-reward-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .v2-victory-stats {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .v2-result-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .v2-modal-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .v2-game-header .v2-mission-chip {
+    display: inline-flex;
+  }
+
+  .v2-mission-progress > div,
+  .v2-chapter-footer,
+  .v2-map-legend,
+  .v2-badge-detail {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .v2-mission-progress > div {
+    align-items: end;
   }
 
   .v2-chapter-grid,
@@ -4411,108 +4521,54 @@ button:disabled {
   .v2-badge-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .v2-constellation-map {
-    grid-template-columns: 1fr;
-  }
-
-  .v2-route-beam {
-    left: 50%;
-    right: auto;
-    top: 5%;
-    bottom: 5%;
-    width: 8px;
-    height: auto;
-    background: linear-gradient(180deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
-  }
-
-  .v2-route-slot.slot-1,
-  .v2-route-slot.slot-2,
-  .v2-route-slot.slot-3 {
-    transform: none;
-  }
-
-  .v2-level-island {
-    min-height: 230px;
-  }
 }
 
-@media (max-width: 760px) {
-  .v2-status-hud {
+@media (min-width: 64rem) {
+  .v2-home-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.92fr);
+    gap: 3rem;
+    padding: 3rem 0 2rem;
+  }
+
+  .v2-game-layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+  }
+
+  .v2-result-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .v2-chapter-grid,
+  .v2-knowledge-grid,
+  .v2-badge-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .v2-player-chip,
-  .v2-xp-core {
-    grid-column: 1 / -1;
+  .v2-constellation-map {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  .v2-page-top,
-  .v2-game-header {
-    align-items: flex-start;
+  .v2-route-beam {
+    left: 8%;
+    right: 8%;
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 8px;
+    background: linear-gradient(90deg, transparent, rgba(53, 208, 172, 0.55), rgba(255, 215, 107, 0.8), rgba(53, 208, 172, 0.55), transparent);
   }
 
-  .v2-page-top h1,
-  .v2-game-header h1 {
-    font-size: 1.55rem;
+  .v2-route-slot.slot-1,
+  .v2-route-slot.slot-3 {
+    transform: translateY(80px);
   }
 
-  .v2-logo-mark span {
-    font-size: 3rem;
+  .v2-route-slot.slot-2 {
+    transform: translateY(-56px);
   }
 
-  .v2-logo-mark strong {
-    font-size: 4rem;
-  }
-
-  .v2-hero-copy h1,
-  .v2-result-title h1,
-  .v2-victory-panel h1 {
-    font-size: 1.9rem;
-  }
-
-  .v2-hero-stage {
-    min-height: 430px;
-  }
-
-  .v2-hero-actions,
-  .v2-chapter-grid,
-  .v2-library-command,
-  .v2-knowledge-grid,
-  .v2-badge-grid,
-  .v2-reward-grid,
-  .v2-victory-stats,
-  .v2-result-actions,
-  .v2-modal-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .v2-game-header .v2-mission-chip {
-    display: none;
-  }
-
-  .v2-mission-progress > div,
-  .v2-chapter-footer,
-  .v2-map-legend,
-  .v2-badge-detail {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .v2-mission-arena,
-  .v2-game-console,
-  .v2-result-panel,
-  .v2-victory-panel {
-    border-radius: 22px;
-    padding: 0.9rem;
-  }
-
-  .v2-quest-title h2 {
-    font-size: 1.28rem;
-  }
-
-  .v2-loading-gate h1 {
-    font-size: 3rem;
+  .v2-level-island {
+    min-height: 268px;
   }
 }
 
