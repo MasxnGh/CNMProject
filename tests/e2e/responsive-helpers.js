@@ -15,10 +15,13 @@ const visibleRectangles = async (page, selector) => page.evaluate((targetSelecto
     .map((element) => {
       const rect = element.getBoundingClientRect();
       const style = window.getComputedStyle(element);
+      const accessibleName = element.getAttribute("aria-label") ?? element.textContent.trim().replace(/\s+/g, " ");
       return {
-        selector: element.matches("button") && element.getAttribute("aria-label")
-          ? `${targetSelector}[aria-label=\"${element.getAttribute("aria-label")}\"]`
-          : targetSelector,
+        selector: element.id
+          ? `#${element.id}`
+          : accessibleName
+            ? `${element.tagName.toLowerCase()}[accessible name=\"${accessibleName}\"]`
+            : targetSelector,
         x: rect.x,
         y: rect.y,
         width: rect.width,
@@ -32,6 +35,8 @@ const visibleRectangles = async (page, selector) => page.evaluate((targetSelecto
 );
 
 const boxLabel = (box) => `x=${Math.round(box.x)}, y=${Math.round(box.y)}, ${Math.round(box.width)}x${Math.round(box.height)}`;
+
+const identifiedBoxLabel = (box) => `${box.selector} (${boxLabel(box)})`;
 
 const viewportLabel = (viewportName, viewport) => `${viewportName} (${viewport.width}x${viewport.height})`;
 
@@ -68,7 +73,7 @@ export async function assertControlsMeetMinimumSize(page, { selector = "button",
 
   expect(
     undersized,
-    `Viewport ${viewportLabel(viewportName, viewport)} has ${selector} controls below ${minimumSize}x${minimumSize}: ${undersized.map(boxLabel).join("; ")}.`,
+    `Viewport ${viewportLabel(viewportName, viewport)} has ${selector} controls below ${minimumSize}x${minimumSize}: ${undersized.map(identifiedBoxLabel).join("; ")}.`,
   ).toEqual([]);
 }
 
@@ -92,16 +97,18 @@ export async function assertFixedControlDoesNotOverlapPrimaryActions(page, { fix
 }
 
 export async function assertMobileHudFits(page, { selector = ".v2-status-hud", viewportName, maxRows = 3, maxHeight = 220 }) {
-  const [viewport, hud] = await Promise.all([
-    getViewport(page),
-    page.locator(selector).evaluate((element) => {
-      const bounds = element.getBoundingClientRect();
-      const rows = [...element.children]
-        .map((child) => child.getBoundingClientRect().top)
-        .reduce((tops, top) => (tops.some((knownTop) => Math.abs(knownTop - top) < 2) ? tops : [...tops, top]), []);
-      return { height: bounds.height, rows: rows.length };
-    }),
-  ]);
+  const [viewport, hudLocator] = await Promise.all([getViewport(page), page.locator(selector)]);
+  await expect(
+    hudLocator,
+    `Viewport ${viewportLabel(viewportName, viewport)} must contain exactly one ${selector} before measuring mobile HUD rows and height.`,
+  ).toHaveCount(1);
+  const hud = await hudLocator.evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const rows = [...element.children]
+      .map((child) => child.getBoundingClientRect().top)
+      .reduce((tops, top) => (tops.some((knownTop) => Math.abs(knownTop - top) < 2) ? tops : [...tops, top]), []);
+    return { height: bounds.height, rows: rows.length };
+  });
 
   expect(
     hud.rows,

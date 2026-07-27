@@ -24,14 +24,15 @@ test("Home keeps the first adventure action usable without clipping", async ({ p
 
   await assertDocumentFitsViewport(page, fixture.name);
   await assertVisibleElementsStayInViewport(page, { selector: ".v2-hero-actions .primary", viewportName: fixture.name });
+
+  if (isMobileViewport(fixture.viewport)) {
+    await assertMobileHudFits(page, { viewportName: fixture.name });
+  }
+
   await assertControlsMeetMinimumSize(page, { selector: "button", viewportName: fixture.name });
   await assertFixedControlDoesNotOverlapPrimaryActions(page, {
     fixedSelector: ".sound-toggle",
     primarySelector: ".v2-hero-actions .primary",
     viewportName: fixture.name,
   });
-
-  if (isMobileViewport(fixture.viewport)) {
-    await assertMobileHudFits(page, { viewportName: fixture.name });
-  }
 });
