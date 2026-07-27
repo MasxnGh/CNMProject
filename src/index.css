@@ -2728,7 +2728,8 @@ button:disabled {
 }
 
 .v2-button.mini {
-  min-height: 42px;
+  min-width: var(--dq-control-height);
+  min-height: var(--dq-control-height);
   border-radius: 14px;
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
@@ -4228,8 +4229,8 @@ button:disabled {
 
 .v2-modal-close {
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: var(--dq-control-height);
+  height: var(--dq-control-height);
   place-items: center;
   border-radius: 14px;
   color: var(--v2-muted);
@@ -4483,9 +4484,16 @@ button:disabled {
   }
 
   .v2-hero-actions,
-  .v2-library-command,
-  .v2-reward-grid {
+  .v2-hero-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .v2-library-command {
+    grid-template-columns: auto minmax(240px, 1fr);
+  }
+
+  .v2-reward-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .v2-victory-stats {
@@ -4510,6 +4518,10 @@ button:disabled {
   .v2-badge-detail {
     align-items: center;
     flex-direction: row;
+  }
+
+  .v2-map-legend {
+    justify-content: space-between;
   }
 
   .v2-mission-progress > div {

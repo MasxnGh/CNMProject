@@ -60,6 +60,8 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
   await page.getByRole("button", { name: "Continue" }).click();
 
   await expect(page.getByText("ภารกิจสำเร็จ", { exact: true })).toBeVisible();
+  const rewardTracks = await page.locator(".v2-reward-grid").evaluate((element) => window.getComputedStyle(element).gridTemplateColumns.split(" ").map(Number.parseFloat));
+  expect(rewardTracks).toHaveLength(3);
   await page.getByRole("button", { name: "ไปห้องสมบัติ" }).click();
   await expect(page.getByText("ยินดีด้วย! คุณพิชิตภารกิจ Dujeen Quest สำเร็จแล้ว", { exact: true })).toBeVisible();
 });

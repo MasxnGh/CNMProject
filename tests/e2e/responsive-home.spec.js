@@ -21,13 +21,7 @@ test("Home exposes the responsive scene and container foundation", async ({ page
     const container = scene.querySelector(".dq-container");
     const sceneStyle = window.getComputedStyle(scene);
     const containerStyle = container ? window.getComputedStyle(container) : null;
-    const controlProbe = document.createElement("div");
-    controlProbe.style.cssText = "display:block; height:var(--dq-control-height); position:absolute;";
-    scene.append(controlProbe);
-    const controlHeight = Number.parseFloat(window.getComputedStyle(controlProbe).height);
-    controlProbe.remove();
     return {
-      controlHeight,
       minHeight: sceneStyle.minHeight,
       minWidth: sceneStyle.minWidth,
       scenePaddingLeft: Number.parseFloat(sceneStyle.paddingLeft),
@@ -37,11 +31,85 @@ test("Home exposes the responsive scene and container foundation", async ({ page
     };
   });
 
-  expect(foundation.controlHeight).toBeGreaterThanOrEqual(44);
   expect(foundation.minWidth).toBe("0px");
   expect(foundation.minHeight).toBe(`${foundation.viewportHeight}px`);
   expect(foundation.containerPresent).toBe(true);
   expect(foundation.scenePaddingLeft).toBe(foundation.scenePaddingRight);
+});
+
+test("Home keeps a symmetric gutter when safe-area insets differ", async ({ page }) => {
+  await page.goto("/");
+
+  const gutter = await page.locator(".dq-scene").evaluate((scene) => {
+    const container = scene.querySelector(".dq-container");
+    scene.style.setProperty("--dq-safe-area-left", "13px");
+    scene.style.setProperty("--dq-safe-area-right", "80px");
+    const sceneStyle = window.getComputedStyle(scene);
+    const sceneRect = scene.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    return {
+      leftPadding: Number.parseFloat(sceneStyle.paddingLeft),
+      rightPadding: Number.parseFloat(sceneStyle.paddingRight),
+      leftGutter: containerRect.left - sceneRect.left,
+      rightGutter: sceneRect.right - containerRect.right,
+    };
+  });
+
+  expect(gutter.leftPadding).toBe(80);
+  expect(gutter.rightPadding).toBe(80);
+  expect(gutter.leftGutter).toBeCloseTo(gutter.rightGutter, 3);
+});
+
+test("Home uses the shared minimum size for rendered compact and modal controls", async ({ page }, testInfo) => {
+  const fixture = viewportFor(testInfo);
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "เริ่มใหม่" }).click();
+  await page.waitForTimeout(500);
+  await assertControlsMeetMinimumSize(page, { selector: ".v2-modal-close", viewportName: fixture.name });
+  await page.locator(".v2-modal-close").click();
+
+  await page.locator(".v2-hero-actions .primary").click();
+  await page.waitForTimeout(500);
+  await assertControlsMeetMinimumSize(page, { selector: ".v2-button.mini", viewportName: fixture.name });
+});
+
+test("Desktop preserves the library command and map legend layout contracts", async ({ page }, testInfo) => {
+  const fixture = viewportFor(testInfo);
+  test.skip(fixture.name !== "desktop-1440x900", "Desktop-only layout contract");
+  await seedResponsiveProgress(page);
+  await page.goto("/");
+
+  await page.locator(".v2-hero-actions button").nth(1).click();
+  await expect(page.locator(".v2-library-command")).toBeVisible();
+  const libraryTracks = await page.locator(".v2-library-command").evaluate((element) => window.getComputedStyle(element).gridTemplateColumns.split(" ").map(Number.parseFloat));
+  expect(libraryTracks).toHaveLength(2);
+  expect(libraryTracks[0]).toBeLessThan(libraryTracks[1]);
+
+  await page.locator(".v2-page-top .v2-icon-button").click();
+  await page.locator(".v2-hero-actions .primary").click();
+  await page.locator(".v2-chapter-portal").first().getByRole("button").click();
+  await expect(page.locator(".v2-map-legend")).toBeVisible();
+  await expect(page.locator(".v2-map-legend")).toHaveCSS("justify-content", "space-between");
+});
+
+test("Home content wrapper does not force its own viewport-height floor", async ({ page }, testInfo) => {
+  const fixture = viewportFor(testInfo);
+  test.skip(fixture.name !== "tablet-landscape-1024x768", "Tablet-landscape viewport contract");
+  await seedResponsiveProgress(page);
+  await page.goto("/");
+
+  const bounds = await page.locator(".dq-scene").evaluate((scene) => {
+    const container = scene.querySelector(".dq-container");
+    return {
+      containerHeight: container.getBoundingClientRect().height,
+      documentHeight: document.documentElement.scrollHeight,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(bounds.containerHeight).toBeLessThan(bounds.viewportHeight - 40);
+  expect(bounds.documentHeight).toBeLessThanOrEqual(bounds.viewportHeight + 1);
 });
 
 test("Home keeps the first adventure action usable without clipping", async ({ page }, testInfo) => {

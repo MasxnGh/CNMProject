@@ -14,7 +14,7 @@ export default function HomePage({ progress, onStart, onLibrary, onBadges, onRes
     >
       <div className="v2-starry-field" aria-hidden="true" />
       <div className="v2-dragon-silhouette" aria-hidden="true" />
-      <div className="dq-container flex min-h-[calc(100vh-40px)] flex-col">
+      <div className="dq-container flex flex-col">
         <PlayerStatus progress={progress} compact />
         <div className="v2-home-grid">
           <motion.div className="v2-hero-copy" initial={{ x: -34, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 150, damping: 18 }}>
