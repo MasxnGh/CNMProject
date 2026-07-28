@@ -64,7 +64,7 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel }) {
         </div>
         <PlayerStatus progress={progress} />
         <div className="v2-map-legend">
-          <span><Route size={18} /> Constellation Route</span>
+          <span><Route size={18} /> เส้นทางในบทนี้</span>
           <strong><Star size={18} fill="currentColor" /> {setStars}/{setLevels.length * 3} ดาว</strong>
         </div>
         <div ref={mapRef} className="v2-constellation-map">

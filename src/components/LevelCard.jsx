@@ -54,6 +54,10 @@ export default function LevelCard({ level, unlocked, completed, current, stars =
       disabled={!unlocked}
     >
       <span className="v2-level-glow" />
+      {/* A cleared level is stamped, the way a passed scroll is sealed. */}
+      {completed ? (
+        <span className="dq-seal earned v2-level-seal" aria-hidden="true">過</span>
+      ) : null}
       <span className="v2-level-orb">
         {completed ? <CheckCircle2 size={28} /> : unlocked ? <Icon size={28} /> : <Lock size={27} />}
       </span>
