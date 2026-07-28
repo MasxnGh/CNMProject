@@ -4,20 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: [
-          "Noto Sans Thai",
-          "Noto Sans SC",
-          "Inter",
-          "system-ui",
-          "sans-serif",
-        ],
-        body: [
-          "Noto Sans Thai",
-          "Noto Sans SC",
-          "Inter",
-          "system-ui",
-          "sans-serif",
-        ],
+        display: ["Trirong", "Noto Serif SC", "Georgia", "serif"],
+        hanzi: ["Noto Serif SC", "Trirong", "Georgia", "serif"],
+        body: ["IBM Plex Sans Thai", "Noto Sans Thai", "system-ui", "sans-serif"],
       },
       boxShadow: {
         game: "0 18px 0 rgba(96, 38, 16, 0.35), 0 28px 45px rgba(64, 25, 18, 0.22)",
