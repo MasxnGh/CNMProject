@@ -129,8 +129,29 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
     return () => window.removeEventListener("resize", measureLines);
   }, [matches, missionView.id]);
 
+  const releaseAnswer = (predicate) => {
+    setMatches((current) => Object.fromEntries(Object.entries(current).filter(predicate)));
+    setActiveLeft(null);
+  };
+
+  /* Tapping a card that is already committed takes it back, so a mis-tap does
+     not force the player to submit a pairing they can see is wrong. */
+  const pickLeft = (left) => {
+    if (disabled) return;
+    if (matches[left]) {
+      releaseAnswer(([key]) => key !== left);
+      return;
+    }
+    setActiveLeft((current) => (current === left ? null : left));
+  };
+
   const chooseMatch = (option) => {
-    if (!activeLeft || disabled) return;
+    if (disabled) return;
+    if (usedAnswers.has(option)) {
+      releaseAnswer(([, value]) => value !== option);
+      return;
+    }
+    if (!activeLeft) return;
     setMatches((current) => {
       const next = Object.fromEntries(Object.entries(current).filter(([, value]) => value !== option));
       next[activeLeft] = option;
@@ -194,8 +215,10 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
                 className={`match-item ${activeLeft === left ? "active" : ""} ${matches[left] ? "matched" : ""} ${verdict ? `pair-${verdict.status}` : ""}`}
                 whileHover={reduceMotion ? undefined : { x: 4 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                onClick={() => !matches[left] && setActiveLeft(left)}
-                disabled={disabled || Boolean(matches[left])}
+                onClick={() => pickLeft(left)}
+                disabled={disabled}
+                aria-pressed={Boolean(matches[left]) || activeLeft === left}
+                title={matches[left] ? `แตะเพื่อยกเลิกคู่ ${left} - ${matches[left]}` : undefined}
               >
                 {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
                 <span>{left}</span>
@@ -218,7 +241,9 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
               whileHover={reduceMotion ? undefined : { x: -4 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
               onClick={() => chooseMatch(option)}
-              disabled={disabled || !activeLeft || usedAnswers.has(option)}
+              disabled={disabled || (!activeLeft && !usedAnswers.has(option))}
+              aria-pressed={usedAnswers.has(option)}
+              title={usedAnswers.has(option) ? `แตะเพื่อยกเลิกคู่ ${option}` : undefined}
             >
               {usedAnswers.has(option) ? <b className="match-pair-number" aria-hidden="true">{pairNumberFor(option)}</b> : null}
               {option}
