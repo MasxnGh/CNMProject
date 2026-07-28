@@ -68,7 +68,10 @@ test("phone game shell keeps the header, mission HUD, and Panda guide contained"
     const hud = document.querySelector(".v2-game-console");
     const panda = document.querySelector(".v2-panda");
     const guide = document.querySelector(".v2-panda-guide");
-    const rowTops = [...hud.children].map((child) => Math.round(child.getBoundingClientRect().top))
+    const rowTops = [...hud.children]
+      // Unrendered children (e.g. the desktop-only back-to-map button) occupy no row.
+      .filter((child) => child.getBoundingClientRect().height > 0 && getComputedStyle(child).display !== "none")
+      .map((child) => Math.round(child.getBoundingClientRect().top))
       .filter((top, index, values) => values.indexOf(top) === index);
     return {
       header: box(".v2-game-header"),
@@ -80,6 +83,10 @@ test("phone game shell keeps the header, mission HUD, and Panda guide contained"
       hudRows: rowTops.length,
       panda: box(".v2-panda"),
       guide: box(".v2-panda-guide"),
+      // Layout width, so the decorative bob rotation's bounding box does not
+      // inflate the measurement. A transform: scale() used for sizing would
+      // still leave offsetWidth disagreeing with --panda-size.
+      pandaLayoutWidth: panda.offsetWidth,
       pandaSize: getComputedStyle(panda).getPropertyValue("--panda-size").trim(),
     };
   });
@@ -92,7 +99,7 @@ test("phone game shell keeps the header, mission HUD, and Panda guide contained"
   expect(geometry.panda.left, "Panda must stay within its guide container.").toBeGreaterThanOrEqual(geometry.guide.left - 1);
   expect(geometry.panda.right, "Panda must stay within its guide container.").toBeLessThanOrEqual(geometry.guide.right + 1);
   expect(geometry.pandaSize, "Responsive Panda geometry must be driven by --panda-size.").not.toBe("");
-  expect(geometry.panda.width, "Panda must render at the --panda-size layout width, without responsive scale().").toBeCloseTo(Number.parseFloat(geometry.pandaSize), 0);
+  expect(geometry.pandaLayoutWidth, "Panda must render at the --panda-size layout width, without responsive scale().").toBeCloseTo(Number.parseFloat(geometry.pandaSize), 0);
 });
 
 test("phone pause control is keyboard-accessible", async ({ page }, testInfo) => {

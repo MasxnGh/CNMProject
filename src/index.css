@@ -2493,11 +2493,29 @@ button:disabled {
 .matching-board .match-column:first-of-type,
 .matching-board .match-column:last-of-type {
   padding: 0;
+  /* Reset the legacy 3-track placement; the V2 board is a balanced 2-track grid. */
+  grid-column: auto;
 }
 
 .match-item,
 .match-answer {
   min-height: 80px;
+}
+
+.match-pair-number {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--v2-jade, #35d0ac);
+  color: #06231f;
+  font-size: 0.78rem;
+  font-weight: 1000;
+  line-height: 1;
 }
 
 .match-item.matched,
@@ -2581,13 +2599,8 @@ button:disabled {
     align-self: flex-end;
   }
 
-  .shopping-grid,
-  .matching-board {
+  .shopping-grid {
     grid-template-columns: 1fr;
-  }
-
-  .match-lines {
-    display: none;
   }
 
   .trace-board {
@@ -3656,8 +3669,14 @@ button:disabled {
 .v2-mission-arena .shop-item em,
 .v2-mission-arena .trace-meta span,
 .v2-mission-arena .trace-meta small,
+.v2-mission-arena .match-item small,
 .v2-mission-arena .order-zone em {
   color: var(--v2-muted);
+}
+
+.v2-mission-arena .match-item,
+.v2-mission-arena .match-answer {
+  position: relative;
 }
 
 .v2-mission-arena .answer-button,
@@ -4530,6 +4549,109 @@ button:disabled {
 @keyframes v2-pulse {
   0%, 100% { opacity: 0.65; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.08); }
+}
+
+/*
+ * Phone compaction for the gameplay shell. These are the mobile base values;
+ * the 48rem block below restores the roomier tablet/desktop sizing.
+ */
+.v2-game-title h1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1.28rem;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.v2-mission-arena .mission-prompt {
+  padding: 0.75rem 0.85rem;
+}
+
+.v2-mission-arena .mission-prompt strong {
+  font-size: clamp(1.35rem, 6vw, 2rem);
+}
+
+.v2-mission-arena .answer-button {
+  min-height: 60px;
+  padding: 0.7rem 0.85rem;
+  font-size: 1rem;
+}
+
+.v2-mission-arena .match-item,
+.v2-mission-arena .match-answer {
+  min-height: 62px;
+  padding: 0.6rem 0.65rem;
+}
+
+.v2-mission-arena .match-item span {
+  font-size: 1.25rem;
+}
+
+.v2-mission-arena .matching-board {
+  gap: clamp(2.25rem, 11vw, 3rem);
+}
+
+.v2-mission-arena .match-line-main {
+  stroke-width: 4;
+}
+
+.v2-mission-arena .match-line-glow {
+  stroke-width: 8;
+}
+
+.v2-mission-status .v2-panda-guide {
+  --panda-size: 62px;
+}
+
+.v2-panda-bubble {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.32;
+}
+
+@media (min-width: 48rem) {
+  .v2-game-title h1 {
+    display: block;
+    overflow: hidden;
+    -webkit-line-clamp: none;
+    line-height: 1.1;
+  }
+
+  .v2-mission-arena .mission-prompt {
+    padding: 1rem;
+  }
+
+  .v2-mission-arena .mission-prompt strong {
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+  }
+
+  .v2-mission-arena .answer-button {
+    min-height: 74px;
+    padding: 1rem;
+    font-size: 1.08rem;
+  }
+
+  .v2-mission-arena .match-item,
+  .v2-mission-arena .match-answer {
+    min-height: 80px;
+    padding: 0.8rem;
+  }
+
+  .v2-mission-arena .match-item span {
+    font-size: 1.45rem;
+  }
+
+  .v2-mission-status .v2-panda-guide {
+    --panda-size: 88px;
+  }
+
+  .v2-panda-bubble {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
 }
 
 @media (min-width: 48rem) {

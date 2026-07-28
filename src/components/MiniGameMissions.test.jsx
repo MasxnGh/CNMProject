@@ -68,7 +68,7 @@ describe("MatchingMission", () => {
     expect(shuffleWithSeed(cards, "mission-1:0:left")).not.toEqual(shuffleWithSeed(cards, "mission-1:1:left"));
   });
 
-  it("renders independent shuffled columns and a line-free mobile matched tray", () => {
+  it("renders independent shuffled columns, connector lines on every viewport, and a mobile matched tray", () => {
     const missionView = {
       id: "matching-1",
       retrySeed: 2,
@@ -89,8 +89,23 @@ describe("MatchingMission", () => {
         "matching-1:2:right",
       ),
     );
-    expect(container.querySelector(".match-lines")).toHaveClass("hidden", "md:block");
+    expect(container.querySelector(".match-lines")).not.toHaveClass("hidden");
     expect(screen.getByLabelText("คู่ที่จับแล้ว")).toHaveClass("md:hidden");
+  });
+
+  it("numbers each matched pair on both sides so the connection stays readable on phones", () => {
+    const missionView = {
+      id: "matching-pairs",
+      leftCards: ["猫", "狗"],
+      rightCards: ["แมว", "หมา"],
+    };
+    const { container } = render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+
+    const badges = [...container.querySelectorAll(".match-pair-number")].map((node) => node.textContent);
+    expect(badges).toEqual(["1", "1"]);
   });
 
   it("never places a correct pair on the same row for real matching missions", () => {

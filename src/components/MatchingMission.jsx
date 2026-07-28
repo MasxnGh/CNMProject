@@ -86,6 +86,9 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
 
   const ready = Object.keys(matches).length === (missionView.leftCards ?? []).length;
   const usedAnswers = new Set(Object.values(matches));
+  const pairNumbers = new Map(Object.keys(matches).map((left, index) => [left, index + 1]));
+  const leftByAnswer = new Map(Object.entries(matches).map(([left, right]) => [right, left]));
+  const pairNumberFor = (answer) => pairNumbers.get(leftByAnswer.get(answer));
 
   useEffect(() => {
     const measureLines = () => {
@@ -101,8 +104,10 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
 
           const leftRect = leftNode.getBoundingClientRect();
           const rightRect = rightNode.getBoundingClientRect();
-          const gap = Math.max(44, rightRect.left - leftRect.right);
-          const portInset = Math.min(24, Math.max(12, gap * 0.18));
+          const gap = Math.max(12, rightRect.left - leftRect.right);
+          // Keep the drawn segment the dominant part of the gutter, so the
+          // connector still reads as a line on narrow phone boards.
+          const portInset = Math.min(20, Math.max(3, gap * 0.16));
           return {
             id: `${left}-${right}`,
             x1: leftRect.right - boardRect.left + portInset,
@@ -137,9 +142,9 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
   return (
     <div className="mission-shell">
       <div className="mission-prompt">
-        <div>
+        <div className="min-w-0">
           <span className="mission-label">{missionView.title}</span>
-          <strong>{missionView.instruction}</strong>
+          <small className="mission-directive">{missionView.instruction}</small>
         </div>
         {missionView.hasAudio ? (
           <motion.button className="sound-button" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => onPlayAudio?.()} disabled={disabled} aria-label="ฟังเสียงภาษาจีน">
@@ -149,7 +154,7 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
       </div>
 
       <div className={`matching-board ${feedback?.correct ? "correct" : feedback ? "wrong" : ""}`} ref={boardRef}>
-        <svg className="match-lines hidden md:block" width={lineCanvas.width} height={lineCanvas.height} viewBox={`0 0 ${Math.max(lineCanvas.width, 1)} ${Math.max(lineCanvas.height, 1)}`} aria-hidden="true">
+        <svg className="match-lines" width={lineCanvas.width} height={lineCanvas.height} viewBox={`0 0 ${Math.max(lineCanvas.width, 1)} ${Math.max(lineCanvas.height, 1)}`} aria-hidden="true">
           <defs>
             <linearGradient id={`matchLineGradient-${missionView.id}`} x1="0%" x2="100%" y1="0%" y2="0%">
               <stop offset="0%" stopColor="#b62924" />
@@ -186,6 +191,7 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
               onClick={() => !matches[left] && setActiveLeft(left)}
               disabled={disabled || Boolean(matches[left])}
             >
+              {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
               <span>{left}</span>
               <small>{matches[left] ?? "เลือกคำแปล"}</small>
             </motion.button>
@@ -204,6 +210,7 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
               onClick={() => chooseMatch(option)}
               disabled={disabled || !activeLeft || usedAnswers.has(option)}
             >
+              {usedAnswers.has(option) ? <b className="match-pair-number" aria-hidden="true">{pairNumberFor(option)}</b> : null}
               {option}
             </motion.button>
           ))}
