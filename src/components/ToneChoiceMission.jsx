@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Volume2 } from "lucide-react";
-import React from "react";
+import React, { useMemo } from "react";
+import { shuffleOptions } from "../utils/shuffle";
 
 const toneMarks = [
   "āēīōūǖĀĒĪŌŪǕ",
@@ -34,14 +35,19 @@ function ToneContour({ tone }) {
 
 export default function ToneChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio }) {
   const reduceMotion = useReducedMotion();
+  const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
+  const headline = missionView.chineseText ?? missionView.question;
+  const question = missionView.question === headline ? null : missionView.question;
 
   return (
     <div className="mission-shell">
       <div className="mission-prompt">
         <div className="min-w-0">
           <span className="mission-label">{missionView.title}</span>
-          <strong>{missionView.chineseText ?? missionView.question}</strong>
-          <small>{missionView.thaiMeaning || missionView.instruction}</small>
+          {question ? <p className="mission-question">{question}</p> : null}
+          <strong>{headline}</strong>
+          {missionView.thaiMeaning ? <small>{missionView.thaiMeaning}</small> : null}
+          {missionView.instruction ? <small className="mission-directive">{missionView.instruction}</small> : null}
         </div>
         {missionView.hasAudio ? (
           <motion.button type="button" className="sound-button" onClick={() => onPlayAudio?.()} disabled={disabled} aria-label="ฟังเสียงภาษาจีน" whileTap={reduceMotion ? undefined : { scale: 0.92 }}>
@@ -50,7 +56,7 @@ export default function ToneChoiceMission({ missionView, onSubmit, disabled, fee
         ) : null}
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        {(missionView.options ?? []).map((option) => {
+        {options.map((option) => {
           const isCorrectChoice = feedback && option === feedback.correctOption;
           const isWrongChoice = feedback && option === feedback.selectedValue && option !== feedback.correctOption;
           return (

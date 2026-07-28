@@ -20,7 +20,6 @@ export default function ShoppingMission({ missionView, onSubmit, disabled, feedb
         <div>
           <span className="mission-label">รายการภารกิจ</span>
           <strong>{missionView.question}</strong>
-          <small>{(missionView.targetList ?? []).join(" / ")}</small>
         </div>
         <div role="status" aria-label="จำนวนสินค้าในตะกร้า" className="flex shrink-0 items-center gap-2 font-black text-red-800">
           <ShoppingBasket size={24} />
@@ -44,7 +43,7 @@ export default function ShoppingMission({ missionView, onSubmit, disabled, feedb
               disabled={disabled}
             >
               <span>{item.emoji}</span>
-              <strong>{item.id}</strong>
+              <strong>{item.label ?? item.id}</strong>
             </motion.button>
           );
         })}

@@ -23,19 +23,19 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   await page.locator("article").filter({ hasText: "บททดสอบขั้นสูงและภารกิจสุดท้าย" }).getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 15" }).click();
-  await page.getByRole("button", { name: "Start Mission" }).click();
+  await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
   await page.getByRole("button", { name: "新年快乐", exact: true }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
 
   await page.getByRole("button", { name: "ü", exact: true }).click();
   await page.locator(".drop-zone").click();
-  await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByText("Audio choice", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
+  await expect(page.getByText("ฟังเสียงเลือกคำ", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "我要去北京。", exact: true }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByText("Hanzi trace", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
+  await expect(page.getByText("เขียนฮั่นจื้อ", { exact: true })).toBeVisible();
 
   const canvas = page.locator("canvas[aria-label='พื้นที่เขียนตัวอักษรจีน']");
   const box = await canvas.boundingBox();
@@ -49,15 +49,15 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
     await page.mouse.up();
   }
   await page.getByRole("button", { name: "ตรวจ" }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByText("Sentence order", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
+  await expect(page.getByText("เรียงประโยค", { exact: true })).toBeVisible();
 
   const wordBank = page.locator(".word-bank");
   for (const word of ["我", "喜欢", "中国菜"]) {
     await wordBank.getByRole("button", { name: word, exact: true }).click();
   }
   await page.getByRole("button", { name: "ตรวจ" }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
 
   await expect(page.getByText("ภารกิจสำเร็จ", { exact: true })).toBeVisible();
   const rewardTracks = await page.locator(".v2-reward-grid").evaluate((element) => window.getComputedStyle(element).gridTemplateColumns.split(" ").map(Number.parseFloat));

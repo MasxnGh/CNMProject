@@ -209,16 +209,27 @@ describe("ShoppingMission", () => {
     const { container } = render(<ShoppingMission missionView={{
       id: "shopping-1",
       question: "เลือกของตามรายการ",
-      targetList: ["苹果", "茶"],
-      items: [{ id: "苹果", emoji: "apple" }, { id: "茶", emoji: "tea" }],
+      items: [{ id: "苹果", label: "píngguǒ", emoji: "apple" }, { id: "茶", label: "chá", emoji: "tea" }],
     }} onSubmit={onSubmit} disabled={false} feedback={null} />);
 
     const basket = screen.getByRole("status", { name: "จำนวนสินค้าในตะกร้า" });
     expect(basket).toHaveTextContent("0");
-    fireEvent.click(screen.getByRole("button", { name: /苹果/ }));
+    fireEvent.click(screen.getByRole("button", { name: /píngguǒ/ }));
     expect(basket).toHaveTextContent("1");
     expect(container).not.toHaveTextContent("apple =");
     fireEvent.click(screen.getByRole("button", { name: "ตรวจรายการ" }));
     expect(onSubmit).toHaveBeenCalledWith(["苹果"]);
+  });
+
+  it("shows the pinyin reading on each item card instead of the Chinese answer text", () => {
+    const { container } = render(<ShoppingMission missionView={{
+      id: "shopping-2",
+      question: "เลือก 水 และ 茶 ให้แพนด้าเตรียมเสบียง",
+      items: [{ id: "水", label: "shuǐ", emoji: "💧" }, { id: "茶", label: "chá", emoji: "🍵" }],
+    }} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+
+    expect(screen.getByText("shuǐ")).toBeInTheDocument();
+    expect(screen.getByText("chá")).toBeInTheDocument();
+    expect(container.querySelector(".shop-item")).not.toHaveTextContent("水");
   });
 });

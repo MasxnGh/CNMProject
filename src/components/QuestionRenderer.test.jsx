@@ -386,6 +386,75 @@ describe("QuestionRenderer safe mission boundary", () => {
     expect(screen.getByText("0 เส้น, 0/5 จุด")).toBeInTheDocument();
   });
 
+  it("shuffles tone, audio and pinyin options so the authored order is not the played order", () => {
+    // Reverses the authored order: shuffleOptions sorts ascending on the drawn key.
+    vi.spyOn(Math, "random").mockImplementation((() => {
+      let next = 1;
+      return () => {
+        next -= 0.1;
+        return next;
+      };
+    })());
+
+    const renderedOrder = (mission, selector) => {
+      const { container, unmount } = renderMission(mission);
+      const order = [...container.querySelectorAll(selector)].map((node) => node.textContent);
+      unmount();
+      return order;
+    };
+
+    expect(renderedOrder(makeMission({
+      type: "toneChoice",
+      beforeAnswer: { chineseText: "马", options: ["mā", "má", "mǎ", "mà"] },
+      answer: { correctAnswer: "mǎ" },
+    }), ".answer-button span:first-child")).toEqual(["mà", "mǎ", "má", "mā"]);
+
+    expect(renderedOrder(makeMission({
+      type: "audioChoice",
+      beforeAnswer: { options: ["米饭", "水", "茶", "面条"] },
+      answer: { correctAnswer: "米饭" },
+    }), ".answer-button")).toEqual(["面条", "茶", "水", "米饭"]);
+
+    expect(renderedOrder(makeMission({
+      type: "pinyinDrag",
+      beforeAnswer: { chineseText: "猫", pinyinPattern: "m _ o", options: ["a", "e", "i", "u"] },
+      answer: { correctAnswer: "a" },
+    }), ".vowel-chip")).toEqual(["u", "i", "e", "a"]);
+  });
+
+  it("shows the mission instruction so the expected answer format stays explicit", () => {
+    const toneMission = makeMission({
+      type: "toneChoice",
+      beforeAnswer: {
+        instruction: "ดูตัวอักษรจีนและความหมาย แล้วเลือกพินอินที่มีเสียงวรรณยุกต์ถูกต้อง",
+        question: "老 อ่านว่าอะไร",
+        chineseText: "老",
+        thaiMeaning: "แก่ / อาวุโส",
+        options: ["lāo", "láo", "lǎo", "lào"],
+      },
+      answer: { correctAnswer: "lǎo" },
+    });
+    const { unmount } = renderMission(toneMission);
+
+    expect(screen.getByText("ดูตัวอักษรจีนและความหมาย แล้วเลือกพินอินที่มีเสียงวรรณยุกต์ถูกต้อง")).toBeInTheDocument();
+    expect(screen.getByText("老 อ่านว่าอะไร")).toBeInTheDocument();
+    unmount();
+
+    renderMission(makeMission({
+      type: "cultureQuiz",
+      beforeAnswer: {
+        instruction: "ไขปริศนาวัฒนธรรมจีนจากคำใบ้และสถานการณ์",
+        question: "เทศกาลตรุษจีน ภาษาจีนเรียกว่าอะไร",
+        chineseText: "ตรุษจีน",
+        options: ["春节", "中秋节"],
+      },
+      answer: { correctAnswer: "春节" },
+    }));
+
+    expect(screen.getByText("เทศกาลตรุษจีน ภาษาจีนเรียกว่าอะไร")).toBeInTheDocument();
+    expect(screen.getByText("ไขปริศนาวัฒนธรรมจีนจากคำใบ้และสถานการณ์")).toBeInTheDocument();
+  });
+
   it("does not emit candidates or audio events while disabled", () => {
     const mission = makeMission({
       type: "toneChoice",

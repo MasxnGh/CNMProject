@@ -152,6 +152,7 @@ const fillMission = (levelId, order, config) =>
     title: "ภารกิจเติมคำในช่องว่าง",
     instruction: "เลือกคำภาษาจีนที่เติมในช่องว่างแล้วทำให้ประโยคถูกต้อง",
     ...config,
+    question: undefined,
     beforeThaiMeaning: config.thaiMeaning,
     answerChinese: config.chineseText.replace(/_+/, config.correctAnswer),
     hint: "พิจารณาความหมายของประโยคและหน้าที่ของคำที่หายไป",
@@ -202,8 +203,7 @@ const shoppingMission = (levelId, order, config) =>
       title: "ภารกิจเลือกของตามรายการ",
       instruction: "แตะเลือกภาพสินค้าให้ตรงกับรายการภาษาจีน แล้วกดตรวจคำตอบ",
       question: config.question,
-      targetList: config.correctAnswer,
-      items: config.items.map((item) => ({ id: item.hanzi, emoji: item.emoji })),
+      items: config.items.map((item) => ({ id: item.hanzi, label: item.pinyin, emoji: item.emoji })),
     },
     answer: { correctAnswer: config.correctAnswer },
     afterAnswer: reveal({
@@ -370,7 +370,7 @@ const rawLevels = [
     badgeUnlock: [],
     questions: [
       pinyinDragMission(2, 1, {
-        question: "เติมเสียงที่หายไปให้เป็น nǐ hǎo",
+        question: "เติมเสียงที่หายไปของคำทักทาย",
         chineseText: "你",
         answerChinese: "你好",
         pinyin: "nǐ hǎo",
@@ -398,7 +398,7 @@ const rawLevels = [
       }),
       audioMission(2, 3, term("谢谢", "xièxie", "ขอบคุณ"), ["你好", "谢谢", "再见", "老师"]),
       pinyinDragMission(2, 4, {
-        question: "เติม final ให้เป็น zài ในคำว่า 再见",
+        question: "เติมเสียงท้ายของพยางค์แรกในคำว่า 再见",
         chineseText: "再见",
         pinyin: "zàijiàn",
         thaiMeaning: "ลาก่อน",
@@ -835,7 +835,7 @@ const rawLevels = [
     badgeUnlock: [],
     questions: [
       pinyinDragMission(9, 1, {
-        question: "เติมส่วนที่หายไปให้เป็นคำว่า māo",
+        question: "เติมส่วนที่หายไปของคำว่า 猫",
         chineseText: "猫",
         pinyin: "māo",
         thaiMeaning: "แมว",
@@ -997,7 +997,7 @@ const rawLevels = [
       }),
       audioMission(11, 4, term("黄色", "huángsè", "สีเหลือง"), ["红色", "黄色", "绿色", "苹果"]),
       pinyinDragMission(11, 5, {
-        question: "เติมสระพิเศษให้เป็น lǜsè",
+        question: "เติมสระพิเศษของคำว่า 绿色",
         chineseText: "绿色",
         pinyin: "lǜsè",
         thaiMeaning: "สีเขียว",
@@ -1151,7 +1151,7 @@ const rawLevels = [
     badgeUnlock: ["wall-runner"],
     questions: [
       pinyinDragMission(14, 1, {
-        question: "เติมส่วนที่หายไปให้เป็น māo",
+        question: "เติมส่วนที่หายไปของคำว่า 猫",
         chineseText: "猫",
         pinyin: "māo",
         thaiMeaning: "แมว",

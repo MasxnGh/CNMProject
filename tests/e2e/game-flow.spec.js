@@ -44,7 +44,7 @@ test("loads home, opens chapter map, and starts the first mission", async ({ pag
   const firstLevel = page.locator(".v2-level-island").filter({ hasText: "ด่าน 1" });
   await expect(firstLevel).toHaveCount(1);
   await firstLevel.click();
-  await expect(page.getByRole("button", { name: "Start Mission" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "เริ่มเล่นเลย" })).toBeVisible();
 });
 
 test("keeps locked chapters unavailable", async ({ page }) => {
@@ -65,7 +65,7 @@ test("shows the pinyin pattern without the full answer before input", async ({ p
   const secondChapter = page.locator("article").filter({ hasText: "ชีวิตประจำวันและวัฒนธรรมจีน" });
   await secondChapter.getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 9" }).click();
-  await page.getByRole("button", { name: "Start Mission" }).click();
+  await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
   await expect(page.locator(".pinyin-pattern")).toHaveText("m _ o");
   await expect(page.getByText("māo", { exact: true })).toHaveCount(0);

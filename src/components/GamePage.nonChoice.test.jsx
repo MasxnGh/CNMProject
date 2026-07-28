@@ -101,7 +101,7 @@ describe("GamePage non-choice keyboard integration", () => {
 
     expect(checkButton).toBeDisabled();
     expect(checkButton).toHaveFocus();
-    expect(screen.getByRole("button", { name: "Continue" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ไปต่อ" })).toBeInTheDocument();
 
     fireEvent.keyDown(window, { key: "Enter" });
 
