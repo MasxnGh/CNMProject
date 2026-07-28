@@ -4835,8 +4835,8 @@ button:disabled {
   border: calc(var(--panda-size) * 0.03) solid #201a1a;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 21% 63%, rgba(240, 138, 130, 0.5) 0 9%, transparent 10%),
-    radial-gradient(circle at 79% 63%, rgba(240, 138, 130, 0.5) 0 9%, transparent 10%),
+    radial-gradient(circle at 17% 68%, rgba(247, 145, 140, 0.62) 0 11%, transparent 13%),
+    radial-gradient(circle at 83% 68%, rgba(247, 145, 140, 0.62) 0 11%, transparent 13%),
     radial-gradient(circle at 50% 18%, #fffdf4 0 32%, transparent 62%),
     linear-gradient(180deg, #fff9e9, #ece0c8);
   box-shadow:
@@ -4877,49 +4877,54 @@ button:disabled {
 .v2-panda-ear.right { right: calc(var(--panda-size) * 0.026); }
 
 /* The element is the black patch; the eyeball and pupil sit inside it, which
-   is what makes it read as an eye instead of a hole. */
+   is what makes it read as an eye instead of a hole. Kept round and set low on
+   the face - a tall patch tilted in toward the nose reads as a furrowed brow,
+   which is what made the mascot look severe. */
 .v2-panda-eye {
-  top: calc(var(--panda-size) * 0.372);
-  width: calc(var(--panda-size) * 0.238);
-  height: calc(var(--panda-size) * 0.296);
-  border-radius: 54% 46% 48% 52% / 58% 56% 44% 42%;
-  background: radial-gradient(circle at 50% 22%, #2c2422, #17110f 78%);
+  top: calc(var(--panda-size) * 0.405);
+  width: calc(var(--panda-size) * 0.253);
+  height: calc(var(--panda-size) * 0.262);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 28%, #2f2624, #17110f 80%);
 }
 
 /* Eyeball. */
 .v2-panda-eye::before {
   position: absolute;
-  top: 26%;
-  left: 22%;
-  width: 56%;
-  height: 46%;
+  top: 17%;
+  left: 17%;
+  width: 66%;
+  height: 66%;
   border-radius: 50%;
   background: #fffdf6;
   content: "";
 }
 
-/* Pupil, with its catchlight baked into the gradient. */
+/* Pupil. Large relative to the eyeball, with two catchlights - a small pupil
+   floating in a lot of white is what makes cartoon eyes look glassy. */
 .v2-panda-eye::after {
   position: absolute;
-  top: 32%;
-  left: 30%;
-  width: 34%;
-  height: 32%;
+  top: 25%;
+  left: 26%;
+  width: 49%;
+  height: 49%;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 32% 26%, #ffffff 0 26%, transparent 27%),
+    radial-gradient(circle at 30% 24%, #ffffff 0 22%, transparent 23%),
+    radial-gradient(circle at 72% 74%, rgba(255, 255, 255, 0.55) 0 11%, transparent 12%),
     #14100f;
   content: "";
 }
 
-.v2-panda-eye.left { left: calc(var(--panda-size) * 0.245); transform: rotate(14deg); }
-.v2-panda-eye.right { right: calc(var(--panda-size) * 0.245); transform: rotate(-14deg) scaleX(-1); }
+/* Leaning the patches out rather than in keeps the expression open. */
+.v2-panda-eye.left { left: calc(var(--panda-size) * 0.222); transform: rotate(-7deg); }
+.v2-panda-eye.right { right: calc(var(--panda-size) * 0.222); transform: rotate(7deg) scaleX(-1); }
 
 .v2-panda-nose {
-  top: calc(var(--panda-size) * 0.612);
+  top: calc(var(--panda-size) * 0.665);
   left: 50%;
-  width: calc(var(--panda-size) * 0.152);
-  height: calc(var(--panda-size) * 0.108);
+  width: calc(var(--panda-size) * 0.116);
+  height: calc(var(--panda-size) * 0.085);
   border-radius: 46% 46% 54% 54% / 38% 38% 62% 62%;
   background:
     radial-gradient(ellipse 38% 30% at 33% 24%, rgba(255, 255, 255, 0.42), transparent 70%),
@@ -4927,21 +4932,27 @@ button:disabled {
   transform: translateX(-50%);
 }
 
+/* A wider, deeper curve than the old thin line, so the smile actually carries
+   the expression instead of the eyes doing all of it. */
 .v2-panda-mouth {
-  top: calc(var(--panda-size) * 0.743);
+  top: calc(var(--panda-size) * 0.738);
   left: 50%;
-  width: calc(var(--panda-size) * 0.237);
-  height: calc(var(--panda-size) * 0.092);
-  border-bottom: calc(var(--panda-size) * 0.026) solid #1f1717;
-  border-radius: 0 0 30px 30px;
+  width: calc(var(--panda-size) * 0.26);
+  height: calc(var(--panda-size) * 0.135);
+  border-bottom: calc(var(--panda-size) * 0.032) solid #1f1717;
+  border-left: calc(var(--panda-size) * 0.032) solid transparent;
+  border-right: calc(var(--panda-size) * 0.032) solid transparent;
+  border-radius: 0 0 50% 50%;
   transform: translateX(-50%);
 }
 
 .v2-panda.sad .v2-panda-mouth {
-  top: calc(var(--panda-size) * 0.783);
-  border-top: calc(var(--panda-size) * 0.026) solid #1f1717;
+  top: calc(var(--panda-size) * 0.79);
+  width: calc(var(--panda-size) * 0.15);
+  height: calc(var(--panda-size) * 0.08);
+  border-top: calc(var(--panda-size) * 0.028) solid #1f1717;
   border-bottom: 0;
-  border-radius: 30px 30px 0 0;
+  border-radius: 50% 50% 0 0;
 }
 
 /* An ellipse clipped to its upper strip, so the band follows the curve of the
