@@ -314,13 +314,13 @@ export default function GamePage({
                 </div>
                 <div className="v2-console-stat v2-mission-counter"><Target size={18} aria-hidden="true" /> ภารกิจ {state.index + 1}/{level.questions.length}</div>
                 <div className="v2-console-stat"><Star size={18} fill="currentColor" aria-hidden="true" /> คะแนน {state.score}</div>
-                <button className="v2-icon-button v2-console-pause" type="button" onClick={pause} disabled={paused || state.phase === "finished"} aria-label="หยุดชั่วคราว">
-                  <Pause size={20} />
-                </button>
               </section>
               <section className="v2-mission-actions" role="group" aria-label="Mission actions">
                 <button className="v2-button hint" type="button" onClick={useHint} disabled={state.hints <= 0 || state.showHint || disabled}>
                   <Lightbulb size={20} /> คำใบ้ {state.hints}/2
+                </button>
+                <button className="v2-icon-button v2-console-pause" type="button" onClick={pause} disabled={paused || state.phase === "finished"} aria-label="หยุดชั่วคราว">
+                  <Pause size={20} />
                 </button>
                 <button className="v2-icon-button v2-console-sound" type="button" onClick={onToggleSound} aria-label={soundOn ? "ปิดเสียง" : "เปิดเสียง"}>
                   {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
@@ -338,7 +338,7 @@ export default function GamePage({
             >
               <div className="v2-mission-progress">
                 <div>
-                  <span>Mission {state.index + 1}/{level.questions.length}</span>
+                  <span>ภารกิจ {state.index + 1}/{level.questions.length}</span>
                   <strong>{missionNames[mission.type] ?? mission.type}</strong>
                 </div>
                 <ProgressBar value={state.index + 1} max={level.questions.length} />
