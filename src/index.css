@@ -3471,8 +3471,14 @@ button:disabled {
   position: relative;
   z-index: 1;
   display: grid;
-  align-items: center;
+  align-items: start;
+  justify-items: center;
   min-width: 0;
+}
+
+/* The open stop rises above its neighbours and the route beam. */
+.v2-route-slot:has(.v2-level-stop.open) {
+  z-index: 3;
 }
 
 .v2-route-slot.slot-1,
@@ -3484,18 +3490,61 @@ button:disabled {
   transform: none;
 }
 
+/* A stop on the route: the node stays small so the path reads as a journey,
+   and the level's details unfold beneath it on tap. */
+.v2-level-stop {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
 .v2-level-island {
   position: relative;
   display: grid;
-  min-height: 230px;
-  overflow: hidden;
+  gap: 0.35rem;
+  justify-items: center;
+  width: 7rem;
   border: 1px solid rgba(255, 215, 107, 0.28);
-  border-radius: 28px;
+  border-radius: 26px;
   background: linear-gradient(180deg, rgba(15, 83, 94, 0.88), rgba(7, 30, 43, 0.92));
-  padding: 1rem;
+  padding: 0.85rem 0.6rem;
   color: var(--v2-ink);
-  text-align: left;
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  text-align: center;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.v2-level-sheet {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: min(100%, 17rem);
+  border: 1px solid rgba(255, 215, 107, 0.34);
+  border-radius: 20px;
+  background: rgba(9, 34, 47, 0.96);
+  padding: 0.85rem;
+  text-align: center;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.42);
+}
+
+.v2-level-sheet strong {
+  color: var(--v2-ink);
+  font-family: var(--dq-face-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.v2-level-sheet small {
+  color: var(--v2-muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.v2-level-sheet .v2-button {
+  width: 100%;
+  margin-top: 0.35rem;
 }
 
 .v2-level-island.completed {
@@ -3554,26 +3603,9 @@ button:disabled {
   font-weight: 1000;
 }
 
-.v2-level-island strong {
-  min-width: 0;
-  margin-top: 0.15rem;
-  font-size: 1.25rem;
-  font-weight: 1000;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.v2-level-island small {
-  margin-top: 0.45rem;
-  color: var(--v2-muted);
-  font-weight: 800;
-  line-height: 1.45;
-}
-
 .v2-level-stars {
   display: flex;
   gap: 0.16rem;
-  margin-top: 0.7rem;
 }
 
 .v2-level-stars .earned,
@@ -3585,18 +3617,6 @@ button:disabled {
 .v2-level-stars .empty,
 .v2-result-stars .empty {
   color: rgba(248, 240, 219, 0.24);
-}
-
-.v2-level-island em {
-  display: inline-flex;
-  width: fit-content;
-  margin-top: 0.7rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.35rem 0.6rem;
-  color: var(--v2-muted);
-  font-style: normal;
-  font-weight: 1000;
 }
 
 .v2-game-header {

@@ -19,6 +19,7 @@ async function openFirstMission(page) {
   await page.getByRole("button", { name: startAdventure }).click();
   await page.getByRole("button", { name: openMap }).first().click();
   await page.locator(".v2-level-island:not(:disabled)").first().click();
+  await page.getByRole("button", { name: /^เริ่ม$|^เล่นซ้ำ$/ }).first().click();
   await expect(page.locator(".v2-mission-arena")).toBeVisible();
 }
 
@@ -30,6 +31,7 @@ test("Game keeps mission controls reachable without sound-control collisions", a
   await page.getByRole("button", { name: startAdventure }).click();
   await page.locator("article").filter({ hasText: "เริ่มต้นผจญภัยในเมืองจีน" }).getByRole("button", { name: openMap }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 1" }).click();
+  await page.getByRole("button", { name: /^เริ่ม$|^เล่นซ้ำ$/ }).first().click();
   await expect(page.locator(".v2-mission-arena")).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
 

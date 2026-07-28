@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Route, Star } from "lucide-react";
 import { getLevelsBySet, stageSets } from "../data/levels";
@@ -16,6 +16,13 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel, onPlayCh
   const setStars = setLevels.reduce((total, level) => total + getLevelStars(progress, level.id), 0);
   const mapRef = useRef(null);
   const [route, setRoute] = useState({ width: 1, height: 1, points: "" });
+  /* One stop is open at a time, and the route opens on wherever the player
+     left off rather than making them hunt for it. */
+  const [openLevelId, setOpenLevelId] = useState(null);
+
+  useEffect(() => {
+    setOpenLevelId(setLevels.some((level) => level.id === currentLevelId) ? currentLevelId : null);
+  }, [setId, currentLevelId]);
 
   useLayoutEffect(() => {
     const map = mapRef.current;
@@ -23,7 +30,9 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel, onPlayCh
 
     const syncRoute = () => {
       const bounds = map.getBoundingClientRect();
-      const points = [...map.querySelectorAll(".v2-route-slot")]
+      /* Measured on the node rather than its slot: an open detail sheet makes
+         the slot much taller, which would drag the path away from the stops. */
+      const points = [...map.querySelectorAll(".v2-level-island")]
         .map((slot) => {
           const rect = slot.getBoundingClientRect();
           return `${Math.round(rect.left - bounds.left + rect.width / 2)},${Math.round(rect.top - bounds.top + rect.height / 2)}`;
@@ -92,9 +101,9 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel, onPlayCh
           <svg className="v2-route-beam" viewBox={`0 0 ${route.width} ${route.height}`} aria-hidden="true">
             <defs>
               <linearGradient id={`route-beam-${set?.id ?? setId}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="rgba(53, 208, 172, 0.42)" />
-                <stop offset="0.5" stopColor="rgba(255, 215, 107, 0.92)" />
-                <stop offset="1" stopColor="rgba(53, 208, 172, 0.42)" />
+                <stop offset="0" stopColor="rgba(53, 208, 172, 0.75)" />
+                <stop offset="0.5" stopColor="rgba(255, 215, 107, 0.95)" />
+                <stop offset="1" stopColor="rgba(53, 208, 172, 0.75)" />
               </linearGradient>
             </defs>
             <polyline points={route.points} stroke={`url(#route-beam-${set?.id ?? setId})`} />
@@ -108,6 +117,10 @@ export default function MapPage({ setId, progress, onBack, onPlayLevel, onPlayCh
                 current={currentLevelId === level.id}
                 stars={getLevelStars(progress, level.id)}
                 onPlay={onPlayLevel}
+                open={openLevelId === level.id}
+                /* Selecting, not toggling: one stop stays open, so there is
+                   always a way to start and no tap leaves the route blank. */
+                onOpen={setOpenLevelId}
               />
             </div>
           ))}

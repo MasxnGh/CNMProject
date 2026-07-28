@@ -23,6 +23,7 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   await page.locator("article").filter({ hasText: "บททดสอบขั้นสูงและภารกิจสุดท้าย" }).getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 15" }).click();
+  await page.getByRole("button", { name: /^เริ่ม$|^เล่นซ้ำ$/ }).click();
   await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
   await page.getByRole("button", { name: "新年快乐", exact: true }).click();

@@ -88,45 +88,47 @@ test("locked chapter gate remains readable", async ({ page }) => {
   await expect(lockedGate).toHaveCSS("filter", "none");
 });
 
-test("map card and route grow around long Thai content without clipping", async ({ page }) => {
+test("an open stop grows around long Thai content without clipping", async ({ page }) => {
   await seedResponsiveProgress(page);
   await openFirstMap(page);
 
-  const mapLayout = await page.locator(".v2-constellation-map").evaluate((map, longName) => {
-    const firstName = map.querySelector(".v2-level-island strong");
-    const card = firstName.closest(".v2-level-island");
+  // the route opens on the current stop, so a detail sheet is already showing
+  const sheet = page.locator(".v2-level-sheet").first();
+  await expect(sheet).toBeVisible();
+
+  const layout = await page.locator(".v2-constellation-map").evaluate((map, longName) => {
+    const title = map.querySelector(".v2-level-sheet strong");
+    const card = title.closest(".v2-level-sheet");
     const beforeMap = map.getBoundingClientRect();
     const beforeCard = card.getBoundingClientRect();
-    firstName.textContent = longName;
+    title.textContent = longName;
     const mapRect = map.getBoundingClientRect();
-    const cards = [...map.querySelectorAll(".v2-level-island")].map((card) => {
-      const rect = card.getBoundingClientRect();
+    const stops = [...map.querySelectorAll(".v2-level-stop")].map((stop) => {
+      const rect = stop.getBoundingClientRect();
       return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
     });
-    const name = firstName.getBoundingClientRect();
+    const name = title.getBoundingClientRect();
     return {
       map: { left: mapRect.left, right: mapRect.right, top: mapRect.top, bottom: mapRect.bottom },
-      cards,
+      stops,
       beforeMapHeight: beforeMap.height,
       afterMapHeight: mapRect.height,
       beforeCardHeight: beforeCard.height,
       afterCardHeight: card.getBoundingClientRect().height,
       cardClipped: card.scrollHeight > card.clientHeight + 1,
-      name: { width: name.width, clientWidth: firstName.clientWidth, scrollWidth: firstName.scrollWidth, height: name.height },
+      name: { clientWidth: title.clientWidth, scrollWidth: title.scrollWidth, height: name.height },
     };
   }, longThaiTitle.repeat(6));
 
-  mapLayout.cards.forEach((card) => {
-    expect(card.left).toBeGreaterThanOrEqual(mapLayout.map.left - 1);
-    expect(card.right).toBeLessThanOrEqual(mapLayout.map.right + 1);
-    expect(card.top).toBeGreaterThanOrEqual(mapLayout.map.top - 1);
-    expect(card.bottom).toBeLessThanOrEqual(mapLayout.map.bottom + 1);
+  layout.stops.forEach((stop) => {
+    expect(stop.left).toBeGreaterThanOrEqual(layout.map.left - 1);
+    expect(stop.right).toBeLessThanOrEqual(layout.map.right + 1);
   });
-  expect(mapLayout.name.scrollWidth).toBeLessThanOrEqual(mapLayout.name.clientWidth + 1);
-  expect(mapLayout.name.height).toBeGreaterThan(24);
-  expect(mapLayout.afterCardHeight).toBeGreaterThan(mapLayout.beforeCardHeight + 8);
-  expect(mapLayout.afterMapHeight).toBeGreaterThan(mapLayout.beforeMapHeight + 8);
-  expect(mapLayout.cardClipped).toBe(false);
+  expect(layout.name.scrollWidth).toBeLessThanOrEqual(layout.name.clientWidth + 1);
+  expect(layout.name.height).toBeGreaterThan(24);
+  expect(layout.afterCardHeight).toBeGreaterThan(layout.beforeCardHeight + 8);
+  expect(layout.afterMapHeight).toBeGreaterThan(layout.beforeMapHeight + 8);
+  expect(layout.cardClipped).toBe(false);
 });
 
 test("route beam points match rendered node centers", async ({ page }) => {
@@ -142,7 +144,7 @@ test("route beam points match rendered node centers", async ({ page }) => {
     const viewBox = svg.viewBox.baseVal;
     const svgRect = svg.getBoundingClientRect();
     const points = (polyline.getAttribute("points") ?? "").trim().split(/\s+/).map((pair) => pair.split(",").map(Number));
-    const nodeCenters = [...map.querySelectorAll(".v2-route-slot")].map((slot) => {
+    const nodeCenters = [...map.querySelectorAll(".v2-level-island")].map((slot) => {
       const rect = slot.getBoundingClientRect();
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     });
@@ -199,13 +201,15 @@ test("tablet and desktop maps use compact multi-column routes", async ({ page },
       return { left: Math.round(rect.left), height: rect.height };
     });
     const mapRect = map.getBoundingClientRect();
+    const stopHeights = [...map.querySelectorAll(".v2-level-stop")].map((stop) => stop.getBoundingClientRect().height);
     return {
       mapHeight: mapRect.height,
-      cardHeight: map.querySelector(".v2-level-island").getBoundingClientRect().height,
+      stackedHeight: stopHeights.reduce((total, height) => total + height, 0),
       columns: new Set(slots.map((slot) => slot.left)).size,
     };
   });
 
   expect(route.columns).toBe(fixture.viewport.width >= 1024 ? 5 : 2);
-  expect(route.mapHeight).toBeLessThan(route.cardHeight * 4);
+  // laid out across columns rather than stacked into one tall list
+  expect(route.mapHeight).toBeLessThan(route.stackedHeight);
 });

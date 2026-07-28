@@ -24,6 +24,7 @@ const openLevel = async (page, chapterText, levelText) => {
   const chapter = page.locator("article").filter({ hasText: chapterText });
   await chapter.getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: levelText }).click();
+  await page.getByRole("button", { name: /^เริ่ม$|^เล่นซ้ำ$/ }).click();
   await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 };
 
