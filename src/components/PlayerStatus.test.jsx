@@ -22,9 +22,9 @@ describe("PlayerStatus", () => {
   it("exposes compact player values as named definitions", () => {
     render(<PlayerStatus progress={progress} compact />);
 
-    expect(screen.getByRole("definition", { name: "Level" })).toHaveTextContent("Lv. 4");
-    expect(screen.getByRole("definition", { name: "Coins" })).toHaveTextContent("19");
-    expect(screen.getByRole("definition", { name: "Stars" })).toHaveTextContent("12");
-    expect(screen.getByRole("definition", { name: "Completed levels" })).toHaveTextContent("3/15");
+    expect(screen.getByRole("definition", { name: "ระดับ" })).toHaveTextContent("Lv. 4");
+    expect(screen.getByRole("definition", { name: "เหรียญ" })).toHaveTextContent("19");
+    expect(screen.getByRole("definition", { name: "ดาวสะสม" })).toHaveTextContent("12");
+    expect(screen.getByRole("definition", { name: "ด่านที่ผ่านแล้ว" })).toHaveTextContent("3/15");
   });
 });

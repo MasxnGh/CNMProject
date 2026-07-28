@@ -64,7 +64,7 @@ export default function HomePage({ progress, onStart, onLibrary, onBadges, onRes
               </motion.button>
               <motion.button className="v2-button glass" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onBadges}>
                 <Medal size={21} />
-                Badge
+                ตราสะสม
               </motion.button>
               <motion.button className="v2-button ghost" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onReset}>
                 <RotateCcw size={20} />

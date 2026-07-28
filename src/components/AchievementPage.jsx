@@ -30,15 +30,15 @@ export default function AchievementPage({ progress, onBack }) {
             <ArrowLeft size={23} />
           </motion.button>
           <div>
-            <h1>หอเกียรติยศดาวทอง</h1>
-            <p>Badge แต่ละอันคือเครื่องหมายจากการพิชิตภารกิจและสะสมดาวใน Dujeen Quest</p>
+            <h1>หอตราเกียรติยศ</h1>
+            <p>ตราแต่ละดวงได้มาจากการพิชิตภารกิจและสะสมดาวตลอดเส้นทาง</p>
           </div>
         </div>
         <PlayerStatus progress={progress} />
 
         <div className="v2-badge-summary">
           <strong>{progress.badges.length}/{badges.length}</strong>
-          <span>Badge ที่ได้รับแล้ว • ดาวรวม {progress.totalStars ?? 0}</span>
+          <span>ตราที่ได้รับแล้ว • ดาวรวม {progress.totalStars ?? 0}</span>
         </div>
 
         <div className="v2-badge-grid">
@@ -48,7 +48,7 @@ export default function AchievementPage({ progress, onBack }) {
             return (
               <motion.button
                 key={badge.id}
-                className={`v2-achievement-medal ${isEarned ? "earned" : "locked"}`}
+                className={`v2-achievement-medal dq-silk ${isEarned ? "earned" : "locked"}`}
                 initial={{ opacity: 0, y: 25, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: index * 0.04, type: "spring", stiffness: 150, damping: 18 }}

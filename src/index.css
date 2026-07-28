@@ -78,6 +78,9 @@ h2,
 .trace-guide,
 .word-chip,
 .order-zone span,
+.v2-crystal-head h3,
+.v2-player-avatar,
+.dq-seal,
 .v2-logo-mark span {
   font-family: var(--dq-face-hanzi);
 }
@@ -4196,25 +4199,26 @@ button:disabled {
 
 .v2-reward-side {
   display: grid;
-  place-items: center;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
   padding: 1.2rem;
 }
 
-.v2-reward-orb {
-  display: grid;
-  width: 190px;
-  height: 190px;
-  place-items: center;
-  border: 1px solid rgba(255, 215, 107, 0.45);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 215, 107, 0.95), rgba(214, 53, 44, 0.9) 58%, rgba(13, 50, 63, 0.88));
-  color: #321004;
-  box-shadow: 0 0 60px rgba(255, 215, 107, 0.34);
+/* The verdict is a chop pressed on the finished level, at the size a
+   real seal would be against a page. */
+.v2-result-seal {
+  width: clamp(6rem, 22vw, 8.5rem);
+  height: clamp(6rem, 22vw, 8.5rem);
+  border-radius: 18px;
+  font-size: clamp(3.2rem, 12vw, 4.6rem);
 }
 
-.v2-reward-orb span {
-  font-size: 1.15rem;
-  font-weight: 1000;
+.v2-result-verdict {
+  color: var(--v2-ink);
+  font-family: var(--dq-face-display);
+  font-size: 1.32rem;
+  font-weight: 700;
 }
 
 .v2-result-title {
@@ -4440,18 +4444,31 @@ button:disabled {
 }
 
 .v2-certificate {
+  position: relative;
   margin-top: 1.3rem;
-  border: 1px solid rgba(255, 215, 107, 0.3);
-  border-radius: 28px;
-  background:
-    linear-gradient(135deg, rgba(255, 215, 107, 0.16), rgba(53, 208, 172, 0.08)),
-    rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 107, 0.34);
+  border-radius: 20px;
+  background-color: rgba(20, 58, 60, 0.7);
+  background-image: var(--dq-weave);
   padding: 1.2rem;
+  /* Room for the chop so it never sits on the wording. */
+  padding-right: clamp(5rem, 18%, 7rem);
 }
 
-.v2-certificate span {
+.v2-certificate-seal {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: 2rem;
+}
+
+.v2-certificate-eyebrow {
   color: var(--v2-jade);
-  font-weight: 1000;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .v2-certificate strong {
@@ -4553,18 +4570,20 @@ button:disabled {
 
 .v2-knowledge-crystal,
 .v2-achievement-medal {
-  min-height: 250px;
-  border: 1px solid rgba(255, 215, 107, 0.2);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(53, 208, 172, 0.14), transparent 130px),
-    linear-gradient(180deg, rgba(14, 51, 64, 0.86), rgba(8, 23, 37, 0.82));
+  min-height: 230px;
+  border-radius: 20px;
   padding: 1rem;
   color: var(--v2-ink);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.v2-knowledge-crystal.closed,
+/* A sealed word is a placeholder, not a card. Keeping it short stops
+   seventy identical locks from burying the words actually collected. */
+.v2-knowledge-crystal.closed {
+  min-height: 0;
+  filter: saturate(0.3);
+  opacity: 0.55;
+}
+
 .v2-achievement-medal.locked {
   filter: saturate(0.35);
   opacity: 0.7;
@@ -4618,9 +4637,15 @@ button:disabled {
 
 .v2-locked-crystal {
   display: grid;
-  min-height: 210px;
+  gap: 0.3rem;
   place-items: center;
+  padding: 0.4rem 0;
   text-align: center;
+}
+
+.v2-locked-crystal svg {
+  width: 22px;
+  height: 22px;
 }
 
 .v2-locked-crystal svg {
@@ -5419,8 +5444,6 @@ button:disabled {
 }
 
 .v2-route-beam,
-.v2-map-star,
-.v2-reward-orb,
 .v2-crown-orb,
 .v2-level-island.current,
 .v2-level-island.perfect {
@@ -5442,6 +5465,12 @@ button:disabled {
 .v2-achievement-medal {
   content-visibility: auto;
   contain-intrinsic-size: 260px;
+}
+
+/* Sealed cards are far shorter than an open one, so they need their own
+   size hint or the skipped-render estimate makes the scrollbar jump. */
+.v2-knowledge-crystal.closed {
+  contain-intrinsic-size: 96px;
 }
 
 @keyframes v2-panda-bob {

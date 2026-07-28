@@ -19,15 +19,15 @@ export default function PlayerStatus({ progress, compact = false }) {
         <span className="v2-player-avatar" aria-hidden="true">猫</span>
         <dl className="v2-player-details">
           <div>
-            <dt className="sr-only" id={`${labelId}-level`}>Level</dt>
+            <dt className="sr-only" id={`${labelId}-level`}>ระดับ</dt>
             <dd aria-labelledby={`${labelId}-level`}>
               <strong>Lv. {progress.level}</strong>
-              <small>Dujeen Explorer</small>
+              <small>นักเดินทางคัมภีร์</small>
             </dd>
           </div>
         </dl>
       </div>
-      <div className="v2-xp-core" aria-label={`Experience points: ${progress.xp}`}>
+      <div className="v2-xp-core" aria-label={`ค่าประสบการณ์ ${progress.xp}`}>
         <div className="v2-xp-label">
           <Trophy size={15} />
           XP {progress.xp}
@@ -36,21 +36,21 @@ export default function PlayerStatus({ progress, compact = false }) {
       </div>
       <dl className="v2-hud-stats">
         <div className="v2-stat-orb">
-          <dt className="sr-only" id={`${labelId}-coins`}>Coins</dt>
+          <dt className="sr-only" id={`${labelId}-coins`}>เหรียญ</dt>
           <dd aria-labelledby={`${labelId}-coins`}>
             <CircleDollarSign size={18} aria-hidden="true" />
             <strong>{progress.coins}</strong>
           </dd>
         </div>
         <div className="v2-stat-orb gold">
-          <dt className="sr-only" id={`${labelId}-stars`}>Stars</dt>
+          <dt className="sr-only" id={`${labelId}-stars`}>ดาวสะสม</dt>
           <dd aria-labelledby={`${labelId}-stars`}>
             <Star size={18} fill="currentColor" aria-hidden="true" />
             <strong>{progress.totalStars ?? 0}</strong>
           </dd>
         </div>
         <div className="v2-stat-orb">
-          <dt className="sr-only" id={`${labelId}-completed`}>Completed levels</dt>
+          <dt className="sr-only" id={`${labelId}-completed`}>ด่านที่ผ่านแล้ว</dt>
           <dd aria-labelledby={`${labelId}-completed`}>
             <Sparkles size={18} aria-hidden="true" />
             <strong>{progress.completedLevels.length}/15</strong>
