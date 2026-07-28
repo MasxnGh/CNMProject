@@ -6,13 +6,13 @@ const missions = levels.flatMap((level) => level.questions);
 const missionById = (id) => missions.find((item) => item.id === id);
 
 const expectedMissionIdTypes = {
-  1: ["1-1:matching", "1-2:shopping", "1-3:audioChoice", "1-4:fillBlank", "1-5:cultureQuiz"],
+  1: ["1-1:matching", "1-2:shopping", "1-3:audioChoice", "1-4:fillBlank", "1-5:imageChoice"],
   2: ["2-1:pinyinDrag", "2-2:toneChoice", "2-3:audioChoice", "2-4:pinyinDrag", "2-5:toneChoice"],
-  3: ["3-1:sentenceOrder", "3-2:multipleChoice", "3-3:sentenceOrder", "3-4:fillBlank", "3-5:audioChoice"],
+  3: ["3-1:sentenceOrder", "3-2:dialogue", "3-3:sentenceOrder", "3-4:fillBlank", "3-5:audioChoice"],
   4: ["4-1:multipleChoice", "4-2:toneChoice", "4-3:fillBlank", "4-4:sentenceOrder", "4-5:audioChoice"],
   5: ["5-1:multipleChoice", "5-2:audioChoice", "5-3:matching", "5-4:fillBlank", "5-5:shopping"],
-  6: ["6-1:shopping", "6-2:multipleChoice", "6-3:fillBlank", "6-4:audioChoice", "6-5:matching"],
-  7: ["7-1:cultureQuiz", "7-2:cultureQuiz", "7-3:matching", "7-4:audioChoice", "7-5:shopping"],
+  6: ["6-1:shopping", "6-2:dialogue", "6-3:fillBlank", "6-4:audioChoice", "6-5:matching"],
+  7: ["7-1:cultureQuiz", "7-2:imageChoice", "7-3:matching", "7-4:audioChoice", "7-5:shopping"],
   8: ["8-1:matching", "8-2:fillBlank", "8-3:shopping", "8-4:audioChoice", "8-5:pinyinDrag"],
   9: ["9-1:pinyinDrag", "9-2:audioChoice", "9-3:matching", "9-4:toneChoice", "9-5:shopping"],
   10: ["10-1:fillBlank", "10-2:sentenceOrder", "10-3:matching", "10-4:audioChoice", "10-5:toneChoice"],
@@ -203,7 +203,7 @@ describe("mission data contract", () => {
         mission.beforeAnswer.options,
         mission.beforeAnswer.leftCards,
         mission.beforeAnswer.rightCards,
-        mission.beforeAnswer.items?.map((item) => item.id),
+        mission.beforeAnswer.items?.map((item) => item.id ?? item.label),
       ].filter(Array.isArray);
 
       groups.forEach((group) => expectUnique(group.map((item) => JSON.stringify(item).toLocaleLowerCase())));

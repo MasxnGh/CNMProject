@@ -163,6 +163,12 @@ const validateByType = (mission, errors) => {
     if (visible) addIssue(errors, "AUDIO_TRANSCRIPT_VISIBLE", "Audio transcript or target is visible before the answer.", visible.field);
   }
 
+  if (type === "imageChoice" || type === "dialogue") {
+    const values = promptValues(beforeAnswerValues(mission, ["title", "instruction", "question", "chineseText", "pinyin", "hint"]));
+    const visible = findVisibleAnswer(values, answer);
+    if (visible) addIssue(errors, "PROMPT_ANSWER_VISIBLE", "The answer is visible in the prompt before submission.", visible.field);
+  }
+
   if (type === "sentenceOrder") {
     const { value: correctSequence } = answerField(mission, "correctSequence");
     const { value: correctAnswer } = answerField(mission, "correctAnswer");

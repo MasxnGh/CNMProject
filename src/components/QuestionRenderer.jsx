@@ -2,9 +2,11 @@ import React from "react";
 import AudioChoiceMission from "./AudioChoiceMission";
 import ChoiceMission from "./ChoiceMission";
 import CultureQuizMission from "./CultureQuizMission";
+import DialogueMission from "./DialogueMission";
 import FillBlankMission from "./FillBlankMission";
 import FinalBossMission from "./FinalBossMission";
 import HanziTraceMission from "./HanziTraceMission";
+import ImageChoiceMission from "./ImageChoiceMission";
 import MatchingMission from "./MatchingMission";
 import PinyinDragMission from "./PinyinDragMission";
 import SentenceOrderMission from "./SentenceOrderMission";
@@ -55,6 +57,12 @@ export default function QuestionRenderer({ missionView, onSubmit, disabled, feed
       break;
     case "cultureQuiz":
       missionContent = <CultureQuizMission {...props} />;
+      break;
+    case "imageChoice":
+      missionContent = <ImageChoiceMission {...props} />;
+      break;
+    case "dialogue":
+      missionContent = <DialogueMission {...props} />;
       break;
     case "shopping":
       missionContent = <ShoppingMission {...props} />;

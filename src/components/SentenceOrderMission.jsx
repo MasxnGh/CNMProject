@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { Check, Eraser, Undo2 } from "lucide-react";
+import { Check, Eraser, Undo2, Volume2 } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { shuffleOptions } from "../utils/shuffle";
 
-export default function SentenceOrderMission({ missionView, onSubmit, disabled, feedback }) {
+export default function SentenceOrderMission({ missionView, onSubmit, disabled, feedback, onPlayAudio }) {
   const wordBank = useMemo(() => shuffleOptions(missionView.options).map((word, index) => ({ id: `${word}-${index}`, word })), [missionView.id, missionView.options]);
   const [selectedWords, setSelectedWords] = useState([]);
   const selectedIds = new Set(selectedWords.map((item) => item.id));
@@ -18,9 +18,23 @@ export default function SentenceOrderMission({ missionView, onSubmit, disabled, 
       <div className="mission-prompt">
         <div className="min-w-0">
           <span className="mission-label">{missionView.title}</span>
-          <strong>{missionView.thaiMeaning}</strong>
+          {/* Listen-first withholds the translation, so the audio button becomes
+              the only way in and the prompt says so. */}
+          <strong>{missionView.listenFirst ? "คุณได้ยินว่าอะไร?" : missionView.thaiMeaning}</strong>
           <small>{missionView.instruction}</small>
         </div>
+        {missionView.listenFirst && missionView.hasAudio ? (
+          <motion.button
+            type="button"
+            className="sound-button"
+            whileTap={{ scale: 0.92 }}
+            onClick={() => onPlayAudio?.()}
+            disabled={disabled}
+            aria-label="ฟังเสียงประโยค"
+          >
+            <Volume2 size={25} />
+          </motion.button>
+        ) : null}
       </div>
       <div className={`order-zone ${feedback?.correct ? "correct" : feedback ? "wrong" : ""}`}>
         {selectedWords.length ? selectedWords.map((item, index) => {

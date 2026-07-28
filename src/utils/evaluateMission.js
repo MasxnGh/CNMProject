@@ -10,6 +10,8 @@ const scalarTypes = new Set([
   "audioChoice",
   "culture",
   "cultureQuiz",
+  "imageChoice",
+  "dialogue",
   "finalBoss",
 ]);
 

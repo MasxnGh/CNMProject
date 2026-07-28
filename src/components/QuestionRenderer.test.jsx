@@ -492,6 +492,75 @@ describe("QuestionRenderer safe mission boundary", () => {
     expect(screen.getByText("ไขปริศนาวัฒนธรรมจีนจากคำใบ้และสถานการณ์")).toBeInTheDocument();
   });
 
+  it("picks a picture by its meaning and never shows the Chinese on the cards", () => {
+    const mission = makeMission({
+      type: "imageChoice",
+      beforeAnswer: {
+        chineseText: "饺子",
+        promptPinyin: "jiǎozi",
+        options: ["เกี๊ยว", "ชา"],
+        items: [{ emoji: "🥟", label: "เกี๊ยว" }, { emoji: "🍵", label: "ชา" }],
+      },
+      answer: { correctAnswer: "เกี๊ยว" },
+      audioText: "饺子",
+    });
+    const { container, onSubmit } = renderMission(mission);
+
+    // the cards carry meaning and a picture, never the characters
+    const cards = [...container.querySelectorAll(".image-card")];
+    expect(cards).toHaveLength(2);
+    cards.forEach((card) => expect(card.textContent).not.toContain("饺子"));
+    expect(screen.getByText("jiǎozi")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /เกี๊ยว/ }));
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
+    expect(onSubmit).toHaveBeenCalledWith("เกี๊ยว");
+  });
+
+  it("frames a dialogue reply in the player's own bubble", () => {
+    const mission = makeMission({
+      type: "dialogue",
+      beforeAnswer: {
+        speakerLine: "你好！",
+        speakerPinyin: "Nǐ hǎo!",
+        speakerThai: "สวัสดี",
+        question: "ตอบกลับอย่างไร",
+        options: ["你叫什么名字？", "再见！"],
+      },
+      answer: { correctAnswer: "你叫什么名字？" },
+      audioText: "你好",
+    });
+    const { container, onSubmit } = renderMission(mission);
+
+    // the reply bubble is empty until a line is chosen
+    expect(container.querySelector(".dialogue-bubble.reply")).not.toHaveClass("filled");
+    fireEvent.click(screen.getByRole("button", { name: "你叫什么名字？" }));
+    expect(container.querySelector(".dialogue-bubble.reply")).toHaveClass("filled");
+
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
+    expect(onSubmit).toHaveBeenCalledWith("你叫什么名字？");
+  });
+
+  it("withholds the translation on a listen-first sentence", () => {
+    const mission = makeMission({
+      type: "sentenceOrder",
+      beforeAnswer: {
+        listenFirst: true,
+        question: "ฟังเสียงแล้วเรียงประโยคที่ได้ยิน",
+        options: ["我", "喝", "茶"],
+      },
+      answer: { correctSequence: ["我", "喝", "茶"], correctAnswer: ["我", "喝", "茶"] },
+      afterAnswer: { thaiMeaning: "ฉันดื่มชา" },
+      audioText: "我喝茶。",
+    });
+    const { container, onPlayAudio } = renderMission(mission);
+
+    expect(container).not.toHaveTextContent("ฉันดื่มชา");
+    expect(screen.getByText("คุณได้ยินว่าอะไร?")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "ฟังเสียงประโยค" }));
+    expect(onPlayAudio).toHaveBeenCalled();
+  });
+
   it("does not emit candidates or audio events while disabled", () => {
     const mission = makeMission({
       type: "toneChoice",

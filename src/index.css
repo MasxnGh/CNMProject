@@ -4051,6 +4051,119 @@ button:disabled {
   box-shadow: 0 0 0 3px rgba(53, 208, 172, 0.22), 0 8px 0 rgba(0, 0, 0, 0.22);
 }
 
+/* ── Picture choice ─────────────────────────────────────────────────
+   The card shows a picture and its Thai meaning but never the Chinese, so
+   the answer comes from understanding the word rather than from spotting
+   the same characters twice. */
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.image-card {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  border: 3px solid rgba(255, 215, 107, 0.2);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(20, 62, 76, 0.94), rgba(8, 30, 44, 0.94));
+  padding: 0.9rem 0.6rem;
+  color: var(--v2-ink);
+}
+
+.image-card-art {
+  font-size: clamp(2.4rem, 12vw, 3.4rem);
+  line-height: 1;
+}
+
+.image-card b {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.image-card.picked {
+  border-color: var(--v2-jade);
+  box-shadow: 0 0 0 3px rgba(53, 208, 172, 0.22);
+}
+
+.image-card.correct {
+  border-color: var(--v2-jade);
+  background: linear-gradient(180deg, rgba(53, 208, 172, 0.3), rgba(7, 58, 54, 0.86));
+}
+
+.image-card.wrong {
+  border-color: var(--dq-seal);
+  background: linear-gradient(180deg, rgba(214, 53, 44, 0.28), rgba(96, 18, 25, 0.86));
+}
+
+/* ── Conversation ───────────────────────────────────────────────────
+   Two bubbles, so choosing a reply reads as speaking rather than as
+   answering a quiz. */
+
+.dialogue-thread {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.dialogue-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.55rem;
+}
+
+.dialogue-line.me {
+  flex-direction: row-reverse;
+}
+
+.dialogue-bubble {
+  max-width: 82%;
+  border: 1px solid rgba(255, 215, 107, 0.22);
+  border-radius: 18px 18px 18px 4px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.7rem 0.85rem;
+}
+
+.dialogue-bubble strong {
+  display: block;
+  color: var(--v2-ink);
+  font-family: var(--dq-face-hanzi);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.dialogue-bubble small {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--v2-muted);
+  font-weight: 600;
+}
+
+.dialogue-bubble.reply {
+  min-height: 3.4rem;
+  min-width: 45%;
+  border-radius: 18px 18px 4px 18px;
+  border-style: dashed;
+  background: rgba(53, 208, 172, 0.1);
+  display: grid;
+  align-items: center;
+}
+
+.dialogue-bubble.reply.filled {
+  border-style: solid;
+  border-color: rgba(53, 208, 172, 0.55);
+  background: rgba(53, 208, 172, 0.18);
+}
+
+.dialogue-bubble.reply em {
+  color: var(--v2-muted);
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
 /* ── Examiner's verdict ─────────────────────────────────────────────
    The imperial examiner marks the scroll: a jade seal for a pass, a
    vermilion seal plus a list of corrections for a fail. It rises from the

@@ -170,6 +170,59 @@ const fillMission = (levelId, order, config) =>
     hint: "พิจารณาความหมายของประโยคและหน้าที่ของคำที่หายไป",
   });
 
+/* Pick the picture. The prompt is the word; the pictures carry only a Thai
+   label, so the choice is made on meaning rather than on matching glyphs. */
+const imageChoiceMission = (levelId, order, config) =>
+  mission({
+    levelId,
+    order,
+    type: "imageChoice",
+    beforeAnswer: {
+      title: "ภารกิจเลือกภาพให้ตรงคำ",
+      instruction: "ฟังเสียง อ่านคำ แล้วเลือกภาพที่ตรงความหมาย",
+      chineseText: config.chineseText,
+      promptPinyin: config.pinyin,
+      options: config.items.map((item) => item.label),
+      items: config.items,
+    },
+    answer: { correctAnswer: config.correctAnswer },
+    afterAnswer: reveal({
+      chineseText: config.chineseText,
+      pinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+      explanation: config.explanation,
+    }),
+    hint: "นึกถึงความหมายของคำ แล้วมองหาภาพที่สื่อถึงสิ่งนั้น",
+    audioText: config.chineseText,
+  });
+
+/* Reply in a conversation. The other speaker's line is shown, and the reply is
+   chosen in the player's own voice. */
+const dialogueMission = (levelId, order, config) =>
+  mission({
+    levelId,
+    order,
+    type: "dialogue",
+    beforeAnswer: {
+      title: "ภารกิจบทสนทนา",
+      instruction: "อ่านสิ่งที่อีกฝ่ายพูด แล้วเลือกคำตอบกลับให้เหมาะสม",
+      speakerLine: config.speakerLine,
+      speakerPinyin: config.speakerPinyin,
+      speakerThai: config.speakerThai,
+      question: config.question,
+      options: config.options,
+    },
+    answer: { correctAnswer: config.correctAnswer },
+    afterAnswer: reveal({
+      chineseText: config.correctAnswer,
+      pinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+      explanation: config.explanation,
+    }),
+    hint: config.hint,
+    audioText: config.speakerLine,
+  });
+
 const cultureMission = (levelId, order, config) =>
   choiceMission(levelId, order, {
     type: "cultureQuiz",
@@ -249,7 +302,11 @@ const sentenceMission = (levelId, order, config) =>
       title: "ภารกิจเรียงประโยค",
       instruction: "แตะคำศัพท์เพื่อเรียงลงช่องคำตอบให้เป็นประโยคภาษาจีนที่ถูกต้อง",
       question: config.question,
-      thaiMeaning: config.thaiMeaning,
+      /* Listen-first hides the translation so the sentence has to come from
+         the audio. Kept on the sentenceOrder type so it keeps that type's
+         grading, diagnosis and sequence-leak check. */
+      thaiMeaning: config.listenFirst ? undefined : config.thaiMeaning,
+      listenFirst: config.listenFirst ?? undefined,
       options: config.options,
       optionPinyin: Object.fromEntries(
         config.options.filter((word) => wordPinyin[word]).map((word) => [word, wordPinyin[word]]),
@@ -365,16 +422,18 @@ const rawLevels = [
         explanation: "面条 แปลว่า บะหมี่",
         audioText: "面条",
       }),
-      cultureMission(1, 5, {
-        question: "อาหารข้อใดคือ 饺子 ที่มักพบในมื้อฉลองของจีน",
+      imageChoiceMission(1, 5, {
         chineseText: "饺子",
         pinyin: "jiǎozi",
         thaiMeaning: "เกี๊ยว",
-        options: ["เกี๊ยว", "ชา", "ข้าวสวย", "น้ำ"],
         correctAnswer: "เกี๊ยว",
-        hint: "รูปร่างคล้ายถุงเงินเล็ก ๆ",
+        items: [
+          { emoji: "🥟", label: "เกี๊ยว" },
+          { emoji: "🍵", label: "ชา" },
+          { emoji: "🍚", label: "ข้าวสวย" },
+          { emoji: "💧", label: "น้ำ" },
+        ],
         explanation: "饺子 คือเกี๊ยว เป็นอาหารมงคลที่นิยมกินในเทศกาล",
-        audioText: "饺子",
       }),
     ],
   }),
@@ -480,17 +539,17 @@ const rawLevels = [
         hint: "เริ่มด้วย 你 = คุณ",
         explanation: "你好 เป็นคำทักทายพื้นฐาน",
       }),
-      choiceMission(3, 2, {
-        title: "ภารกิจเลือกบทสนทนา",
-        question: "ถ้าต้องการถามชื่ออีกฝ่าย ควรพูดว่าอะไร",
-        chineseText: "สถานการณ์: ถามชื่อ",
-        pinyin: "Nǐ jiào shénme míngzi?",
-        thaiMeaning: "คุณชื่ออะไร",
+      dialogueMission(3, 2, {
+        speakerLine: "你好！",
+        speakerPinyin: "Nǐ hǎo!",
+        speakerThai: "สวัสดี",
+        question: "อยากรู้ว่าอีกฝ่ายชื่ออะไร ควรตอบกลับว่าอย่างไร",
         options: ["你叫什么名字？", "再见！", "谢谢！", "我要这个。"],
         correctAnswer: "你叫什么名字？",
+        pinyin: "Nǐ jiào shénme míngzi?",
+        thaiMeaning: "คุณชื่ออะไร",
         hint: "มองหาคำว่า 名字 = ชื่อ",
         explanation: "你叫什么名字？ แปลว่า คุณชื่ออะไร",
-        audioText: "你叫什么名字",
       }),
       sentenceMission(3, 3, {
         question: "เรียงประโยคว่า ฉันชื่อเสี่ยวหมิง",
@@ -570,7 +629,8 @@ const rawLevels = [
         audioText: "明天见",
       }),
       sentenceMission(4, 4, {
-        question: "เรียงประโยคว่า วันนี้ฉันดื่มชา",
+        question: "ฟังเสียงแล้วเรียงประโยคที่ได้ยิน",
+        listenFirst: true,
         chineseText: "今天我喝茶。",
         pinyin: "Jīntiān wǒ hē chá.",
         thaiMeaning: "วันนี้ฉันดื่มชา",
@@ -678,17 +738,17 @@ const rawLevels = [
         hint: "米饭 คือ ข้าว",
         explanation: "คำที่ต้องเลือกคือ 菜单 และ 米饭",
       }),
-      choiceMission(6, 2, {
-        title: "ภารกิจเลือกบทสนทนา",
-        question: "ถ้าต้องการถามราคา ควรถามว่าอะไร",
-        chineseText: "สถานการณ์: ถามราคา",
-        pinyin: "Duōshǎo qián?",
-        thaiMeaning: "ราคาเท่าไหร่",
+      dialogueMission(6, 2, {
+        speakerLine: "请给我菜单。",
+        speakerPinyin: "Qǐng gěi wǒ càidān.",
+        speakerThai: "ขอเมนูให้ฉัน",
+        question: "เลือกเมนูได้แล้ว อยากถามราคา ควรพูดว่าอย่างไร",
         options: ["多少钱？", "再见！", "你好！", "明天见。"],
         correctAnswer: "多少钱？",
+        pinyin: "Duōshǎo qián?",
+        thaiMeaning: "ราคาเท่าไหร่",
         hint: "钱 แปลว่า เงิน",
         explanation: "多少钱？ แปลว่า ราคาเท่าไหร่",
-        audioText: "多少钱",
       }),
       fillMission(6, 3, {
         question: "我要____。= ฉันเอาอันนี้",
@@ -740,16 +800,18 @@ const rawLevels = [
         explanation: "春节 คือ ตรุษจีน",
         audioText: "春节",
       }),
-      cultureMission(7, 2, {
-        question: "红包 หมายถึงอะไร",
+      imageChoiceMission(7, 2, {
         chineseText: "红包",
         pinyin: "hóngbāo",
         thaiMeaning: "อั่งเปา",
-        options: ["อั่งเปา", "โคมไฟ", "รถไฟ", "หนังสือ"],
         correctAnswer: "อั่งเปา",
-        hint: "红 แปลว่า สีแดง",
+        items: [
+          { emoji: "🧧", label: "อั่งเปา" },
+          { emoji: "🏮", label: "โคมไฟ" },
+          { emoji: "🚄", label: "รถไฟ" },
+          { emoji: "📘", label: "หนังสือ" },
+        ],
         explanation: "红包 คือ ซองแดงอั่งเปา",
-        audioText: "红包",
       }),
       matchingMission(7, 3, [
         term("春节", "Chūnjié", "ตรุษจีน"),
@@ -1136,7 +1198,8 @@ const rawLevels = [
         audioText: "喜欢",
       }),
       sentenceMission(13, 3, {
-        question: "เรียงประโยคว่า เขาไปโรงเรียน",
+        question: "ฟังเสียงแล้วเรียงประโยคที่ได้ยิน",
+        listenFirst: true,
         chineseText: "他去学校。",
         pinyin: "Tā qù xuéxiào.",
         thaiMeaning: "เขาไปโรงเรียน",
