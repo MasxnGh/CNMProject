@@ -200,9 +200,13 @@ export default function GamePage({
 
   const useHint = useCallback(() => dispatch({ type: "USE_HINT" }), []);
 
-  const playAudio = useCallback((callbacks = {}) => {
-    if (state.phase !== "playing" || !mission?.audioText) return;
-    return speakChinese(mission.audioText, {
+  /* `text` lets a mission speak one of its own words (matching reads each card)
+     while everything else keeps falling back to the mission's audioText. */
+  const playAudio = useCallback((options = {}) => {
+    const { text, ...callbacks } = options;
+    const phrase = text ?? mission?.audioText;
+    if (state.phase !== "playing" || !phrase) return;
+    return speakChinese(phrase, {
       ...callbacks,
       onUnsupported: setSpeechMessage,
     });

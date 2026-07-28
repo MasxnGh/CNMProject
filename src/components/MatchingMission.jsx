@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Volume2 } from "lucide-react";
+import { Check, Eraser, Undo2, Volume2 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const seedNumber = (seed) => {
@@ -160,7 +160,23 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
     setActiveLeft(null);
   };
 
+  /* Keys keep insertion order, and re-pairing moves a key to the end, so the
+     last key is always the most recent pairing. */
+  const undoLast = () => {
+    if (disabled) return;
+    const keys = Object.keys(matches);
+    if (!keys.length) return;
+    releaseAnswer(([key]) => key !== keys[keys.length - 1]);
+  };
+
+  const clearAll = () => {
+    if (disabled) return;
+    setMatches({});
+    setActiveLeft(null);
+  };
+
   const submit = () => onSubmit(matches);
+  const pairCount = Object.keys(matches).length;
 
   return (
     <div className="mission-shell">
@@ -207,26 +223,40 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
           {leftOptions.map((left) => {
             const verdict = verdictFor(left);
             return (
-              <motion.button
+              <div
                 key={left}
+                className="match-item-shell"
                 ref={(node) => {
                   if (node) leftRefs.current[left] = node;
                 }}
-                className={`match-item ${activeLeft === left ? "active" : ""} ${matches[left] ? "matched" : ""} ${verdict ? `pair-${verdict.status}` : ""}`}
-                whileHover={reduceMotion ? undefined : { x: 4 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                onClick={() => pickLeft(left)}
-                disabled={disabled}
-                aria-pressed={Boolean(matches[left]) || activeLeft === left}
-                title={matches[left] ? `แตะเพื่อยกเลิกคู่ ${left} - ${matches[left]}` : undefined}
               >
-                {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
-                <span>{left}</span>
-                <small>{matches[left] ?? "เลือกคำแปล"}</small>
-                {verdict && verdict.status !== "correct" ? (
-                  <b className="pair-expected">ควรเป็น {verdict.expected}</b>
-                ) : null}
-              </motion.button>
+                <motion.button
+                  type="button"
+                  className={`match-item ${activeLeft === left ? "active" : ""} ${matches[left] ? "matched" : ""} ${verdict ? `pair-${verdict.status}` : ""}`}
+                  whileHover={reduceMotion ? undefined : { x: 4 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                  onClick={() => pickLeft(left)}
+                  disabled={disabled}
+                  aria-pressed={Boolean(matches[left]) || activeLeft === left}
+                  title={matches[left] ? `แตะเพื่อยกเลิกคู่ ${left} - ${matches[left]}` : undefined}
+                >
+                  {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
+                  <span>{left}</span>
+                  <small>{matches[left] ?? "รอจับคู่"}</small>
+                  {verdict && verdict.status !== "correct" ? (
+                    <b className="pair-expected">ควรเป็น {verdict.expected}</b>
+                  ) : null}
+                </motion.button>
+                <button
+                  type="button"
+                  className="match-say"
+                  onClick={() => onPlayAudio?.({ text: left })}
+                  disabled={disabled}
+                  aria-label={`ฟังเสียงคำว่า ${left}`}
+                >
+                  <Volume2 size={19} aria-hidden="true" />
+                </button>
+              </div>
             );
           })}
         </div>
@@ -259,10 +289,20 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
         </div>
       </div>
 
-      <motion.button className="game-button primary w-full" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={submit} disabled={disabled || !ready}>
-        <Check size={19} />
-        ตรวจคำตอบ
-      </motion.button>
+      <div className="match-controls">
+        <motion.button type="button" className="game-button secondary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={undoLast} disabled={disabled || pairCount === 0}>
+          <Undo2 size={19} />
+          ย้อนกลับ
+        </motion.button>
+        <motion.button type="button" className="game-button secondary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={clearAll} disabled={disabled || pairCount === 0}>
+          <Eraser size={19} />
+          ล้าง
+        </motion.button>
+        <motion.button type="button" className="game-button primary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={submit} disabled={disabled || !ready}>
+          <Check size={19} />
+          ตรวจคำตอบ
+        </motion.button>
+      </div>
     </div>
   );
 }

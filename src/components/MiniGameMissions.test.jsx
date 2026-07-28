@@ -78,8 +78,8 @@ describe("MatchingMission", () => {
     const { container } = render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
     const columns = container.querySelectorAll(".match-column");
 
-    expect([...columns[0].querySelectorAll("button")].map((button) => button.textContent)).toEqual(
-      shuffleWithSeed(missionView.leftCards, "matching-1:2:left").map((left) => `${left}เลือกคำแปล`),
+    expect([...columns[0].querySelectorAll(".match-item")].map((button) => button.textContent)).toEqual(
+      shuffleWithSeed(missionView.leftCards, "matching-1:2:left").map((left) => `${left}รอจับคู่`),
     );
     expect([...columns[1].querySelectorAll("button")].map((button) => button.textContent)).toEqual(
       orderRightAvoidingAlignedPairs(
@@ -91,6 +91,52 @@ describe("MatchingMission", () => {
     );
     expect(container.querySelector(".match-lines")).not.toHaveClass("hidden");
     expect(screen.getByLabelText("คู่ที่จับแล้ว")).toHaveClass("md:hidden");
+  });
+
+  it("gives every Chinese word its own speaker instead of one button for the first word", () => {
+    const onPlayAudio = vi.fn();
+    const missionView = {
+      id: "matching-audio",
+      leftCards: ["猫", "狗", "茶"],
+      rightCards: ["แมว", "หมา", "ชา"],
+    };
+    render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} onPlayAudio={onPlayAudio} />);
+
+    missionView.leftCards.forEach((word) => {
+      fireEvent.click(screen.getByRole("button", { name: `ฟังเสียงคำว่า ${word}` }));
+      expect(onPlayAudio).toHaveBeenCalledWith({ text: word });
+    });
+    expect(onPlayAudio).toHaveBeenCalledTimes(3);
+  });
+
+  it("undoes only the most recent pair and can clear the board", () => {
+    const missionView = {
+      id: "matching-controls",
+      leftCards: ["猫", "狗"],
+      rightCards: ["แมว", "หมา"],
+    };
+    const { container } = render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+    const pairCount = () => container.querySelectorAll(".match-pair-number").length;
+    const undo = screen.getByRole("button", { name: /ย้อนกลับ/ });
+    const clear = screen.getByRole("button", { name: /ล้าง/ });
+
+    expect(undo).toBeDisabled();
+    expect(clear).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+    fireEvent.click(screen.getByRole("button", { name: /^狗/ }));
+    fireEvent.click(screen.getByRole("button", { name: "หมา" }));
+    expect(pairCount()).toBe(4);
+
+    // only the second pairing goes
+    fireEvent.click(undo);
+    expect(pairCount()).toBe(2);
+    expect(screen.getByRole("button", { name: /^猫/ })).toHaveClass("matched");
+
+    fireEvent.click(clear);
+    expect(pairCount()).toBe(0);
+    expect(screen.getByRole("button", { name: /ย้อนกลับ/ })).toBeDisabled();
   });
 
   it("lets a committed pair be taken back from either side", () => {
