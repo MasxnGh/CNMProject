@@ -299,7 +299,7 @@ describe("SentenceOrderMission", () => {
     expect(screen.getByText("ฉันชอบชา")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "我" }));
     fireEvent.click(screen.getByRole("button", { name: "喜欢" }));
-    fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+    fireEvent.click(screen.getByRole("button", { name: "ย้อนกลับ" }));
     fireEvent.click(screen.getByRole("button", { name: "喜欢" }));
     fireEvent.click(screen.getByRole("button", { name: "茶" }));
     fireEvent.click(screen.getByRole("button", { name: "ตรวจ" }));

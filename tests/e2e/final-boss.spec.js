@@ -56,7 +56,8 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
 
   const wordBank = page.locator(".word-bank");
   for (const word of ["我", "喜欢", "中国菜"]) {
-    await wordBank.getByRole("button", { name: word, exact: true }).click();
+    // tiles read as "<pinyin><hanzi>", so anchor on the characters at the end
+    await wordBank.getByRole("button", { name: new RegExp(`${word}$`) }).click();
   }
   await page.getByRole("button", { name: "ตรวจ" }).click();
   await page.getByRole("button", { name: "ไปต่อ" }).click();

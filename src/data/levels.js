@@ -39,6 +39,8 @@ const knowledgeFromTerms = (levelId, terms) =>
     example: item.example,
   }));
 
+const hasHanzi = (value) => typeof value === "string" && /[㐀-鿿]/.test(value);
+
 const reveal = ({ chineseText, pinyin, thaiMeaning, explanation }) => ({
   chineseText,
   pinyin,
@@ -70,6 +72,14 @@ const choiceMission = (levelId, order, config) =>
       instruction: config.instruction ?? "อ่านโจทย์แล้วเลือกคำตอบที่ถูกต้อง",
       question: config.question,
       chineseText: config.chineseText,
+      /* Reading aid over the prompt. Withheld wherever the reading is itself
+         the answer - tone missions - or where the full sentence pinyin would
+         spell out the missing word - fill-in-the-blank. Also withheld when the
+         prompt is Thai scene-setting rather than Chinese, since there the
+         reading belongs to an answer option instead of to the prompt. */
+      promptPinyin: config.showPromptPinyin === false || !hasHanzi(config.chineseText)
+        ? undefined
+        : config.pinyin,
       thaiMeaning: config.beforeThaiMeaning,
       options: config.options,
     },
@@ -120,6 +130,7 @@ const toneMission = (levelId, order, config) =>
     title: "ภารกิจเลือกวรรณยุกต์พินอิน",
     instruction: "ดูตัวอักษรจีนและความหมาย แล้วเลือกพินอินที่มีเสียงวรรณยุกต์ถูกต้อง",
     ...config,
+    showPromptPinyin: false,
     answerChinese: config.chineseText,
     beforeThaiMeaning: config.thaiMeaning,
     hint: "สังเกตทิศทางการขึ้นลงของระดับเสียงเมื่อออกเสียงคำนี้",
@@ -152,6 +163,7 @@ const fillMission = (levelId, order, config) =>
     title: "ภารกิจเติมคำในช่องว่าง",
     instruction: "เลือกคำภาษาจีนที่เติมในช่องว่างแล้วทำให้ประโยคถูกต้อง",
     ...config,
+    showPromptPinyin: false,
     question: undefined,
     beforeThaiMeaning: config.thaiMeaning,
     answerChinese: config.chineseText.replace(/_+/, config.correctAnswer),
@@ -176,6 +188,7 @@ const matchingMission = (levelId, order, terms, count = 5) => {
       title: "ภารกิจจับคู่ฮั่นจื้อ",
       instruction: "เลือกคำจีนทางซ้าย แล้วเลือกคำแปลไทยทางขวาเพื่อโยงคู่ให้ครบ แตะคู่ที่โยงแล้วเพื่อยกเลิก",
       leftCards: pairs.map((pair) => pair.left),
+      leftPinyin: Object.fromEntries(pairs.map((pair) => [pair.left, pair.pinyin])),
       rightCards: pairs.map((pair) => pair.right),
     },
     answer: {
@@ -217,6 +230,16 @@ const shoppingMission = (levelId, order, config) =>
     mechanics: { selection: "multiple" },
   });
 
+/* Readings for the sentence-builder tiles. The answer there is the word order,
+   so showing how each tile sounds costs nothing and is how the tiles read in
+   a textbook. */
+const wordPinyin = {
+  你: "nǐ", 好: "hǎo", 我: "wǒ", 叫: "jiào", 小明: "Xiǎomíng",
+  今天: "jīntiān", 喝: "hē", 茶: "chá", 爱: "ài", 妈妈: "māma",
+  是: "shì", 学生: "xuéshēng", 他: "tā", 去: "qù", 学校: "xuéxiào",
+  这: "zhè", 的: "de", 书: "shū", 喜欢: "xǐhuān", 中国菜: "Zhōngguó cài",
+};
+
 const sentenceMission = (levelId, order, config) =>
   mission({
     levelId,
@@ -228,6 +251,9 @@ const sentenceMission = (levelId, order, config) =>
       question: config.question,
       thaiMeaning: config.thaiMeaning,
       options: config.options,
+      optionPinyin: Object.fromEntries(
+        config.options.filter((word) => wordPinyin[word]).map((word) => [word, wordPinyin[word]]),
+      ),
     },
     answer: {
       correctSequence: config.correctSequence,
@@ -253,6 +279,7 @@ const traceMission = (levelId, order, config) =>
       instruction: "ลากนิ้วหรือเมาส์เขียนตามตัวอักษรจาง ๆ แล้วกดตรวจคำตอบ",
       question: config.question,
       chineseText: config.characterToTrace,
+      promptPinyin: config.pinyin,
       thaiMeaning: config.thaiMeaning,
       characterToTrace: config.characterToTrace,
     },

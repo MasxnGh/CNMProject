@@ -345,6 +345,23 @@ describe("leak-safe mission type data", () => {
     expect(missionById("15-4").mechanics.mode).toBe("challenge");
   });
 
+  test("only offers a prompt reading where it cannot give the answer away", () => {
+    missions.forEach((mission) => {
+      const reading = mission.beforeAnswer.promptPinyin;
+      if (!reading) return;
+
+      // a reading is only ever attached to Chinese prompt text
+      expect(mission.beforeAnswer.chineseText).toMatch(/[㐀-鿿]/);
+      // and never where the reading is the thing being asked for
+      expect(["toneChoice", "fillBlank", "pinyinDrag"]).not.toContain(mission.type);
+      // nor where it would spell out one of the options
+      const answer = mission.answer.correctAnswer;
+      if (typeof answer === "string") {
+        expect(reading).not.toBe(answer);
+      }
+    });
+  });
+
   test("does not expose the final boss greeting pinyin before answer", () => {
     const mission = missionById("15-1");
     expect(JSON.stringify({ beforeAnswer: mission.beforeAnswer, hint: mission.hint })).not.toContain("xīnnián kuàilè");

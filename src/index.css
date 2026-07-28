@@ -3878,22 +3878,22 @@ button:disabled {
 
 /* Three labelled buttons do not fit one phone row without wrapping, so the
    check spans its own row until there is width for a single line of three. */
-.match-controls {
+.mission-controls {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.7rem;
 }
 
-.match-controls .primary {
+.mission-controls .primary {
   grid-column: 1 / -1;
 }
 
 @media (min-width: 30rem) {
-  .match-controls {
+  .mission-controls {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .match-controls .primary {
+  .mission-controls .primary {
     grid-column: auto;
   }
 }
@@ -4004,6 +4004,43 @@ button:disabled {
 .v2-feedback.wrong,
 .v2-hint-panel.warning {
   border-color: rgba(255, 92, 100, 0.5);
+}
+
+/* ── Readings ────────────────────────────────────────────────────────
+   Pinyin sits directly above the characters it belongs to, the way a
+   textbook prints it, rather than being withheld until after the answer. */
+
+.prompt-pinyin,
+.card-pinyin {
+  display: block;
+  color: var(--v2-jade);
+  font-family: var(--dq-face-ui);
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.v2-mission-arena .mission-prompt .prompt-pinyin {
+  margin-bottom: 0.1rem;
+}
+
+.v2-mission-arena .match-item .card-pinyin {
+  font-size: 0.72rem;
+}
+
+/* A tile carrying a reading stacks it over the characters rather than setting
+   the two side by side. */
+.word-chip:has(.card-pinyin) {
+  align-items: center;
+  flex-direction: column;
+  gap: 0.05rem;
+  line-height: 1.15;
+}
+
+.word-chip .card-pinyin {
+  font-size: 0.68rem;
 }
 
 /* A picked-but-not-yet-checked answer. Distinct from correct/wrong, which
@@ -4244,6 +4281,36 @@ button:disabled {
   0% { transform: translateY(0) scale(1); }
   45% { transform: translateY(-7px) scale(1.012); }
   100% { transform: translateY(0) scale(1); }
+}
+
+/* The graded answer gets a single pop, so the eye lands on it before the
+   sheet arrives. */
+.v2-mission-arena .answer-button.correct,
+.v2-mission-arena .match-answer.selected.pair-correct {
+  animation: answer-pop 0.44s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.v2-mission-arena .answer-button.wrong {
+  animation: answer-nudge 0.36s ease-in-out;
+}
+
+@keyframes answer-pop {
+  0% { transform: scale(1); }
+  38% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes answer-nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  60% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-mission-arena .answer-button.correct,
+  .v2-mission-arena .answer-button.wrong {
+    animation: none;
+  }
 }
 
 @keyframes verdict-shake {

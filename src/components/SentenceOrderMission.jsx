@@ -44,14 +44,17 @@ export default function SentenceOrderMission({ missionView, onSubmit, disabled, 
             onClick={() => !selectedIds.has(item.id) && setSelectedWords((current) => [...current, item])}
             disabled={disabled || selectedIds.has(item.id)}
           >
+            {missionView.optionPinyin?.[item.word]
+              ? <i className="card-pinyin">{missionView.optionPinyin[item.word]}</i>
+              : null}
             {item.word}
           </motion.button>
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="mission-controls">
         <motion.button className="game-button secondary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={() => setSelectedWords((current) => current.slice(0, -1))} disabled={disabled || selectedWords.length === 0}>
           <Undo2 size={19} />
-          Undo
+          ย้อนกลับ
         </motion.button>
         <motion.button className="game-button secondary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={() => setSelectedWords([])} disabled={disabled}>
           <Eraser size={19} />

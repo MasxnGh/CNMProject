@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Check, Headphones, Volume2 } from "lucide-react";
 import React, { useMemo } from "react";
 import { shuffleOptions } from "../utils/shuffle";
-import useAnswerDraft from "./useAnswerDraft";
+import useAnswerDraft, { containsHanzi } from "./useAnswerDraft";
 
 export default function ChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio, audioOnly = false, boss = false }) {
   const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
@@ -17,6 +17,11 @@ export default function ChoiceMission({ missionView, onSubmit, disabled, feedbac
         <div className="min-w-0">
           <span className="mission-label">{missionView.title}</span>
           {question ? <p className="mission-question">{question}</p> : null}
+          {/* Several prompts hold Thai scene-setting rather than Chinese, and a
+              reading above those would be nonsense. */}
+          {missionView.promptPinyin && containsHanzi(headline)
+            ? <span className="prompt-pinyin">{missionView.promptPinyin}</span>
+            : null}
           <strong>{headline}</strong>
           {!audioOnly && missionView.thaiMeaning ? <small>{missionView.thaiMeaning}</small> : null}
           {directive ? <small className="mission-directive">{directive}</small> : null}

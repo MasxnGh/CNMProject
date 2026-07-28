@@ -56,7 +56,7 @@ describe("HanziTraceMission", () => {
     expect(canvas.setPointerCapture).toHaveBeenCalledWith(1);
     expect(canvas.releasePointerCapture).toHaveBeenCalledWith(2);
     expect(screen.getByText(/2 เส้น/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+    fireEvent.click(screen.getByRole("button", { name: "ย้อนกลับ" }));
     expect(screen.getByText(/1 เส้น/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "ล้าง" }));
     expect(screen.getByText(/0 เส้น/)).toBeInTheDocument();

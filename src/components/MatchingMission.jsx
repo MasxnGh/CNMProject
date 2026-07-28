@@ -241,6 +241,9 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
                   title={matches[left] ? `แตะเพื่อยกเลิกคู่ ${left} - ${matches[left]}` : undefined}
                 >
                   {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
+                  {missionView.leftPinyin?.[left]
+                    ? <i className="card-pinyin">{missionView.leftPinyin[left]}</i>
+                    : null}
                   <span>{left}</span>
                   <small>{matches[left] ?? "รอจับคู่"}</small>
                   {verdict && verdict.status !== "correct" ? (
@@ -289,7 +292,7 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
         </div>
       </div>
 
-      <div className="match-controls">
+      <div className="mission-controls">
         <motion.button type="button" className="game-button secondary" whileHover={{ y: -2 }} whileTap={{ y: 2 }} onClick={undoLast} disabled={disabled || pairCount === 0}>
           <Undo2 size={19} />
           ย้อนกลับ

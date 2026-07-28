@@ -131,6 +131,7 @@ export default function HanziTraceMission({ missionView, onSubmit, disabled, fee
         />
       </div>
       <div className="trace-meta" aria-live="polite">
+        {missionView.promptPinyin ? <i className="card-pinyin">{missionView.promptPinyin}</i> : null}
         <strong>{missionView.characterToTrace}</strong>
         <span>{missionView.thaiMeaning}</span>
         <small>{strokes.length} เส้น, {pointCount}/{minStrokePoints} จุด</small>
@@ -138,7 +139,7 @@ export default function HanziTraceMission({ missionView, onSubmit, disabled, fee
       <div className={`grid gap-3 ${mode === "challenge" ? "grid-cols-2 sm:grid-cols-4" : "sm:grid-cols-3"}`}>
         <motion.button type="button" className="game-button secondary" whileTap={reduceMotion ? undefined : { y: 2 }} onClick={undo} disabled={disabled || strokes.length === 0}>
           <Undo2 size={19} />
-          Undo
+          ย้อนกลับ
         </motion.button>
         <motion.button type="button" className="game-button secondary" whileTap={reduceMotion ? undefined : { y: 2 }} onClick={clear} disabled={disabled || strokes.length === 0}>
           <Eraser size={19} />
