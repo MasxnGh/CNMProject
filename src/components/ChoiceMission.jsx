@@ -1,23 +1,23 @@
 import { motion } from "framer-motion";
 import { Headphones, Volume2 } from "lucide-react";
 import React, { useMemo } from "react";
-
-const shuffle = (items) =>
-  [...items]
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
+import { shuffleOptions } from "../utils/shuffle";
 
 export default function ChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio, audioOnly = false, boss = false }) {
-  const options = useMemo(() => shuffle(missionView.options ?? []), [missionView.id, missionView.options]);
+  const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
+  const headline = audioOnly ? "ฟังเสียงจากแผ่นหยก" : missionView.chineseText ?? missionView.question;
+  const question = audioOnly || missionView.question === headline ? null : missionView.question;
+  const directive = audioOnly ? "กดฟังเสียงแล้วเลือกคำที่ได้ยิน" : missionView.instruction;
 
   return (
     <div className={`mission-shell ${boss ? "boss-mission" : ""}`}>
       <div className="mission-prompt">
         <div className="min-w-0">
           <span className="mission-label">{missionView.title}</span>
-          <strong>{audioOnly ? "ฟังเสียงจากแผ่นหยก" : missionView.chineseText ?? missionView.question}</strong>
-          <small>{audioOnly ? "กดฟังเสียงแล้วเลือกคำที่ได้ยิน" : missionView.thaiMeaning || missionView.instruction}</small>
+          {question ? <p className="mission-question">{question}</p> : null}
+          <strong>{headline}</strong>
+          {!audioOnly && missionView.thaiMeaning ? <small>{missionView.thaiMeaning}</small> : null}
+          {directive ? <small className="mission-directive">{directive}</small> : null}
         </div>
         {missionView.hasAudio && (
           <motion.button className="sound-button" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => onPlayAudio?.()} disabled={disabled} aria-label="ฟังเสียงภาษาจีน">

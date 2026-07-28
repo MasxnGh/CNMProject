@@ -15,12 +15,15 @@ export default function KnowledgeLibrary({ progress, onBack }) {
 
   const visibleItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return allItems.filter((item) => {
+    const matches = allItems.filter((item) => {
       const categoryMatch = activeCategory === "ทั้งหมด" || item.category === activeCategory;
       const text = `${item.hanzi} ${item.pinyin} ${item.thai} ${item.example ?? ""} ${item.levelTitle}`.toLowerCase();
       return categoryMatch && (!normalizedQuery || text.includes(normalizedQuery));
     });
-  }, [activeCategory, query]);
+    // Words you have actually collected lead; sealed ones trail behind, so the
+    // page opens on the collection rather than on dozens of locks.
+    return [...matches].sort((a, b) => Number(unlocked.has(b.id)) - Number(unlocked.has(a.id)));
+  }, [activeCategory, query, unlocked]);
 
   return (
     <motion.section className="scene dq-scene v2-scene v2-library-scene" initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -35 }}>
@@ -31,8 +34,8 @@ export default function KnowledgeLibrary({ progress, onBack }) {
             <ArrowLeft size={23} />
           </motion.button>
           <div>
-            <h1>คลังความรู้ดวงดาว</h1>
-            <p>การ์ดคำศัพท์ที่ปลดล็อกจากภารกิจ จะกลายเป็นผลึกความรู้ในสมุดนักผจญภัย</p>
+            <h1>สมุดคำศัพท์นักเดินทาง</h1>
+            <p>คำศัพท์ทุกคำที่เก็บได้ระหว่างเดินทาง จะถูกจดไว้ที่นี่พร้อมเสียงอ่าน</p>
           </div>
         </div>
         <PlayerStatus progress={progress} />
@@ -40,7 +43,7 @@ export default function KnowledgeLibrary({ progress, onBack }) {
         <div className="v2-library-command">
           <div className="v2-library-counter">
             <strong>{progress.unlockedKnowledge.length}/{allItems.length}</strong>
-            <span>ผลึกความรู้ที่เปิดแล้ว</span>
+            <span>คำศัพท์ที่เก็บได้</span>
           </div>
           <label className="v2-search-box">
             <Search size={18} />
@@ -62,11 +65,13 @@ export default function KnowledgeLibrary({ progress, onBack }) {
             return (
               <motion.article
                 key={item.id}
-                className={`v2-knowledge-crystal ${isUnlocked ? "open" : "closed"}`}
+                className={`v2-knowledge-crystal dq-silk ${isUnlocked ? "open" : "closed"}`}
                 initial={{ opacity: 0, y: 22, rotateX: -8 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: index * 0.012, type: "spring", stiffness: 150, damping: 18 }}
+                /* Cap the stagger: with 76 cards an uncapped delay left the
+                   tail of the grid invisible for a full second. */
+                transition={{ delay: Math.min(index, 22) * 0.012, type: "spring", stiffness: 150, damping: 18 }}
                 whileHover={isUnlocked ? { y: -6, rotateY: 2 } : {}}
               >
                 {isUnlocked ? (
@@ -87,7 +92,7 @@ export default function KnowledgeLibrary({ progress, onBack }) {
                 ) : (
                   <div className="v2-locked-crystal">
                     <Lock size={36} />
-                    <strong>ยังเป็นผลึกปิดผนึก</strong>
+                    <strong>ยังปิดผนึกอยู่</strong>
                     <span>ผ่านด่าน {item.levelId} เพื่อเปิดการ์ดนี้</span>
                   </div>
                 )}

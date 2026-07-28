@@ -1,15 +1,10 @@
 import { motion } from "framer-motion";
 import { Check, Eraser, Undo2 } from "lucide-react";
 import React, { useMemo, useState } from "react";
-
-const shuffle = (items) =>
-  [...items]
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
+import { shuffleOptions } from "../utils/shuffle";
 
 export default function SentenceOrderMission({ missionView, onSubmit, disabled, feedback }) {
-  const wordBank = useMemo(() => shuffle(missionView.options ?? []).map((word, index) => ({ id: `${word}-${index}`, word })), [missionView.id, missionView.options]);
+  const wordBank = useMemo(() => shuffleOptions(missionView.options).map((word, index) => ({ id: `${word}-${index}`, word })), [missionView.id, missionView.options]);
   const [selectedWords, setSelectedWords] = useState([]);
   const selectedIds = new Set(selectedWords.map((item) => item.id));
   const ready = selectedWords.length === wordBank.length;
@@ -28,7 +23,16 @@ export default function SentenceOrderMission({ missionView, onSubmit, disabled, 
         </div>
       </div>
       <div className={`order-zone ${feedback?.correct ? "correct" : feedback ? "wrong" : ""}`}>
-        {selectedWords.length ? selectedWords.map((item) => <span key={item.id}>{item.word}</span>) : <em>แตะคำด้านล่างเพื่อเรียงประโยค</em>}
+        {selectedWords.length ? selectedWords.map((item, index) => {
+          const verdict = feedback?.parts?.[index];
+          const marked = verdict && !feedback.correct ? verdict.status : null;
+          return (
+            <span key={item.id} className={marked ? `slot-${marked}` : undefined}>
+              {item.word}
+              {marked === "wrong" ? <b className="slot-expected">ควรเป็น {verdict.expected}</b> : null}
+            </span>
+          );
+        }) : <em>แตะคำด้านล่างเพื่อเรียงประโยค</em>}
       </div>
       <div className="word-bank">
         {wordBank.map((item) => (

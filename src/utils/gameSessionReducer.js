@@ -36,7 +36,9 @@ export const gameSessionReducer = (state, action) => {
           correct: isCorrect,
           selectedValue: action.candidate,
           correctOption: action.correctOption,
-          text: isCorrect ? "Mission complete!" : "Not quite. Review the answer and continue.",
+          parts: action.parts ?? [],
+          notes: action.notes ?? [],
+          text: isCorrect ? "ถูกต้อง! ผ่านภารกิจนี้แล้ว" : "ยังไม่ถูก ดูจุดที่ต้องแก้ด้านล่าง",
         },
       };
     }

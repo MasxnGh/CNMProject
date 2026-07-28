@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Heart, Lightbulb, Map, Pause, Shield, Star, Target } from "lucide-react";
+import { ArrowLeft, Heart, Lightbulb, Map, Pause, Shield, Star, Target, Volume2, VolumeX } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { evaluateMission } from "../utils/evaluateMission";
+import { diagnoseMission } from "../utils/diagnoseMission";
 import { createGameSession, gameSessionReducer } from "../utils/gameSessionReducer";
 import { getMissionView } from "../utils/missionViewModel";
 import {
@@ -13,6 +13,7 @@ import {
 } from "../utils/speech";
 import soundManager from "../utils/soundManager";
 import MissionIntro from "./MissionIntro";
+import MissionVerdict from "./MissionVerdict";
 import PandaGuide from "./PandaGuide";
 import PauseOverlay from "./PauseOverlay";
 import PlayerStatus from "./PlayerStatus";
@@ -20,23 +21,23 @@ import ProgressBar from "./ProgressBar";
 import QuestionRenderer from "./QuestionRenderer";
 
 const missionNames = {
-  multiple: "Multiple choice",
-  multipleChoice: "Multiple choice",
-  pinyin: "Pinyin",
-  pinyinDrag: "Pinyin builder",
-  toneChoice: "Tone choice",
-  hanziTrace: "Hanzi trace",
-  matching: "Matching",
-  audio: "Audio choice",
-  audioChoice: "Audio choice",
-  sentenceOrder: "Sentence order",
-  "sentence-order": "Sentence order",
-  fillBlank: "Fill in the blank",
-  "fill-blank": "Fill in the blank",
-  culture: "Culture quiz",
-  cultureQuiz: "Culture quiz",
-  shopping: "Shopping",
-  finalBoss: "Final Boss",
+  multiple: "ตัวเลือกหลายข้อ",
+  multipleChoice: "ตัวเลือกหลายข้อ",
+  pinyin: "พินอิน",
+  pinyinDrag: "ประกอบพินอิน",
+  toneChoice: "เลือกวรรณยุกต์",
+  hanziTrace: "เขียนฮั่นจื้อ",
+  matching: "จับคู่คำศัพท์",
+  audio: "ฟังเสียงเลือกคำ",
+  audioChoice: "ฟังเสียงเลือกคำ",
+  sentenceOrder: "เรียงประโยค",
+  "sentence-order": "เรียงประโยค",
+  fillBlank: "เติมคำในช่องว่าง",
+  "fill-blank": "เติมคำในช่องว่าง",
+  culture: "ปริศนาวัฒนธรรม",
+  cultureQuiz: "ปริศนาวัฒนธรรม",
+  shopping: "เลือกซื้อของ",
+  finalBoss: "บอสด่านสุดท้าย",
 };
 
 const isEditable = (element) =>
@@ -183,7 +184,7 @@ export default function GamePage({
 
   const submitCandidate = useCallback((candidate) => {
     if (state.phase !== "playing" || !mission) return;
-    const isCorrect = evaluateMission(mission, candidate);
+    const { correct: isCorrect, parts, notes } = diagnoseMission(mission, candidate);
     if (isCorrect && mission.type === "finalBoss") soundManager.play("bossHit");
     else if (isCorrect) playCorrectSound();
     else playWrongSound();
@@ -192,6 +193,8 @@ export default function GamePage({
       candidate,
       correctOption: mission.answer.correctSequence ?? mission.answer.correctAnswer,
       isCorrect,
+      parts,
+      notes,
     });
   }, [mission, state.phase]);
 
@@ -279,11 +282,11 @@ export default function GamePage({
         inert={paused ? "" : undefined}
       >
         <div className="v2-game-header">
-          <button className="v2-icon-button" type="button" onClick={backToMap} disabled={paused} aria-label="Return to map">
+          <button className="v2-icon-button" type="button" onClick={backToMap} disabled={paused} aria-label="กลับไปที่แผนที่">
             <ArrowLeft size={23} />
           </button>
-          <div>
-            <h1>{level.title}</h1>
+          <div className="v2-game-title">
+            <h1 title={level.title}>{level.title}</h1>
             <p>{level.location} - {level.topic}</p>
           </div>
           <div className="v2-mission-chip"><Shield size={18} /> Lv. {progress.level}</div>
@@ -299,25 +302,32 @@ export default function GamePage({
           />
         ) : mission ? (
           <div className="v2-game-layout">
-            <aside className="v2-game-console">
-              <PandaGuide compact text={state.hearts > 1 ? "Take your time and use the hint when needed." : "One heart left. Review carefully."} mood={state.hearts <= 1 ? "sad" : "happy"} />
-              <div className="v2-heart-row">
-                {[0, 1, 2].map((heart) => (
-                  <span key={heart} className={heart < state.hearts ? "alive" : "lost"}>
-                    <Heart size={23} fill="currentColor" />
-                  </span>
-                ))}
-              </div>
-              <div className="v2-console-stat"><Star size={18} fill="currentColor" /> Score {state.score}</div>
-              <div className="v2-console-stat"><Target size={18} /> Correct {state.correct}/{level.questions.length}</div>
-              <button className="v2-button hint" type="button" onClick={useHint} disabled={state.hints <= 0 || state.showHint || disabled}>
-                <Lightbulb size={20} /> Hint {state.hints}/2
-              </button>
-              <button className="v2-button glass" type="button" onClick={pause} disabled={paused || state.phase === "finished"}>
-                <Pause size={20} /> Pause
-              </button>
-              <button className="v2-button ghost" type="button" onClick={backToMap} disabled={paused}>
-                <Map size={20} /> Back to map
+            <aside className="v2-game-console" aria-label="Mission dashboard">
+              <section className="v2-mission-status" role="group" aria-label="Mission status">
+                <PandaGuide compact text={state.hearts > 1 ? "ค่อย ๆ คิด ใช้คำใบ้ได้เมื่อจำเป็น" : "เหลือหัวใจเดียวแล้ว ตรวจให้ดีก่อนตอบ"} mood={state.hearts <= 1 ? "sad" : "happy"} />
+                <div className="v2-heart-row" aria-label={`${state.hearts} hearts remaining`}>
+                  {[0, 1, 2].map((heart) => (
+                    <span key={heart} className={heart < state.hearts ? "alive" : "lost"}>
+                      <Heart size={20} fill="currentColor" aria-hidden="true" />
+                    </span>
+                  ))}
+                </div>
+                <div className="v2-console-stat v2-mission-counter"><Target size={18} aria-hidden="true" /> ภารกิจ {state.index + 1}/{level.questions.length}</div>
+                <div className="v2-console-stat"><Star size={18} fill="currentColor" aria-hidden="true" /> คะแนน {state.score}</div>
+                <button className="v2-icon-button v2-console-pause" type="button" onClick={pause} disabled={paused || state.phase === "finished"} aria-label="หยุดชั่วคราว">
+                  <Pause size={20} />
+                </button>
+              </section>
+              <section className="v2-mission-actions" role="group" aria-label="Mission actions">
+                <button className="v2-button hint" type="button" onClick={useHint} disabled={state.hints <= 0 || state.showHint || disabled}>
+                  <Lightbulb size={20} /> คำใบ้ {state.hints}/2
+                </button>
+                <button className="v2-icon-button v2-console-sound" type="button" onClick={onToggleSound} aria-label={soundOn ? "ปิดเสียง" : "เปิดเสียง"}>
+                  {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                </button>
+              </section>
+              <button className="v2-button ghost v2-console-map" type="button" onClick={backToMap} disabled={paused}>
+                <Map size={20} /> กลับแผนที่
               </button>
             </aside>
 
@@ -354,11 +364,12 @@ export default function GamePage({
                 {state.showHint ? <div className="v2-hint-panel"><Lightbulb size={20} /> {mission.hint}</div> : null}
                 {speechMessage ? <div className="v2-hint-panel warning">{speechMessage}</div> : null}
                 {state.feedback ? (
-                  <div className={`v2-feedback ${state.feedback.correct ? "right" : "wrong"}`}>
-                    <strong>{state.feedback.text}</strong>
-                    {missionView.explanation ? <span>{missionView.explanation}</span> : null}
-                    <button ref={continueRef} className="v2-button primary" type="button" onClick={continueMission}>Continue</button>
-                  </div>
+                  <MissionVerdict
+                    feedback={state.feedback}
+                    explanation={missionView.explanation}
+                    onContinue={continueMission}
+                    continueRef={continueRef}
+                  />
                 ) : null}
               </AnimatePresence>
             </main>

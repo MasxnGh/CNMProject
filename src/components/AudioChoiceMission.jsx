@@ -1,12 +1,14 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Headphones } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { shuffleOptions } from "../utils/shuffle";
 
 export default function AudioChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio }) {
   const [speaking, setSpeaking] = useState(false);
   const cleanupRef = useRef(null);
   const mountedRef = useRef(true);
   const reduceMotion = useReducedMotion();
+  const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
 
   const releasePlayback = useCallback((updateState = true) => {
     cleanupRef.current?.();
@@ -82,7 +84,7 @@ export default function AudioChoiceMission({ missionView, onSubmit, disabled, fe
       </div>
       {speaking ? <p role="status" className="mission-help">กำลังเล่นเสียง</p> : null}
       <div className="grid gap-3 sm:grid-cols-2">
-        {(missionView.options ?? []).map((option) => {
+        {options.map((option) => {
           const isCorrectChoice = feedback && option === feedback.correctOption;
           const isWrongChoice = feedback && option === feedback.selectedValue && option !== feedback.correctOption;
           return (

@@ -1,10 +1,12 @@
 import { motion, useReducedMotion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { shuffleOptions } from "../utils/shuffle";
 
 export default function PinyinDragMission({ missionView, onSubmit, disabled, feedback }) {
   const [selected, setSelected] = useState(null);
   const [dropped, setDropped] = useState(null);
   const reduceMotion = useReducedMotion();
+  const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
   const [prefix = "", suffix = ""] = (missionView.pinyinPattern ?? "_").split("_");
   const helpId = `pinyin-drop-help-${missionView.id}`;
 
@@ -36,6 +38,12 @@ export default function PinyinDragMission({ missionView, onSubmit, disabled, fee
 
   return (
     <div className="mission-shell">
+      <div className="mission-prompt">
+        <div className="min-w-0">
+          <span className="mission-label">{missionView.title}</span>
+          <small className="mission-directive">{missionView.instruction}</small>
+        </div>
+      </div>
       <div className="pinyin-board">
         <div className="pinyin-card">
           <span>{missionView.chineseText}</span>
@@ -61,7 +69,7 @@ export default function PinyinDragMission({ missionView, onSubmit, disabled, fee
       </div>
 
       <div className="vowel-tray">
-        {(missionView.options ?? []).map((item) => (
+        {options.map((item) => (
           <motion.button
             type="button"
             key={item}

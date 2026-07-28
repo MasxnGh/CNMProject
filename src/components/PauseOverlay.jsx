@@ -46,31 +46,31 @@ export default function PauseOverlay({
   }, [onResume]);
 
   return (
-    <div className="v2-modal-backdrop" role="dialog" aria-modal="true" aria-label="Game paused">
+    <div className="v2-modal-backdrop" role="dialog" aria-modal="true" aria-label="หยุดเกมชั่วคราว">
       <section ref={panelRef} className="v2-modal-panel">
         <div className="v2-modal-head">
           <div className="v2-modal-icon"><Pause size={22} /></div>
           <div>
-            <h2>Game paused</h2>
-            <p>Your mission state is safe. Resume when you are ready.</p>
+            <h2>หยุดเกมชั่วคราว</h2>
+            <p>ภารกิจของคุณถูกบันทึกไว้แล้ว กดเล่นต่อเมื่อพร้อม</p>
           </div>
         </div>
 
         <div className="grid gap-3 mt-4">
           <button ref={resumeRef} className="v2-button primary" type="button" onClick={onResume}>
-            <Play size={20} /> Resume
+            <Play size={20} /> เล่นต่อ
           </button>
           <button className="v2-button glass" type="button" onClick={onToggleSound}>
-            <Volume2 size={20} /> Sound {soundOn ? "on" : "off"}
+            <Volume2 size={20} /> {soundOn ? "ปิดเสียง" : "เปิดเสียง"}
           </button>
           <button className="v2-button glass" type="button" onClick={onToggleReducedMotion}>
-            <WandSparkles size={20} /> Reduced motion {reducedMotion ? "on" : "off"}
+            <WandSparkles size={20} /> {reducedMotion ? "ปิดลดการเคลื่อนไหว" : "เปิดลดการเคลื่อนไหว"}
           </button>
           <button className="v2-button ghost" type="button" onClick={onRestart}>
-            <RotateCcw size={20} /> Restart Level
+            <RotateCcw size={20} /> เริ่มด่านใหม่
           </button>
           <button className="v2-button ghost" type="button" onClick={onMap}>
-            <ArrowLeft size={20} /> Back to map
+            <ArrowLeft size={20} /> กลับแผนที่
           </button>
         </div>
       </section>

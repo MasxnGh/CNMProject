@@ -331,8 +331,10 @@ describe("leak-safe mission type data", () => {
     });
 
     missions.filter((mission) => mission.type === "shopping").forEach((mission) => {
+      expect(mission.beforeAnswer).not.toHaveProperty("targetList");
       mission.beforeAnswer.items.forEach((item) => {
-        expect(Object.keys(item).sort()).toEqual(["emoji", "id"]);
+        expect(Object.keys(item).sort()).toEqual(["emoji", "id", "label"]);
+        expect(item.label).not.toBe(item.id);
       });
     });
   });

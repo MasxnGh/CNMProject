@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Map, Medal, RotateCcw, Sparkles, Star, Trophy } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Coins, Map, Medal, RotateCcw, Sparkles, Star } from "lucide-react";
 import { useEffect } from "react";
 import { badges } from "../data/badges";
 import { playWinSound } from "../utils/speech";
@@ -11,6 +11,17 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
   const passed = result?.passed;
   const earnedBadges = badges.filter((badge) => result?.earned.badges.includes(badge.id));
   const nextAction = result?.isVictory ? onVictory : onNext;
+  const reduceMotion = useReducedMotion();
+
+  // The level is stamped the way a finished scroll is: 過 for passed,
+  // 再 for "again".
+  const stamp = reduceMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 } }
+    : {
+      initial: { scale: 2.6, opacity: 0, rotate: passed ? -20 : 16 },
+      animate: { scale: 1, opacity: 1, rotate: passed ? -8 : 6 },
+      transition: { delay: 0.1, type: "spring", stiffness: 460, damping: 17 },
+    };
 
   useEffect(() => {
     if (passed) playWinSound();
@@ -28,17 +39,17 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
       <div className="v2-starry-field" aria-hidden="true" />
       <div className="dq-game-container grid gap-6 lg:grid-cols-[360px_1fr]">
         <aside className="v2-reward-side">
-          <div className="v2-reward-orb">
-            <Trophy size={54} />
-            <span>{passed ? "CLEAR" : "RETRY"}</span>
-          </div>
+          <motion.div className={`dq-seal ${passed ? "earned" : ""} v2-result-seal`} aria-hidden="true" {...stamp}>
+            {passed ? "過" : "再"}
+          </motion.div>
+          <p className="v2-result-verdict">{passed ? "ผ่านด่านแล้ว" : "ยังไม่ผ่าน"}</p>
           <PandaGuide mood={passed ? "happy" : "sad"} text={passed ? "ดาวของคุณสว่างขึ้นแล้ว!" : "ลองใหม่อีกครั้ง เกือบถึงแล้ว!"} />
         </aside>
         <motion.main className="v2-result-panel" initial={{ y: 35, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 18 }}>
           <div className="v2-result-title">
             <span>{result.level.title}</span>
             <h1>{passed ? "ภารกิจสำเร็จ" : "ภารกิจยังไม่สำเร็จ"}</h1>
-            <p>ตอบถูก {result.correct}/{result.total} • คะแนน {result.score} • ใช้ Hint {result.hintsUsed}</p>
+            <p>ตอบถูก {result.correct}/{result.total} • คะแนน {result.score} • ใช้คำใบ้ {result.hintsUsed}</p>
           </div>
 
           <div className="v2-result-stars" aria-label={`${result.stars} ดาว`}>
@@ -59,13 +70,13 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
           {!passed ? <div className="v2-record-ribbon muted">ต้องตอบถูกอย่างน้อย 3 ภารกิจเพื่อผ่านด่าน</div> : null}
 
           <div className="v2-reward-grid">
-            <div><Sparkles /><strong>+{result.earned.xp}</strong><span>XP</span></div>
-            <div><Sparkles /><strong>+{result.earned.coins}</strong><span>Coins</span></div>
-            <div><Star /><strong>{result.stars}/3</strong><span>Stars</span></div>
+            <div><Sparkles /><strong>+{result.earned.xp}</strong><span>ค่าประสบการณ์</span></div>
+            <div><Coins /><strong>+{result.earned.coins}</strong><span>เหรียญ</span></div>
+            <div><Star /><strong>{result.stars}/3</strong><span>ดาวประจำด่าน</span></div>
           </div>
 
           <div className="v2-xp-panel">
-            <ProgressBar value={progress.xp % 120} max={120} label={`Level ${progress.level} XP`} />
+            <ProgressBar value={progress.xp % 120} max={120} label={`ค่าประสบการณ์ ระดับ ${progress.level}`} />
           </div>
 
           <div className="v2-result-info">

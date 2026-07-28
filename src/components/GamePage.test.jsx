@@ -26,6 +26,7 @@ vi.mock("framer-motion", async () => {
   return {
     AnimatePresence: ({ children }) => ReactModule.createElement(ReactModule.Fragment, null, children),
     motion,
+    useReducedMotion: () => false,
   };
 });
 
@@ -144,7 +145,7 @@ describe("GamePage safe session integration", () => {
 
     expect(screen.getByRole("heading", { name: "Test Level" })).toBeInTheDocument();
     expect(screen.getByText("Safe level summary")).toBeInTheDocument();
-    expect(screen.getByText("Multiple choice")).toBeInTheDocument();
+    expect(screen.getByText("ตัวเลือกหลายข้อ")).toBeInTheDocument();
     expect(container).not.toHaveTextContent("LEAKED PROMPT SAMPLE");
     expect(container).not.toHaveTextContent("ANSWER_SECRET");
     expect(screen.queryByTestId("renderer")).not.toBeInTheDocument();
@@ -154,7 +155,7 @@ describe("GamePage safe session integration", () => {
 
   it("passes only missionView, evaluates in the parent, locks feedback, and finishes explicitly", async () => {
     const { props } = renderGame();
-    fireEvent.click(screen.getByRole("button", { name: "Start Mission" }));
+    fireEvent.click(screen.getByRole("button", { name: "เริ่มเล่นเลย" }));
 
     const serializedView = screen.getByTestId("renderer").getAttribute("data-view");
     expect(serializedView).toContain("LEAKED PROMPT SAMPLE");
@@ -171,24 +172,24 @@ describe("GamePage safe session integration", () => {
       correctOption: "correct-candidate",
     }));
     fireEvent.click(screen.getByRole("button", { name: "Correct candidate" }));
-    expect(screen.getByText("Score 20")).toBeInTheDocument();
+    expect(screen.getByText("คะแนน 20")).toBeInTheDocument();
     expect(props.onFinish).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(screen.getByRole("button", { name: "ไปต่อ" }));
     await waitFor(() => expect(props.onFinish).toHaveBeenCalledWith(level, 1, { hintsUsed: 0, score: 20 }));
   });
 
   it("uses Escape for pause/resume and exposes persisted pause settings", () => {
     const { props } = renderGame();
-    fireEvent.click(screen.getByRole("button", { name: "Start Mission" }));
+    fireEvent.click(screen.getByRole("button", { name: "เริ่มเล่นเลย" }));
 
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(screen.getByRole("dialog", { name: "Game paused" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "หยุดเกมชั่วคราว" })).toBeInTheDocument();
     expect(latestRendererProps.disabled).toBe(true);
     expect(screen.getByTestId("game-background")).toHaveAttribute("inert");
 
-    const resumeButton = screen.getByRole("button", { name: "Resume" });
-    const pauseMapButton = screen.getByRole("button", { name: "Back to map" });
+    const resumeButton = screen.getByRole("button", { name: "เล่นต่อ" });
+    const pauseMapButton = screen.getByRole("button", { name: "กลับแผนที่" });
     expect(resumeButton).toHaveFocus();
     fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
     expect(pauseMapButton).toHaveFocus();
@@ -199,14 +200,22 @@ describe("GamePage safe session integration", () => {
     fireEvent.keyDown(document, { key: "Tab" });
     expect(resumeButton).toHaveFocus();
 
-    fireEvent.click(screen.getByRole("button", { name: "Sound on" }));
-    fireEvent.click(screen.getByRole("button", { name: "Reduced motion off" }));
+    fireEvent.click(screen.getByRole("button", { name: "ปิดเสียง" }));
+    fireEvent.click(screen.getByRole("button", { name: "เปิดลดการเคลื่อนไหว" }));
     expect(props.onToggleSound).toHaveBeenCalledTimes(1);
     expect(props.onToggleReducedMotion).toHaveBeenCalledTimes(1);
 
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.queryByRole("dialog", { name: "Game paused" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "หยุดเกมชั่วคราว" })).not.toBeInTheDocument();
     expect(latestRendererProps.disabled).toBe(false);
+  });
+
+  it("groups mission status controls for compact assistive-technology navigation", () => {
+    renderGame({ skipMissionIntro: true });
+
+    expect(screen.getByRole("group", { name: "Mission status" })).toHaveTextContent("คะแนน 0");
+    expect(screen.getByRole("group", { name: "Mission actions" })).toHaveTextContent("คำใบ้ 2/2");
+    expect(screen.getByRole("button", { name: "ปิดเสียง" })).toBeInTheDocument();
   });
 
   it("supports numeric shortcuts against the real answer-button shape", () => {
@@ -255,7 +264,7 @@ describe("GamePage safe session integration", () => {
     expect(cancelSpeech).toHaveBeenCalledTimes(1);
     expect(cancelPendingSound).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(screen.getByRole("button", { name: "Restart Level" }));
+    fireEvent.click(screen.getByRole("button", { name: "เริ่มด่านใหม่" }));
     expect(cancelSpeech).toHaveBeenCalledTimes(2);
     expect(cancelPendingSound).toHaveBeenCalledTimes(2);
 
@@ -268,7 +277,7 @@ describe("GamePage safe session integration", () => {
     expect(cancelSpeech).toHaveBeenCalledTimes(3);
     expect(cancelPendingSound).toHaveBeenCalledTimes(3);
 
-    fireEvent.click(screen.getByRole("button", { name: "Back to map" }));
+    fireEvent.click(screen.getByRole("button", { name: "กลับแผนที่" }));
     expect(cancelSpeech).toHaveBeenCalledTimes(4);
     expect(cancelPendingSound).toHaveBeenCalledTimes(4);
     expect(props.onMap).toHaveBeenCalledTimes(1);
@@ -287,13 +296,13 @@ describe("GamePage safe session integration", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     fireEvent.keyDown(document, { key: "Escape" });
 
-    expect(screen.getByRole("button", { name: "Continue" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "ไปต่อ" })).toHaveFocus();
   });
 
   it("does not report a finished old session against a newly rerendered level", async () => {
     const { props, rerender } = renderGame({ skipMissionIntro: true });
     fireEvent.click(screen.getByRole("button", { name: "Correct candidate" }));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(screen.getByRole("button", { name: "ไปต่อ" }));
     await waitFor(() => expect(props.onFinish).toHaveBeenCalledTimes(1));
 
     const nextLevel = {
@@ -321,7 +330,7 @@ describe("GamePage safe session integration", () => {
     fireEvent.keyDown(window, { key: "1" });
 
     fireEvent.keyDown(window, { key: "Escape" });
-    fireEvent.click(screen.getByRole("button", { name: "Restart Level" }));
+    fireEvent.click(screen.getByRole("button", { name: "เริ่มด่านใหม่" }));
     expect(latestRendererProps.feedback).toBeNull();
     expect(latestRendererProps.disabled).toBe(false);
 
@@ -335,7 +344,7 @@ describe("GamePage safe session integration", () => {
     const { props } = renderGame({ skipMissionIntro: true });
 
     fireEvent.click(screen.getByRole("button", { name: "Correct candidate" }));
-    fireEvent.click(screen.getByRole("button", { name: "Back to map" }));
+    fireEvent.click(screen.getByRole("button", { name: "กลับแผนที่" }));
     vi.runAllTimers();
 
     expect(props.onMap).toHaveBeenCalledTimes(1);

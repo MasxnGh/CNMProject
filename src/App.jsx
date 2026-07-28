@@ -195,7 +195,9 @@ export default function App() {
           <Suspense fallback={<SceneFallback />}><VictoryPage key="victory" progress={progress} onHome={goHome} onReset={() => setResetOpen(true)} /></Suspense>
         )}
       </AnimatePresence>
-      {!loading ? <SoundToggle enabled={soundOn} onToggle={toggleSound} /> : null}
+      {/* The game page has its own sound control in the mission console; the floating
+          toggle would otherwise overlap answer buttons and matching cards. */}
+      {!loading && page !== "game" ? <SoundToggle enabled={soundOn} onToggle={toggleSound} /> : null}
       <Modal
         open={resetOpen}
         title="ต้องการเริ่มผจญภัยใหม่หรือไม่?"

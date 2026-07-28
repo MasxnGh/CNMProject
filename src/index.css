@@ -13,6 +13,29 @@
   --jade: #2f8f74;
   --teal: #2b6f7c;
   --shadow: rgba(65, 26, 16, 0.28);
+
+  /* ── Type roles ──────────────────────────────────────────────────
+     Three voices, each with one job. Carved letterforms (Trirong,
+     Noto Serif SC) belong to the artifact - titles, hanzi, numerals
+     that represent earned value. Plex is the interface talking. */
+  --dq-face-display: "Trirong", "Noto Serif SC", Georgia, serif;
+  --dq-face-hanzi: "Noto Serif SC", "Trirong", Georgia, serif;
+  --dq-face-ui: "IBM Plex Sans Thai", "Noto Sans Thai", system-ui, sans-serif;
+
+  /* ── Colour jobs ─────────────────────────────────────────────────
+     Previously a gold-to-jade gradient carried every accent, so none
+     of them meant anything. One job each: */
+  --dq-earned: #ffd76b;      /* progress, stars, XP, the primary path */
+  --dq-earned-deep: #d99124;
+  --dq-seal: #d6352c;        /* the vermilion mark: attention and error */
+  --dq-seal-soft: #ff8172;
+  --dq-confirm: #35d0ac;     /* confirmation and unlocked state only */
+
+  /* Silk weave: a material for surfaces that hold text, so panels stop
+     reading as identical sheets of glass. */
+  --dq-weave:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.022) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.03) 0 2px, transparent 2px 4px);
 }
 
 * {
@@ -32,7 +55,34 @@ body {
     radial-gradient(circle at 18% 12%, rgba(247, 184, 51, 0.24), transparent 26rem),
     linear-gradient(135deg, #8c1b1b, #4d1212 52%, #1e4f54);
   color: var(--ink);
-  font-family: "Noto Sans Thai", "Noto Sans SC", Inter, system-ui, sans-serif;
+  font-family: var(--dq-face-ui);
+}
+
+/* Titles, hanzi and earned numerals carry the carved voice. */
+h1,
+h2,
+.v2-logo-mark strong,
+.v2-logo-mark span,
+.v2-quest-title h2,
+.v2-hero-copy h1,
+.v2-page-top h1,
+.v2-game-header h1 {
+  font-family: var(--dq-face-display);
+  letter-spacing: 0.005em;
+}
+
+.mission-prompt strong,
+.match-item span,
+.pinyin-card span,
+.trace-meta strong,
+.trace-guide,
+.word-chip,
+.order-zone span,
+.v2-crystal-head h3,
+.v2-player-avatar,
+.dq-seal,
+.v2-logo-mark span {
+  font-family: var(--dq-face-hanzi);
 }
 
 button,
@@ -2188,6 +2238,20 @@ button:disabled {
   font-weight: 900;
 }
 
+.mission-prompt .mission-question {
+  margin-bottom: 0.4rem;
+  color: rgba(74, 29, 19, 0.92);
+  font-size: clamp(0.95rem, 2.6vw, 1.12rem);
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.mission-prompt .mission-directive {
+  color: var(--red-700, #b62924);
+  font-size: clamp(0.82rem, 2.2vw, 0.95rem);
+  opacity: 0.82;
+}
+
 .pinyin-board {
   position: relative;
   overflow: hidden;
@@ -2479,11 +2543,29 @@ button:disabled {
 .matching-board .match-column:first-of-type,
 .matching-board .match-column:last-of-type {
   padding: 0;
+  /* Reset the legacy 3-track placement; the V2 board is a balanced 2-track grid. */
+  grid-column: auto;
 }
 
 .match-item,
 .match-answer {
   min-height: 80px;
+}
+
+.match-pair-number {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--v2-jade, #35d0ac);
+  color: #06231f;
+  font-size: 0.78rem;
+  font-weight: 1000;
+  line-height: 1;
 }
 
 .match-item.matched,
@@ -2567,13 +2649,8 @@ button:disabled {
     align-self: flex-end;
   }
 
-  .shopping-grid,
-  .matching-board {
+  .shopping-grid {
     grid-template-columns: 1fr;
-  }
-
-  .match-lines {
-    display: none;
   }
 
   .trace-board {
@@ -2604,6 +2681,63 @@ button:disabled {
   --v2-glass: rgba(11, 35, 48, 0.72);
   --v2-glass-strong: rgba(14, 44, 58, 0.9);
   --v2-border: rgba(255, 215, 107, 0.24);
+}
+
+/* ── Materials ───────────────────────────────────────────────────────
+   Every panel used to be the same sheet of glass, so nothing could be
+   more important than anything else. Two materials instead:
+   `.dq-silk` for surfaces that carry content, `.dq-lacquer` for the
+   quiet ones that recede. */
+
+.dq-silk {
+  position: relative;
+  border: 1px solid rgba(255, 215, 107, 0.3);
+  border-radius: 20px;
+  background-color: rgba(16, 52, 66, 0.9);
+  background-image: var(--dq-weave);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 231, 165, 0.16),
+    0 18px 42px rgba(0, 0, 0, 0.34);
+}
+
+.dq-lacquer {
+  border: 1px solid rgba(255, 215, 107, 0.14);
+  border-radius: 18px;
+  background: rgba(7, 27, 38, 0.72);
+}
+
+/* A gold hairline that stops short of the corners, the way a mounted
+   scroll's silk border is stitched. */
+.dq-silk::after {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255, 215, 107, 0.12);
+  border-radius: 14px;
+  content: "";
+  pointer-events: none;
+}
+
+/* ── The seal ────────────────────────────────────────────────────────
+   The same vermilion chop that marks a wrong answer also marks a
+   cleared level and an earned badge, so one motif carries the whole
+   game instead of three unrelated accents. */
+
+.dq-seal {
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: linear-gradient(160deg, #ff8f80, #e0483d 55%, var(--dq-seal));
+  color: #fff3ef;
+  font-family: var(--dq-face-hanzi);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(120, 18, 12, 0.5);
+}
+
+.dq-seal.earned {
+  background: linear-gradient(160deg, #ffe9a8, var(--dq-earned) 52%, var(--dq-earned-deep));
+  color: #4a2408;
+  box-shadow: 0 4px 12px rgba(90, 55, 6, 0.45);
 }
 
 .v2-scene {
@@ -2987,13 +3121,33 @@ button:disabled {
   max-width: 720px;
 }
 
+/* The wordmark stacks, and the chop is pressed beside it the way a
+   collector's seal sits next to the title on a mounted scroll. */
 .v2-logo-mark {
   display: inline-grid;
-  gap: 0.1rem;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 0.1rem 0.6rem;
   color: var(--v2-ink);
-  font-weight: 1000;
-  line-height: 0.88;
+  font-weight: 700;
+  line-height: 0.9;
   text-transform: uppercase;
+}
+
+.v2-logo-mark span:not(.v2-title-seal) {
+  grid-column: 1;
+}
+
+.v2-logo-mark strong {
+  grid-column: 1;
+}
+
+.v2-title-seal {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 1.3rem;
 }
 
 .v2-logo-mark span {
@@ -3004,7 +3158,7 @@ button:disabled {
 
 .v2-logo-mark strong {
   font-size: calc(var(--dq-text-title) * 1.55);
-  text-shadow: 0 9px 0 rgba(214, 53, 44, 0.36), 0 0 50px rgba(255, 215, 107, 0.35);
+  text-shadow: 0 6px 0 rgba(214, 53, 44, 0.34), 0 0 50px rgba(255, 215, 107, 0.28);
 }
 
 .v2-hero-copy h1 {
@@ -3043,88 +3197,112 @@ button:disabled {
   width: 100%;
   min-width: 0;
   min-height: clamp(18.5rem, 68vw, 26.875rem);
-  place-items: center;
-  border: 1px solid var(--v2-border);
-  border-radius: 36px;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(53, 208, 172, 0.18), transparent 210px),
-    linear-gradient(180deg, rgba(14, 44, 58, 0.76), rgba(7, 17, 31, 0.7));
-  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  align-content: center;
+  gap: 1.1rem;
+  border-radius: 30px;
+  padding: clamp(1.1rem, 4vw, 1.9rem);
   overflow: hidden;
 }
 
-.v2-orbit-map {
-  position: absolute;
-  inset: clamp(0.75rem, 8%, 2rem);
-}
+/* ── The journey ─────────────────────────────────────────────────────
+   The hero used to orbit three icons that merely repeated the buttons
+   beside it. It now shows the road itself: one seal per chapter, with
+   the stars collected along the way. */
 
-.v2-orbit-ring {
-  position: absolute;
-  inset: 12%;
-  border: 3px dashed rgba(255, 215, 107, 0.36);
-  border-left-color: rgba(53, 208, 172, 0.48);
-  border-radius: 50%;
-  animation: v2-slow-spin 16s linear infinite;
-}
-
-.v2-map-island {
-  position: absolute;
+.v2-journey {
   display: grid;
-  width: clamp(3.5rem, 22vw, 5.75rem);
-  height: clamp(3rem, 18vw, 4.75rem);
-  place-items: center;
-  border: 1px solid rgba(255, 215, 107, 0.4);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 215, 107, 0.9), rgba(9, 94, 99, 0.82));
-  color: #2b1408;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 0 28px rgba(255, 215, 107, 0.22);
+  gap: 0.9rem;
+  width: 100%;
 }
 
-.v2-map-island.one { left: 12%; top: 22%; }
-.v2-map-island.two { right: 12%; top: 16%; }
-.v2-map-island.three { right: 20%; bottom: 18%; }
+.v2-journey-title {
+  color: var(--v2-gold);
+  font-family: var(--dq-face-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
 
-.v2-map-star {
+.v2-journey-road {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem;
+}
+
+/* The road under the seals. */
+.v2-journey-road::before {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--v2-gold);
-  box-shadow: 0 0 18px var(--v2-gold);
+  left: 8%;
+  right: 8%;
+  top: 25px;
+  height: 3px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 215, 107, 0.5) 0 10px,
+    transparent 10px 18px
+  );
+  content: "";
 }
 
-.v2-map-star.a { left: 44%; top: 18%; }
-.v2-map-star.b { left: 30%; bottom: 24%; }
-.v2-map-star.c { right: 38%; bottom: 38%; }
-
-.v2-hero-stat-card {
-  position: absolute;
-  right: var(--dq-space-2);
-  top: var(--dq-space-2);
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  border: 1px solid var(--v2-border);
-  border-radius: 20px;
-  background: rgba(8, 30, 42, 0.78);
-  padding: 0.85rem 1rem;
-  max-width: calc(100% - (var(--dq-space-2) * 2));
+.v2-journey-stop {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+  text-align: center;
 }
 
-.v2-hero-stat-card svg {
+.v2-journey-seal {
+  width: 52px;
+  height: 52px;
+  font-size: 1.5rem;
+}
+
+.v2-journey-stop.locked .v2-journey-seal {
+  background: rgba(9, 32, 44, 0.94);
+  color: rgba(248, 240, 219, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 215, 107, 0.2);
+}
+
+.v2-journey-stop b {
+  color: var(--v2-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.v2-journey-stop.cleared b {
   color: var(--v2-gold);
 }
 
-.v2-hero-stat-card span {
-  display: block;
+.v2-journey-total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  border-top: 1px solid rgba(255, 215, 107, 0.18);
+  padding-top: 0.8rem;
   color: var(--v2-muted);
-  font-size: 0.8rem;
-  font-weight: 900;
 }
 
-.v2-hero-stat-card strong {
-  color: var(--v2-ink);
-  font-weight: 1000;
+.v2-journey-total svg {
+  align-self: center;
+  color: var(--v2-gold);
+}
+
+.v2-journey-total strong {
+  color: var(--v2-gold);
+  font-family: var(--dq-face-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.v2-journey-total span {
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .v2-chapter-grid {
@@ -3138,56 +3316,53 @@ button:disabled {
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--v2-border);
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(255, 215, 107, 0.22), transparent 150px),
-    linear-gradient(180deg, rgba(12, 49, 61, 0.86), rgba(12, 24, 42, 0.86));
+  border-radius: 24px;
   padding: 1.2rem;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .v2-chapter-portal.locked {
-  opacity: 0.9;
+  opacity: 0.72;
 }
 
-.v2-portal-light {
-  position: absolute;
-  inset: -80px 20% auto;
-  height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 215, 107, 0.35), transparent 70%);
-  animation: v2-pulse 2.8s ease-in-out infinite;
+/* A cleared chapter is the only card that glows, so the eye lands on
+   progress rather than on all three cards equally. */
+.v2-chapter-portal.cleared {
+  border-color: rgba(255, 215, 107, 0.5);
 }
 
-.v2-chapter-emblem {
-  position: relative;
-  display: grid;
-  width: clamp(4rem, 12vw, 5.25rem);
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid rgba(255, 215, 107, 0.44);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 215, 107, 0.95), rgba(53, 208, 172, 0.75));
-  color: #241006;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+.v2-chapter-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.v2-chapter-seal {
+  flex: 0 0 auto;
+  width: 3.15rem;
+  height: 3.15rem;
+  font-size: 1.7rem;
+}
+
+.v2-chapter-portal.locked .v2-chapter-seal {
+  background: rgba(9, 32, 44, 0.94);
+  color: rgba(248, 240, 219, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 215, 107, 0.22);
 }
 
 .v2-chapter-number {
   display: block;
-  margin-top: 1rem;
   color: var(--v2-jade);
-  font-size: 0.82rem;
-  font-weight: 1000;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .v2-chapter-portal h2 {
-  margin-top: 0.35rem;
+  margin-top: 0.15rem;
   color: var(--v2-ink);
-  font-size: 1.65rem;
-  font-weight: 1000;
-  line-height: 1.12;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.18;
 }
 
 .v2-chapter-portal p {
@@ -3322,6 +3497,19 @@ button:disabled {
   background: linear-gradient(180deg, rgba(18, 107, 94, 0.92), rgba(7, 35, 42, 0.92));
 }
 
+/* Pressed into the corner at a slight angle, the way a chop lands on
+   paper rather than sitting square like a badge. */
+.v2-level-seal {
+  position: absolute;
+  right: 0.7rem;
+  top: 0.7rem;
+  z-index: 2;
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 1.15rem;
+  transform: rotate(-8deg);
+}
+
 .v2-level-island.current,
 .v2-level-island.perfect {
   border-color: rgba(255, 215, 107, 0.72);
@@ -3406,7 +3594,31 @@ button:disabled {
 }
 
 .v2-game-header {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
   justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 56px;
+  margin-bottom: 0.75rem;
+}
+
+.v2-game-header .v2-icon-button {
+  flex: 0 0 50px;
+}
+
+.v2-game-title {
+  min-width: 0;
+}
+
+.v2-game-title h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-game-title p {
+  display: none;
 }
 
 .v2-mission-chip {
@@ -3444,8 +3656,52 @@ button:disabled {
 .v2-game-console {
   align-self: start;
   display: grid;
-  gap: 0.8rem;
-  padding: 0.9rem;
+  gap: 0.55rem;
+  padding: 0.55rem;
+}
+
+.v2-mission-status,
+.v2-mission-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 50px;
+  gap: 0.45rem;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.v2-mission-status .v2-panda-guide,
+.v2-mission-actions .v2-console-stat,
+.v2-mission-actions .hint {
+  grid-column: auto;
+}
+
+.v2-mission-status .v2-heart-row,
+.v2-mission-status .v2-mission-counter {
+  display: none;
+}
+
+.v2-mission-status .v2-console-pause,
+.v2-mission-actions .v2-console-sound {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.v2-mission-status {
+  grid-template-columns: minmax(0, 1fr) 50px;
+}
+
+.v2-mission-status .v2-panda-guide {
+  grid-column: 1;
+}
+
+.v2-mission-actions .hint {
+  width: auto;
+  min-height: 50px;
+  padding-inline: 0.7rem;
+}
+
+.v2-console-map {
+  display: none;
 }
 
 .v2-heart-row {
@@ -3574,8 +3830,19 @@ button:disabled {
 .v2-mission-arena .shop-item em,
 .v2-mission-arena .trace-meta span,
 .v2-mission-arena .trace-meta small,
+.v2-mission-arena .match-item small,
 .v2-mission-arena .order-zone em {
   color: var(--v2-muted);
+}
+
+.v2-mission-arena .match-item,
+.v2-mission-arena .match-answer {
+  position: relative;
+}
+
+/* The question line is body copy on the dark arena, not the gold headline. */
+.v2-mission-arena .mission-prompt .mission-question {
+  color: var(--v2-ink);
 }
 
 .v2-mission-arena .answer-button,
@@ -3615,12 +3882,24 @@ button:disabled {
   background: linear-gradient(180deg, rgba(53, 208, 172, 0.28), rgba(7, 58, 54, 0.78));
 }
 
+/* The chosen answer is graded, so it carries the seal colour at full strength
+   while the merely-revealed correct option stays quieter. */
+.v2-mission-arena .answer-button.correct {
+  border-color: var(--v2-jade);
+  box-shadow: 0 0 0 3px rgba(53, 208, 172, 0.22), 0 0 26px rgba(53, 208, 172, 0.3);
+}
+
 .v2-mission-arena .answer-button.wrong,
 .v2-mission-arena .drop-zone.wrong,
 .v2-mission-arena .order-zone.wrong,
 .v2-mission-arena .shop-item.wrong {
   border-color: rgba(255, 92, 100, 0.72);
   background: linear-gradient(180deg, rgba(255, 92, 100, 0.28), rgba(96, 18, 25, 0.78));
+}
+
+.v2-mission-arena .answer-button.wrong {
+  border-color: var(--v2-cinnabar);
+  box-shadow: 0 0 0 3px rgba(214, 53, 44, 0.22), 0 0 26px rgba(214, 53, 44, 0.26);
 }
 
 .v2-mission-arena .trace-guide,
@@ -3669,6 +3948,232 @@ button:disabled {
   border-color: rgba(255, 92, 100, 0.5);
 }
 
+/* ── Examiner's verdict ─────────────────────────────────────────────
+   The imperial examiner marks the scroll: a jade seal for a pass, a
+   vermilion seal plus a list of corrections for a fail. */
+
+.v2-verdict {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  border: 1px solid rgba(255, 215, 107, 0.28);
+  border-radius: 20px;
+  background: rgba(10, 37, 50, 0.86);
+  padding: 0.9rem 1rem;
+}
+
+.v2-verdict::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  content: "";
+}
+
+.v2-verdict.right {
+  border-color: rgba(53, 208, 172, 0.52);
+}
+
+.v2-verdict.right::before {
+  background: linear-gradient(180deg, var(--v2-jade), #0f7c8f);
+}
+
+.v2-verdict.wrong {
+  border-color: rgba(214, 53, 44, 0.6);
+}
+
+.v2-verdict.wrong::before {
+  background: linear-gradient(180deg, #ff7a6d, var(--v2-cinnabar));
+}
+
+.v2-verdict-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.v2-verdict-head strong {
+  display: block;
+  color: var(--v2-ink);
+  font-size: 1.05rem;
+  font-weight: 1000;
+  line-height: 1.3;
+}
+
+.v2-verdict-head p {
+  margin-top: 0.2rem;
+  color: var(--v2-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+/* The seal itself: a soft-cornered square block, the way a carved
+   name-chop prints, not a circular badge. */
+.v2-seal {
+  display: grid;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 12px;
+  color: #0a1f1c;
+}
+
+.v2-seal.jade {
+  background: linear-gradient(160deg, #7ffada, var(--v2-jade) 55%, #12907a);
+  box-shadow: 0 0 0 3px rgba(53, 208, 172, 0.24), 0 8px 18px rgba(0, 0, 0, 0.34);
+}
+
+.v2-seal.cinnabar {
+  background: linear-gradient(160deg, #ff8f80, #e0483d 55%, var(--v2-cinnabar));
+  color: #fff3ef;
+  box-shadow: 0 0 0 3px rgba(214, 53, 44, 0.24), 0 8px 18px rgba(0, 0, 0, 0.34);
+}
+
+.v2-correction-scroll {
+  overflow: hidden;
+  border-radius: 14px;
+  background: rgba(214, 53, 44, 0.1);
+  padding: 0.7rem 0.85rem;
+}
+
+.v2-correction-title {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #ff9d92;
+  font-size: 0.76rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.v2-correction-scroll ul {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.v2-correction-scroll li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  color: var(--v2-ink);
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.v2-correction-mark {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--v2-cinnabar);
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.v2-verdict-continue {
+  justify-self: stretch;
+}
+
+/* ── In-place error markers ───────────────────────────────────────── */
+
+/* A marked slot stacks the placed word above its correction, so neither
+   crowds the other. */
+.order-zone span.slot-wrong,
+.order-zone span.slot-missing,
+.order-zone span.slot-correct {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.order-zone span.slot-wrong,
+.order-zone span.slot-missing {
+  position: relative;
+  border-color: rgba(214, 53, 44, 0.75);
+  background: rgba(214, 53, 44, 0.2);
+}
+
+.order-zone span.slot-correct {
+  border-color: rgba(53, 208, 172, 0.6);
+}
+
+.slot-expected,
+.pair-expected {
+  display: block;
+  margin-top: 0.2rem;
+  color: #ff9d92;
+  font-size: 0.7rem;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.v2-mission-arena .match-item.pair-wrong,
+.v2-mission-arena .match-item.pair-missing {
+  border-color: rgba(214, 53, 44, 0.72);
+  background: linear-gradient(180deg, rgba(214, 53, 44, 0.26), rgba(96, 18, 25, 0.74));
+}
+
+.v2-mission-arena .match-item.pair-correct {
+  border-color: rgba(53, 208, 172, 0.66);
+}
+
+.pick-tag {
+  display: block;
+  margin-top: 0.25rem;
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.66rem;
+  font-weight: 1000;
+}
+
+.pick-tag.extra {
+  background: rgba(214, 53, 44, 0.32);
+  color: #ffd9d3;
+}
+
+.pick-tag.missing {
+  background: rgba(255, 215, 107, 0.26);
+  color: var(--v2-gold);
+}
+
+.v2-mission-arena .shop-item.pick-missing {
+  border-color: rgba(255, 215, 107, 0.6);
+  border-style: dashed;
+}
+
+/* ── Verdict motion ───────────────────────────────────────────────── */
+
+.v2-mission-arena.is-correct .mission-shell {
+  animation: verdict-lift 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.v2-mission-arena.is-wrong .mission-shell {
+  animation: verdict-shake 0.42s ease-in-out;
+}
+
+@keyframes verdict-lift {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-7px) scale(1.012); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes verdict-shake {
+  0%, 100% { transform: translateX(0); }
+  18% { transform: translateX(-8px); }
+  38% { transform: translateX(7px); }
+  58% { transform: translateX(-5px); }
+  78% { transform: translateX(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-mission-arena.is-correct .mission-shell,
+  .v2-mission-arena.is-wrong .mission-shell {
+    animation: none;
+  }
+}
+
 .v2-star-burst {
   position: absolute;
   inset: 0;
@@ -3694,25 +4199,26 @@ button:disabled {
 
 .v2-reward-side {
   display: grid;
-  place-items: center;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
   padding: 1.2rem;
 }
 
-.v2-reward-orb {
-  display: grid;
-  width: 190px;
-  height: 190px;
-  place-items: center;
-  border: 1px solid rgba(255, 215, 107, 0.45);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 215, 107, 0.95), rgba(214, 53, 44, 0.9) 58%, rgba(13, 50, 63, 0.88));
-  color: #321004;
-  box-shadow: 0 0 60px rgba(255, 215, 107, 0.34);
+/* The verdict is a chop pressed on the finished level, at the size a
+   real seal would be against a page. */
+.v2-result-seal {
+  width: clamp(6rem, 22vw, 8.5rem);
+  height: clamp(6rem, 22vw, 8.5rem);
+  border-radius: 18px;
+  font-size: clamp(3.2rem, 12vw, 4.6rem);
 }
 
-.v2-reward-orb span {
-  font-size: 1.15rem;
-  font-weight: 1000;
+.v2-result-verdict {
+  color: var(--v2-ink);
+  font-family: var(--dq-face-display);
+  font-size: 1.32rem;
+  font-weight: 700;
 }
 
 .v2-result-title {
@@ -3938,18 +4444,31 @@ button:disabled {
 }
 
 .v2-certificate {
+  position: relative;
   margin-top: 1.3rem;
-  border: 1px solid rgba(255, 215, 107, 0.3);
-  border-radius: 28px;
-  background:
-    linear-gradient(135deg, rgba(255, 215, 107, 0.16), rgba(53, 208, 172, 0.08)),
-    rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 107, 0.34);
+  border-radius: 20px;
+  background-color: rgba(20, 58, 60, 0.7);
+  background-image: var(--dq-weave);
   padding: 1.2rem;
+  /* Room for the chop so it never sits on the wording. */
+  padding-right: clamp(5rem, 18%, 7rem);
 }
 
-.v2-certificate span {
+.v2-certificate-seal {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: 2rem;
+}
+
+.v2-certificate-eyebrow {
   color: var(--v2-jade);
-  font-weight: 1000;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .v2-certificate strong {
@@ -4051,18 +4570,20 @@ button:disabled {
 
 .v2-knowledge-crystal,
 .v2-achievement-medal {
-  min-height: 250px;
-  border: 1px solid rgba(255, 215, 107, 0.2);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(53, 208, 172, 0.14), transparent 130px),
-    linear-gradient(180deg, rgba(14, 51, 64, 0.86), rgba(8, 23, 37, 0.82));
+  min-height: 230px;
+  border-radius: 20px;
   padding: 1rem;
   color: var(--v2-ink);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.v2-knowledge-crystal.closed,
+/* A sealed word is a placeholder, not a card. Keeping it short stops
+   seventy identical locks from burying the words actually collected. */
+.v2-knowledge-crystal.closed {
+  min-height: 0;
+  filter: saturate(0.3);
+  opacity: 0.55;
+}
+
 .v2-achievement-medal.locked {
   filter: saturate(0.35);
   opacity: 0.7;
@@ -4116,9 +4637,15 @@ button:disabled {
 
 .v2-locked-crystal {
   display: grid;
-  min-height: 210px;
+  gap: 0.3rem;
   place-items: center;
+  padding: 0.4rem 0;
   text-align: center;
+}
+
+.v2-locked-crystal svg {
+  width: 22px;
+  height: 22px;
 }
 
 .v2-locked-crystal svg {
@@ -4282,29 +4809,33 @@ button:disabled {
 }
 
 .v2-panda-guide {
+  --panda-size: 152px;
   position: relative;
   display: grid;
   place-items: center;
+  min-width: 0;
 }
 
 .v2-panda-guide.compact {
-  transform: scale(0.78);
-  transform-origin: top center;
+  --panda-size: 88px;
+  grid-template-columns: var(--panda-size) minmax(0, 1fr);
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .v2-panda {
   position: relative;
-  width: 152px;
-  height: 152px;
+  width: var(--panda-size);
+  height: var(--panda-size);
 }
 
 .v2-panda-face {
   position: absolute;
-  inset: 14px;
-  border: 5px solid #1f1717;
+  inset: calc(var(--panda-size) * 0.092);
+  border: calc(var(--panda-size) * 0.033) solid #1f1717;
   border-radius: 50%;
   background: linear-gradient(180deg, #fff9e9, #e7dcc5);
-  box-shadow: 0 18px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: 0 calc(var(--panda-size) * 0.118) 0 rgba(0, 0, 0, 0.18);
 }
 
 .v2-panda-ear,
@@ -4319,97 +4850,97 @@ button:disabled {
 }
 
 .v2-panda-ear {
-  top: 14px;
-  width: 48px;
-  height: 48px;
+  top: calc(var(--panda-size) * 0.092);
+  width: calc(var(--panda-size) * 0.316);
+  height: calc(var(--panda-size) * 0.316);
   border-radius: 50%;
   background: #1f1717;
 }
 
-.v2-panda-ear.left { left: 6px; }
-.v2-panda-ear.right { right: 6px; }
+.v2-panda-ear.left { left: calc(var(--panda-size) * 0.039); }
+.v2-panda-ear.right { right: calc(var(--panda-size) * 0.039); }
 
 .v2-panda-eye {
-  top: 58px;
-  width: 34px;
-  height: 43px;
+  top: calc(var(--panda-size) * 0.382);
+  width: calc(var(--panda-size) * 0.224);
+  height: calc(var(--panda-size) * 0.283);
   border-radius: 50%;
   background: #1f1717;
 }
 
 .v2-panda-eye::after {
   position: absolute;
-  top: 10px;
-  left: 12px;
-  width: 8px;
-  height: 8px;
+  top: calc(var(--panda-size) * 0.066);
+  left: calc(var(--panda-size) * 0.079);
+  width: calc(var(--panda-size) * 0.053);
+  height: calc(var(--panda-size) * 0.053);
   border-radius: 50%;
   background: white;
   content: "";
 }
 
-.v2-panda-eye.left { left: 39px; transform: rotate(16deg); }
-.v2-panda-eye.right { right: 39px; transform: rotate(-16deg); }
+.v2-panda-eye.left { left: calc(var(--panda-size) * 0.257); transform: rotate(16deg); }
+.v2-panda-eye.right { right: calc(var(--panda-size) * 0.257); transform: rotate(-16deg); }
 
 .v2-panda-nose {
-  top: 94px;
+  top: calc(var(--panda-size) * 0.618);
   left: 50%;
-  width: 22px;
-  height: 16px;
+  width: calc(var(--panda-size) * 0.145);
+  height: calc(var(--panda-size) * 0.105);
   border-radius: 50%;
   background: #1f1717;
   transform: translateX(-50%);
 }
 
 .v2-panda-mouth {
-  top: 113px;
+  top: calc(var(--panda-size) * 0.743);
   left: 50%;
-  width: 36px;
-  height: 14px;
-  border-bottom: 4px solid #1f1717;
+  width: calc(var(--panda-size) * 0.237);
+  height: calc(var(--panda-size) * 0.092);
+  border-bottom: calc(var(--panda-size) * 0.026) solid #1f1717;
   border-radius: 0 0 30px 30px;
   transform: translateX(-50%);
 }
 
 .v2-panda.sad .v2-panda-mouth {
-  top: 119px;
-  border-top: 4px solid #1f1717;
+  top: calc(var(--panda-size) * 0.783);
+  border-top: calc(var(--panda-size) * 0.026) solid #1f1717;
   border-bottom: 0;
   border-radius: 30px 30px 0 0;
 }
 
 .v2-panda-headband {
-  top: 20px;
-  left: 35px;
-  width: 82px;
-  height: 18px;
+  top: calc(var(--panda-size) * 0.132);
+  left: calc(var(--panda-size) * 0.23);
+  width: calc(var(--panda-size) * 0.539);
+  height: calc(var(--panda-size) * 0.118);
   border-radius: 999px;
   background: linear-gradient(90deg, var(--v2-cinnabar), var(--v2-gold));
   transform: rotate(-10deg);
 }
 
 .v2-panda-backpack {
-  right: -2px;
-  bottom: 35px;
-  width: 38px;
-  height: 54px;
+  right: calc(var(--panda-size) * -0.013);
+  bottom: calc(var(--panda-size) * 0.23);
+  width: calc(var(--panda-size) * 0.25);
+  height: calc(var(--panda-size) * 0.355);
   border-radius: 16px;
   background: linear-gradient(180deg, var(--v2-jade), #0b716c);
 }
 
 .v2-panda-star {
-  right: 20px;
-  bottom: 32px;
-  width: 22px;
-  height: 22px;
+  right: calc(var(--panda-size) * 0.132);
+  bottom: calc(var(--panda-size) * 0.211);
+  width: calc(var(--panda-size) * 0.145);
+  height: calc(var(--panda-size) * 0.145);
   background: var(--v2-gold);
   clip-path: polygon(50% 0, 61% 36%, 98% 36%, 68% 57%, 79% 92%, 50% 70%, 21% 92%, 32% 57%, 2% 36%, 39% 36%);
   filter: drop-shadow(0 0 8px rgba(255, 215, 107, 0.8));
 }
 
 .v2-panda-bubble {
-  max-width: 260px;
-  margin-top: 0.4rem;
+  max-width: min(260px, 100%);
+  margin-top: 0;
   border: 1px solid rgba(255, 215, 107, 0.3);
   border-radius: 18px;
   background: rgba(8, 30, 42, 0.86);
@@ -4444,6 +4975,109 @@ button:disabled {
 @keyframes v2-pulse {
   0%, 100% { opacity: 0.65; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.08); }
+}
+
+/*
+ * Phone compaction for the gameplay shell. These are the mobile base values;
+ * the 48rem block below restores the roomier tablet/desktop sizing.
+ */
+.v2-game-title h1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1.28rem;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.v2-mission-arena .mission-prompt {
+  padding: 0.75rem 0.85rem;
+}
+
+.v2-mission-arena .mission-prompt strong {
+  font-size: clamp(1.35rem, 6vw, 2rem);
+}
+
+.v2-mission-arena .answer-button {
+  min-height: 60px;
+  padding: 0.7rem 0.85rem;
+  font-size: 1rem;
+}
+
+.v2-mission-arena .match-item,
+.v2-mission-arena .match-answer {
+  min-height: 62px;
+  padding: 0.6rem 0.65rem;
+}
+
+.v2-mission-arena .match-item span {
+  font-size: 1.25rem;
+}
+
+.v2-mission-arena .matching-board {
+  gap: clamp(2.25rem, 11vw, 3rem);
+}
+
+.v2-mission-arena .match-line-main {
+  stroke-width: 4;
+}
+
+.v2-mission-arena .match-line-glow {
+  stroke-width: 8;
+}
+
+.v2-mission-status .v2-panda-guide {
+  --panda-size: 62px;
+}
+
+.v2-panda-bubble {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.32;
+}
+
+@media (min-width: 48rem) {
+  .v2-game-title h1 {
+    display: block;
+    overflow: hidden;
+    -webkit-line-clamp: none;
+    line-height: 1.1;
+  }
+
+  .v2-mission-arena .mission-prompt {
+    padding: 1rem;
+  }
+
+  .v2-mission-arena .mission-prompt strong {
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+  }
+
+  .v2-mission-arena .answer-button {
+    min-height: 74px;
+    padding: 1rem;
+    font-size: 1.08rem;
+  }
+
+  .v2-mission-arena .match-item,
+  .v2-mission-arena .match-answer {
+    min-height: 80px;
+    padding: 0.8rem;
+  }
+
+  .v2-mission-arena .match-item span {
+    font-size: 1.45rem;
+  }
+
+  .v2-mission-status .v2-panda-guide {
+    --panda-size: 88px;
+  }
+
+  .v2-panda-bubble {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
 }
 
 @media (min-width: 48rem) {
@@ -4492,6 +5126,19 @@ button:disabled {
     align-items: center;
   }
 
+  .v2-game-header {
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    margin-bottom: 1.1rem;
+  }
+
+  .v2-game-title h1 {
+    white-space: normal;
+  }
+
+  .v2-game-title p {
+    display: block;
+  }
+
   .v2-page-top h1,
   .v2-game-header h1 {
     font-size: 2.35rem;
@@ -4515,8 +5162,9 @@ button:disabled {
     font-size: 3.2rem;
   }
 
+  /* Sized for the old orbit decoration; the journey is content-driven. */
   .v2-hero-stage {
-    min-height: 560px;
+    min-height: 0;
   }
 
   .v2-game-console,
@@ -4658,6 +5306,46 @@ button:disabled {
     grid-template-columns: 250px minmax(0, 1fr);
   }
 
+  .v2-game-console {
+    gap: 0.8rem;
+    padding: 0.9rem;
+  }
+
+  .v2-mission-status,
+  .v2-mission-actions {
+    grid-template-columns: minmax(0, 1fr) 50px;
+  }
+
+  .v2-mission-status .v2-panda-guide {
+    --panda-size: 132px;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .v2-mission-status .v2-heart-row,
+  .v2-mission-status .v2-mission-counter {
+    display: grid;
+    grid-column: 1;
+  }
+
+  .v2-mission-status .v2-console-pause,
+  .v2-mission-actions .v2-console-sound {
+    grid-column: 2;
+  }
+
+  .v2-mission-actions .v2-console-stat,
+  .v2-mission-actions .hint {
+    grid-column: 1;
+  }
+
+  .v2-mission-actions .hint {
+    width: 100%;
+  }
+
+  .v2-console-map {
+    display: inline-flex;
+  }
+
   .v2-result-info {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4733,8 +5421,7 @@ button:disabled {
 }
 
 .v2-floating-island,
-.v2-portal-light,
-.v2-orbit-ring {
+.v2-portal-light {
   animation: none !important;
 }
 
@@ -4757,8 +5444,6 @@ button:disabled {
 }
 
 .v2-route-beam,
-.v2-map-star,
-.v2-reward-orb,
 .v2-crown-orb,
 .v2-level-island.current,
 .v2-level-island.perfect {
@@ -4780,6 +5465,12 @@ button:disabled {
 .v2-achievement-medal {
   content-visibility: auto;
   contain-intrinsic-size: 260px;
+}
+
+/* Sealed cards are far shorter than an open one, so they need their own
+   size hint or the skipped-render estimate makes the scrollbar jump. */
+.v2-knowledge-crystal.closed {
+  contain-intrinsic-size: 96px;
 }
 
 @keyframes v2-panda-bob {

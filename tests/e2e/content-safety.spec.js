@@ -24,7 +24,7 @@ const openLevel = async (page, chapterText, levelText) => {
   const chapter = page.locator("article").filter({ hasText: chapterText });
   await chapter.getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: levelText }).click();
-  await page.getByRole("button", { name: "Start Mission" }).click();
+  await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 };
 
 test("audio mission hides pinyin until after the answer", async ({ page }) => {
@@ -33,7 +33,7 @@ test("audio mission hides pinyin until after the answer", async ({ page }) => {
 
   await page.getByRole("button", { name: "a", exact: true }).click();
   await page.locator(".drop-zone").click();
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "ไปต่อ" }).click();
   await expect(page.getByText("xióngmāo", { exact: true })).toHaveCount(0);
 
   await page.getByRole("button", { name: "熊猫", exact: true }).click();

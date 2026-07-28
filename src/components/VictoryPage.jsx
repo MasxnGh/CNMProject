@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Crown, Home, Medal, RotateCcw, Sparkles, Star } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Coins, Crown, Home, Medal, RotateCcw, Sparkles, Star } from "lucide-react";
 import { useEffect } from "react";
 import { playWinSound } from "../utils/speech";
 import Confetti from "./Confetti";
@@ -7,6 +7,7 @@ import PandaGuide from "./PandaGuide";
 
 export default function VictoryPage({ progress, onHome, onReset }) {
   const perfectLevels = Object.values(progress.levelStars ?? {}).filter((stars) => Number(stars) === 3).length;
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     playWinSound();
@@ -33,19 +34,26 @@ export default function VictoryPage({ progress, onHome, onReset }) {
           </motion.div>
         </div>
         <main className="v2-victory-panel">
-          <div className="v2-crown-orb">
-            <Crown size={44} />
-          </div>
           <h1>ยินดีด้วย! คุณพิชิตภารกิจ Dujeen Quest สำเร็จแล้ว</h1>
           <div className="v2-victory-stats">
-            <div><Sparkles /><strong>{progress.xp}</strong><span>XP</span></div>
-            <div><Sparkles /><strong>{progress.coins}</strong><span>Coins</span></div>
-            <div><Star /><strong>{progress.totalStars ?? 0}</strong><span>Stars</span></div>
-            <div><Medal /><strong>{progress.badges.length}</strong><span>Badges</span></div>
-            <div><Crown /><strong>{perfectLevels}/15</strong><span>3-Star</span></div>
+            <div><Sparkles /><strong>{progress.xp}</strong><span>ค่าประสบการณ์</span></div>
+            <div><Coins /><strong>{progress.coins}</strong><span>เหรียญ</span></div>
+            <div><Star /><strong>{progress.totalStars ?? 0}</strong><span>ดาวสะสม</span></div>
+            <div><Medal /><strong>{progress.badges.length}</strong><span>ตราสะสม</span></div>
+            <div><Crown /><strong>{perfectLevels}/15</strong><span>ด่านสามดาว</span></div>
           </div>
+          {/* The journey ends the way it was tracked: with a seal. */}
           <div className="v2-certificate">
-            <span>Certificate of Adventure</span>
+            <motion.span
+              className="dq-seal earned v2-certificate-seal"
+              aria-hidden="true"
+              initial={reduceMotion ? { opacity: 0 } : { scale: 2.8, opacity: 0, rotate: -22 }}
+              animate={reduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1, rotate: -9 }}
+              transition={{ delay: 0.45, type: "spring", stiffness: 420, damping: 16 }}
+            >
+              畢
+            </motion.span>
+            <span className="v2-certificate-eyebrow">ตราประจำผู้พิชิตเส้นทาง</span>
             <strong>พิชิตภารกิจ Dujeen Quest</strong>
             <p>ผ่านครบ 15 ด่าน สะสมดาว ปลดล็อกคลังความรู้ และเปิดสมบัติแห่งความรู้ภาษาจีน</p>
           </div>

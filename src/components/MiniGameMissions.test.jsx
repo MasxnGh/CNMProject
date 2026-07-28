@@ -68,7 +68,7 @@ describe("MatchingMission", () => {
     expect(shuffleWithSeed(cards, "mission-1:0:left")).not.toEqual(shuffleWithSeed(cards, "mission-1:1:left"));
   });
 
-  it("renders independent shuffled columns and a line-free mobile matched tray", () => {
+  it("renders independent shuffled columns, connector lines on every viewport, and a mobile matched tray", () => {
     const missionView = {
       id: "matching-1",
       retrySeed: 2,
@@ -89,8 +89,23 @@ describe("MatchingMission", () => {
         "matching-1:2:right",
       ),
     );
-    expect(container.querySelector(".match-lines")).toHaveClass("hidden", "md:block");
+    expect(container.querySelector(".match-lines")).not.toHaveClass("hidden");
     expect(screen.getByLabelText("คู่ที่จับแล้ว")).toHaveClass("md:hidden");
+  });
+
+  it("numbers each matched pair on both sides so the connection stays readable on phones", () => {
+    const missionView = {
+      id: "matching-pairs",
+      leftCards: ["猫", "狗"],
+      rightCards: ["แมว", "หมา"],
+    };
+    const { container } = render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+
+    const badges = [...container.querySelectorAll(".match-pair-number")].map((node) => node.textContent);
+    expect(badges).toEqual(["1", "1"]);
   });
 
   it("never places a correct pair on the same row for real matching missions", () => {
@@ -209,16 +224,27 @@ describe("ShoppingMission", () => {
     const { container } = render(<ShoppingMission missionView={{
       id: "shopping-1",
       question: "เลือกของตามรายการ",
-      targetList: ["苹果", "茶"],
-      items: [{ id: "苹果", emoji: "apple" }, { id: "茶", emoji: "tea" }],
+      items: [{ id: "苹果", label: "píngguǒ", emoji: "apple" }, { id: "茶", label: "chá", emoji: "tea" }],
     }} onSubmit={onSubmit} disabled={false} feedback={null} />);
 
     const basket = screen.getByRole("status", { name: "จำนวนสินค้าในตะกร้า" });
     expect(basket).toHaveTextContent("0");
-    fireEvent.click(screen.getByRole("button", { name: /苹果/ }));
+    fireEvent.click(screen.getByRole("button", { name: /píngguǒ/ }));
     expect(basket).toHaveTextContent("1");
     expect(container).not.toHaveTextContent("apple =");
     fireEvent.click(screen.getByRole("button", { name: "ตรวจรายการ" }));
     expect(onSubmit).toHaveBeenCalledWith(["苹果"]);
+  });
+
+  it("shows the pinyin reading on each item card instead of the Chinese answer text", () => {
+    const { container } = render(<ShoppingMission missionView={{
+      id: "shopping-2",
+      question: "เลือก 水 และ 茶 ให้แพนด้าเตรียมเสบียง",
+      items: [{ id: "水", label: "shuǐ", emoji: "💧" }, { id: "茶", label: "chá", emoji: "🍵" }],
+    }} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+
+    expect(screen.getByText("shuǐ")).toBeInTheDocument();
+    expect(screen.getByText("chá")).toBeInTheDocument();
+    expect(container.querySelector(".shop-item")).not.toHaveTextContent("水");
   });
 });
