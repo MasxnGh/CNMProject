@@ -89,6 +89,8 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
   const pairNumbers = new Map(Object.keys(matches).map((left, index) => [left, index + 1]));
   const leftByAnswer = new Map(Object.entries(matches).map(([left, right]) => [right, left]));
   const pairNumberFor = (answer) => pairNumbers.get(leftByAnswer.get(answer));
+  const verdictByLeft = new Map((feedback?.parts ?? []).map((part) => [part.key, part]));
+  const verdictFor = (left) => (feedback && !feedback.correct ? verdictByLeft.get(left) : null);
 
   useEffect(() => {
     const measureLines = () => {
@@ -179,23 +181,29 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
         </svg>
 
         <div className="match-column">
-          {leftOptions.map((left) => (
-            <motion.button
-              key={left}
-              ref={(node) => {
-                if (node) leftRefs.current[left] = node;
-              }}
-              className={`match-item ${activeLeft === left ? "active" : ""} ${matches[left] ? "matched" : ""}`}
-              whileHover={reduceMotion ? undefined : { x: 4 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              onClick={() => !matches[left] && setActiveLeft(left)}
-              disabled={disabled || Boolean(matches[left])}
-            >
-              {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
-              <span>{left}</span>
-              <small>{matches[left] ?? "เลือกคำแปล"}</small>
-            </motion.button>
-          ))}
+          {leftOptions.map((left) => {
+            const verdict = verdictFor(left);
+            return (
+              <motion.button
+                key={left}
+                ref={(node) => {
+                  if (node) leftRefs.current[left] = node;
+                }}
+                className={`match-item ${activeLeft === left ? "active" : ""} ${matches[left] ? "matched" : ""} ${verdict ? `pair-${verdict.status}` : ""}`}
+                whileHover={reduceMotion ? undefined : { x: 4 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                onClick={() => !matches[left] && setActiveLeft(left)}
+                disabled={disabled || Boolean(matches[left])}
+              >
+                {matches[left] ? <b className="match-pair-number" aria-hidden="true">{pairNumbers.get(left)}</b> : null}
+                <span>{left}</span>
+                <small>{matches[left] ?? "เลือกคำแปล"}</small>
+                {verdict && verdict.status !== "correct" ? (
+                  <b className="pair-expected">ควรเป็น {verdict.expected}</b>
+                ) : null}
+              </motion.button>
+            );
+          })}
         </div>
         <div className="match-column">
           {rightOptions.map((option) => (

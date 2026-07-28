@@ -26,6 +26,7 @@ vi.mock("framer-motion", async () => {
   return {
     AnimatePresence: ({ children }) => ReactModule.createElement(ReactModule.Fragment, null, children),
     motion,
+    useReducedMotion: () => false,
   };
 });
 

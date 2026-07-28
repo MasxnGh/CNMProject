@@ -6,6 +6,7 @@ export default function ShoppingMission({ missionView, onSubmit, disabled, feedb
   const [selected, setSelected] = useState([]);
   const reduceMotion = useReducedMotion();
   const correctItems = Array.isArray(feedback?.correctOption) ? feedback.correctOption : [];
+  const statusByItem = new Map((feedback?.parts ?? []).map((part) => [part.key, part.status]));
 
   const toggle = (hanzi) => {
     if (disabled) return;
@@ -32,10 +33,11 @@ export default function ShoppingMission({ missionView, onSubmit, disabled, feedb
           const picked = selected.includes(item.id);
           const isCorrect = feedback && correctItems.includes(item.id);
           const isWrong = feedback && picked && !correctItems.includes(item.id);
+          const status = feedback && !feedback.correct ? statusByItem.get(item.id) : null;
           return (
             <motion.button
               key={item.id}
-              className={`shop-item ${picked ? "picked" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+              className={`shop-item ${picked ? "picked" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""} ${status ? `pick-${status}` : ""}`}
               whileHover={reduceMotion ? undefined : { y: -5, scale: 1.025 }}
               whileTap={reduceMotion ? undefined : { y: 3, scale: 0.96 }}
               animate={picked && !reduceMotion ? { y: [0, -4, 0] } : {}}
@@ -44,6 +46,8 @@ export default function ShoppingMission({ missionView, onSubmit, disabled, feedb
             >
               <span>{item.emoji}</span>
               <strong>{item.label ?? item.id}</strong>
+              {status === "extra" ? <b className="pick-tag extra">ไม่อยู่ในรายการ</b> : null}
+              {status === "missing" ? <b className="pick-tag missing">ยังขาด</b> : null}
             </motion.button>
           );
         })}

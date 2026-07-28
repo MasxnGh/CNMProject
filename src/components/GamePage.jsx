@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Heart, Lightbulb, Map, Pause, Shield, Star, Target, Volume2, VolumeX } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { evaluateMission } from "../utils/evaluateMission";
+import { diagnoseMission } from "../utils/diagnoseMission";
 import { createGameSession, gameSessionReducer } from "../utils/gameSessionReducer";
 import { getMissionView } from "../utils/missionViewModel";
 import {
@@ -13,6 +13,7 @@ import {
 } from "../utils/speech";
 import soundManager from "../utils/soundManager";
 import MissionIntro from "./MissionIntro";
+import MissionVerdict from "./MissionVerdict";
 import PandaGuide from "./PandaGuide";
 import PauseOverlay from "./PauseOverlay";
 import PlayerStatus from "./PlayerStatus";
@@ -183,7 +184,7 @@ export default function GamePage({
 
   const submitCandidate = useCallback((candidate) => {
     if (state.phase !== "playing" || !mission) return;
-    const isCorrect = evaluateMission(mission, candidate);
+    const { correct: isCorrect, parts, notes } = diagnoseMission(mission, candidate);
     if (isCorrect && mission.type === "finalBoss") soundManager.play("bossHit");
     else if (isCorrect) playCorrectSound();
     else playWrongSound();
@@ -192,6 +193,8 @@ export default function GamePage({
       candidate,
       correctOption: mission.answer.correctSequence ?? mission.answer.correctAnswer,
       isCorrect,
+      parts,
+      notes,
     });
   }, [mission, state.phase]);
 
@@ -361,11 +364,12 @@ export default function GamePage({
                 {state.showHint ? <div className="v2-hint-panel"><Lightbulb size={20} /> {mission.hint}</div> : null}
                 {speechMessage ? <div className="v2-hint-panel warning">{speechMessage}</div> : null}
                 {state.feedback ? (
-                  <div className={`v2-feedback ${state.feedback.correct ? "right" : "wrong"}`}>
-                    <strong>{state.feedback.text}</strong>
-                    {missionView.explanation ? <span>{missionView.explanation}</span> : null}
-                    <button ref={continueRef} className="v2-button primary" type="button" onClick={continueMission}>ไปต่อ</button>
-                  </div>
+                  <MissionVerdict
+                    feedback={state.feedback}
+                    explanation={missionView.explanation}
+                    onContinue={continueMission}
+                    continueRef={continueRef}
+                  />
                 ) : null}
               </AnimatePresence>
             </main>
