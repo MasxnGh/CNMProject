@@ -6,6 +6,8 @@ playwright-report/
 blob-report/
 tmp-chrome-v2/
 .superpowers/
+.claude/
 *.log
 vite-*.log
 .worktrees/
+PR_BODY.md

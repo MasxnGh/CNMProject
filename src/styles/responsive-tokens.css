@@ -16,6 +16,8 @@
   --dq-page-block: var(--dq-space-3);
   --dq-content-max: 80rem;
   --dq-game-content-max: 90rem;
+  /* Reading measure for mission content on wide screens. */
+  --dq-mission-measure: 46rem;
 }
 
 html,

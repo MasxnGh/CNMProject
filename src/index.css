@@ -2911,6 +2911,12 @@ button:disabled {
   margin-inline: auto;
 }
 
+/* On the game page the header and the play area both span the container, so a
+   centred 860px HUD floated out of alignment between them. */
+.v2-game-scene .v2-status-hud.compact {
+  max-width: none;
+}
+
 .v2-player-chip {
   display: flex;
   align-items: center;
@@ -3663,31 +3669,24 @@ button:disabled {
 .v2-mission-status,
 .v2-mission-actions {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 50px;
   gap: 0.45rem;
   align-items: stretch;
   min-width: 0;
 }
 
-.v2-mission-status .v2-panda-guide,
-.v2-mission-actions .v2-console-stat,
-.v2-mission-actions .hint {
-  grid-column: auto;
+/* Phone: the guide sits beside the score, and the three controls share one
+   row underneath. */
+.v2-mission-status {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.v2-mission-actions {
+  grid-template-columns: minmax(0, 1fr) 50px 50px;
 }
 
 .v2-mission-status .v2-heart-row,
 .v2-mission-status .v2-mission-counter {
   display: none;
-}
-
-.v2-mission-status .v2-console-pause,
-.v2-mission-actions .v2-console-sound {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-.v2-mission-status {
-  grid-template-columns: minmax(0, 1fr) 50px;
 }
 
 .v2-mission-status .v2-panda-guide {
@@ -3756,7 +3755,7 @@ button:disabled {
   margin-bottom: 1rem;
 }
 
-.v2-mission-progress > div {
+.v2-mission-progress > div:first-child {
   display: flex;
   align-items: stretch;
   flex-direction: column;
@@ -5015,8 +5014,15 @@ button:disabled {
   font-size: 1.25rem;
 }
 
+/* The cards used to take half the board each, which left a thin gutter that
+   the connectors had to cram into. Cap the board and size the gutter as a
+   share of it, so the card-to-gutter ratio is the same on a phone and on a
+   1920 monitor rather than tracking the viewport. */
 .v2-mission-arena .matching-board {
-  gap: clamp(2.25rem, 11vw, 3rem);
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  column-gap: 22%;
+  row-gap: 0;
 }
 
 .v2-mission-arena .match-line-main {
@@ -5061,8 +5067,8 @@ button:disabled {
 
   .v2-mission-arena .match-item,
   .v2-mission-arena .match-answer {
-    min-height: 80px;
-    padding: 0.8rem;
+    min-height: 64px;
+    padding: 0.65rem 0.75rem;
   }
 
   .v2-mission-arena .match-item span {
@@ -5225,7 +5231,7 @@ button:disabled {
     display: inline-flex;
   }
 
-  .v2-mission-progress > div,
+  .v2-mission-progress > div:first-child,
   .v2-chapter-footer,
   .v2-map-legend,
   .v2-badge-detail {
@@ -5237,7 +5243,7 @@ button:disabled {
     justify-content: space-between;
   }
 
-  .v2-mission-progress > div {
+  .v2-mission-progress > div:first-child {
     align-items: end;
   }
 
@@ -5303,7 +5309,17 @@ button:disabled {
   }
 
   .v2-game-layout {
-    grid-template-columns: 250px minmax(0, 1fr);
+    /* Wide enough for the two stat boxes to sit side by side without the
+       mission count wrapping onto a second line. */
+    grid-template-columns: 272px minmax(0, 1fr);
+  }
+
+  /* Hold the mission to a readable measure. Left to stretch, a two-character
+     word sat on a 543px card at 1920px wide. Padding does the centring so
+     every child - prompt, board, verdict, hint - lines up on one column
+     without needing its own width rule. */
+  .v2-mission-arena {
+    padding-inline: max(1.2rem, calc((100% - var(--dq-mission-measure)) / 2));
   }
 
   .v2-game-console {
@@ -5311,9 +5327,18 @@ button:disabled {
     padding: 0.9rem;
   }
 
-  .v2-mission-status,
-  .v2-mission-actions {
-    grid-template-columns: minmax(0, 1fr) 50px;
+  /* Mission count and score share equal columns so the console reads as a
+     grid rather than one wide box beside one narrow one. */
+  .v2-mission-status {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .v2-mission-status .v2-mission-counter {
+    grid-column: 1;
+  }
+
+  .v2-mission-status .v2-console-stat:not(.v2-mission-counter) {
+    grid-column: 2;
   }
 
   .v2-mission-status .v2-panda-guide {
@@ -5322,15 +5347,13 @@ button:disabled {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .v2-mission-status .v2-heart-row,
-  .v2-mission-status .v2-mission-counter {
+  .v2-mission-status .v2-heart-row {
     display: grid;
-    grid-column: 1;
+    grid-column: 1 / -1;
   }
 
-  .v2-mission-status .v2-console-pause,
-  .v2-mission-actions .v2-console-sound {
-    grid-column: 2;
+  .v2-mission-status .v2-mission-counter {
+    display: grid;
   }
 
   .v2-mission-actions .v2-console-stat,

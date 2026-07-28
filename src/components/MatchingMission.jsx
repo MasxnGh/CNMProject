@@ -165,8 +165,10 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
             </linearGradient>
           </defs>
           {connectionLines.map((line) => {
-            const horizontal = Math.max(54, Math.abs(line.x2 - line.x1));
-            const curve = Math.max(28, horizontal * 0.34);
+            const horizontal = Math.max(24, Math.abs(line.x2 - line.x1));
+            // Keep the control offset proportional. A fixed floor made the
+            // curves swing hard and bunch together in a phone-width gutter.
+            const curve = Math.max(10, horizontal * 0.36);
             const path = `M ${line.x1} ${line.y1} C ${line.x1 + curve} ${line.y1}, ${line.x2 - curve} ${line.y2}, ${line.x2} ${line.y2}`;
             return (
               <g key={line.id}>
