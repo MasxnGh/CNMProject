@@ -80,7 +80,9 @@ test("locked chapter gate remains readable", async ({ page }) => {
 
   const lockedGate = page.locator(".v2-chapter-portal.locked").first();
   await expect(lockedGate).toBeVisible();
-  await expect(lockedGate.getByRole("button")).toBeDisabled();
+  // the way in stays shut; the skip-test shortcut beside it is meant to be open
+  await expect(lockedGate.getByRole("button", { name: /เข้าแผนที่/ })).toBeDisabled();
+  await expect(lockedGate.getByRole("button", { name: /ข้ามด่านด้วยบททดสอบ/ })).toBeEnabled();
 
   await expect.poll(async () => lockedGate.evaluate((portal) => Number.parseFloat(window.getComputedStyle(portal).opacity))).toBeGreaterThanOrEqual(0.85);
   await expect(lockedGate).toHaveCSS("filter", "none");

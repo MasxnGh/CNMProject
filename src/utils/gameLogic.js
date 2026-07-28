@@ -14,13 +14,32 @@ export const getSetStars = (progress, setId) => {
 
 export const isLevelCompleted = (progress, levelId) => getLevelStars(progress, levelId) > 0;
 
+/* Clearing a chapter's checkpoint opens that chapter outright. Without this the
+   shortcut would be useless: skipping a chapter credits one star per level,
+   which never reaches the star gate guarding the next one. */
+const checkpointClears = (progress, setId) =>
+  (progress.clearedCheckpoints ?? []).includes(`checkpoint-${setId}`);
+
 export const isLevelUnlocked = (progress, levelId) => {
   const id = Number(levelId);
   if (id === 1) return true;
+
+  const level = levels.find((item) => item.id === id);
+  if (level && checkpointClears(progress, level.setId)) return true;
+
   if (id === 15) return isLevelCompleted(progress, 14) && getTotalStars(progress) >= 30;
   if (id >= 6 && id <= 10) return getSetStars(progress, 1) >= 8 && isLevelCompleted(progress, id - 1);
   if (id >= 11 && id <= 14) return getTotalStars(progress) >= 18 && isLevelCompleted(progress, id - 1);
   return isLevelCompleted(progress, id - 1);
+};
+
+/* The chapter card and its status text used to answer this question with two
+   different rules, so a card could offer a map whose levels were all locked. */
+export const isSetUnlocked = (progress, setId) => {
+  const set = stageSets.find((item) => item.id === Number(setId));
+  if (!set) return false;
+  if (checkpointClears(progress, set.id)) return true;
+  return levels.filter((level) => level.setId === set.id).some((level) => isLevelUnlocked(progress, level.id));
 };
 
 export const getUnlockedLevels = (progress) =>
@@ -41,7 +60,7 @@ export const getSetProgress = (progress, setId) => {
 export const getSetStatus = (progress, setId) => {
   const set = stageSets.find((item) => item.id === Number(setId));
   const setLevels = levels.filter((level) => level.setId === Number(setId));
-  const unlocked = setLevels.some((level) => isLevelUnlocked(progress, level.id));
+  const unlocked = isSetUnlocked(progress, setId);
   const completed = setLevels.every((level) => isLevelCompleted(progress, level.id));
   if (completed) return "ผ่านแล้ว";
   if (!unlocked && set?.requiredStars) return `ต้องมีดาวอย่างน้อย ${set.requiredStars} ดวง`;

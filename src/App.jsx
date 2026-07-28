@@ -9,6 +9,7 @@ import ResultPage from "./components/ResultPage";
 import SoundToggle from "./components/SoundToggle";
 import StageSelectPage from "./components/StageSelectPage";
 import { getLevelById } from "./data/levels";
+import { buildCheckpointLevel, completeCheckpoint } from "./utils/checkpoint";
 import { completeLevel, getCurrentLevelId, isLevelUnlocked } from "./utils/gameLogic";
 import { setAudioEnabled } from "./utils/speech";
 import { defaultProgress, loadProgress, resetProgress, saveProgress } from "./utils/storage";
@@ -33,6 +34,7 @@ export default function App() {
   const [setId, setSetId] = useState(1);
   const [activeLevelId, setActiveLevelId] = useState(initialProgress.lastPlayedLevel ?? 1);
   const [result, setResult] = useState(null);
+  const [checkpoint, setCheckpoint] = useState(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(() => {
     if (typeof window === "undefined") return true;
@@ -80,14 +82,36 @@ export default function App() {
     setPage("map");
   };
 
+  /* The checkpoint plays through the normal mission engine: it is a synthesised
+     level, so nothing about GamePage has to know it exists. */
+  const playCheckpoint = (targetSetId) => {
+    const built = buildCheckpointLevel(progress, targetSetId);
+    if (!built) return;
+    setCheckpoint(built);
+    setPage("game");
+  };
+
   const playLevel = (levelId) => {
     if (!isLevelUnlocked(progress, levelId)) return;
+    setCheckpoint(null);
     setActiveLevelId(levelId);
     updateProgress({ ...progress, lastPlayedLevel: levelId });
     setPage("game");
   };
 
   const finishLevel = (level, correctCount, meta = {}) => {
+    if (level.isCheckpoint) {
+      const outcome = completeCheckpoint(progress, level, {
+        correct: correctCount,
+        hintsUsed: meta.hintsUsed ?? 0,
+        score: meta.score ?? 0,
+      });
+      const savedProgress = updateProgress(outcome.progress);
+      setResult({ ...outcome, progress: savedProgress });
+      setPage("result");
+      return;
+    }
+
     const outcome = completeLevel(progress, level, {
       correct: correctCount,
       hintsUsed: meta.hintsUsed ?? 0,
@@ -117,6 +141,11 @@ export default function App() {
 
   const retryLevel = () => {
     setPage("game");
+  };
+
+  const leaveResult = () => {
+    setCheckpoint(null);
+    setPage("map");
   };
 
   const confirmReset = () => {
@@ -160,13 +189,13 @@ export default function App() {
             onReset={() => setResetOpen(true)}
           />
         ) : page === "stages" ? (
-          <StageSelectPage key="stages" progress={progress} onOpenSet={openSet} onHome={goHome} />
+          <StageSelectPage key="stages" progress={progress} onOpenSet={openSet} onHome={goHome} onPlayCheckpoint={playCheckpoint} />
         ) : page === "map" ? (
-          <MapPage key={`map-${setId}`} setId={setId} progress={progress} onBack={() => setPage("stages")} onPlayLevel={playLevel} />
+          <MapPage key={`map-${setId}`} setId={setId} progress={progress} onBack={() => setPage("stages")} onPlayLevel={playLevel} onPlayCheckpoint={playCheckpoint} />
         ) : page === "game" ? (
           <GamePage
-            key={`game-${activeLevelId}`}
-            level={activeLevel}
+            key={`game-${checkpoint ? checkpoint.id : activeLevelId}`}
+            level={checkpoint ?? activeLevel}
             progress={progress}
             onFinish={finishLevel}
             onMap={() => setPage("map")}
@@ -182,8 +211,8 @@ export default function App() {
             key={`result-${result.level.id}-${result.correct}-${result.stars}`}
             result={result}
             progress={progress}
-            onNext={nextLevel}
-            onMap={() => setPage("map")}
+            onNext={result.level.isCheckpoint ? leaveResult : nextLevel}
+            onMap={leaveResult}
             onRetry={retryLevel}
             onVictory={() => setPage("victory")}
           />

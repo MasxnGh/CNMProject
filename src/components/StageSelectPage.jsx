@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Lock, Map, Star } from "lucide-react";
 import { stageSets } from "../data/levels";
-import { getSetProgress, getSetStatus } from "../utils/gameLogic";
+import { getSetProgress, getSetStatus, isSetUnlocked } from "../utils/gameLogic";
 import PlayerStatus from "./PlayerStatus";
 import ProgressBar from "./ProgressBar";
 
@@ -9,7 +9,7 @@ import ProgressBar from "./ProgressBar";
    journey the same way: market, festival, palace. */
 const chapterSeals = ["市", "節", "殿"];
 
-export default function StageSelectPage({ progress, onOpenSet, onHome }) {
+export default function StageSelectPage({ progress, onOpenSet, onHome, onPlayCheckpoint }) {
   return (
     <motion.section
       className="scene dq-scene v2-scene v2-stage-scene"
@@ -34,7 +34,7 @@ export default function StageSelectPage({ progress, onOpenSet, onHome }) {
           {stageSets.map((set, index) => {
             const { completed, total, stars, maxStars } = getSetProgress(progress, set.id);
             const status = getSetStatus(progress, set.id);
-            const unlocked = set.requiredStars === 0 || progress.totalStars >= set.requiredStars;
+            const unlocked = isSetUnlocked(progress, set.id);
             const cleared = completed === total;
             return (
               <motion.article
@@ -61,6 +61,20 @@ export default function StageSelectPage({ progress, onOpenSet, onHome }) {
                   <span>{set.requiredStars ? `ต้องมี ${set.requiredStars} ดาว` : "เปิดทันที"}</span>
                 </div>
                 <ProgressBar value={stars} max={maxStars} label="ดาวที่สะสมได้" />
+                {/* A locked chapter is exactly where the shortcut matters, and
+                    its map cannot be opened to reach the gate on the route. */}
+                {!unlocked ? (
+                  <motion.button
+                    type="button"
+                    className="v2-chapter-checkpoint"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 2 }}
+                    onClick={() => onPlayCheckpoint?.(set.id)}
+                  >
+                    <span className="dq-seal v2-checkpoint-seal" aria-hidden="true">試</span>
+                    ข้ามด่านด้วยบททดสอบ
+                  </motion.button>
+                ) : null}
                 <div className="v2-chapter-footer">
                   <span>{status}</span>
                   <motion.button className="v2-button mini" whileHover={unlocked ? { y: -2 } : {}} whileTap={unlocked ? { y: 2 } : {}} onClick={() => unlocked && onOpenSet(set.id)} disabled={!unlocked}>
