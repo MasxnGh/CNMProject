@@ -174,7 +174,7 @@ const matchingMission = (levelId, order, terms, count = 5) => {
     type: "matching",
     beforeAnswer: {
       title: "ภารกิจจับคู่ฮั่นจื้อ",
-      instruction: "เลือกคำจีนทางซ้าย แล้วเลือกคำแปลไทยทางขวาเพื่อโยงคู่ให้ครบ",
+      instruction: "เลือกคำจีนทางซ้าย แล้วเลือกคำแปลไทยทางขวาเพื่อโยงคู่ให้ครบ แตะคู่ที่โยงแล้วเพื่อยกเลิก",
       leftCards: pairs.map((pair) => pair.left),
       rightCards: pairs.map((pair) => pair.right),
     },

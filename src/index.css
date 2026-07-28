@@ -4828,13 +4828,20 @@ button:disabled {
   height: var(--panda-size);
 }
 
+/* Cheeks ride on the face's own background so they cost no extra element. */
 .v2-panda-face {
   position: absolute;
   inset: calc(var(--panda-size) * 0.092);
-  border: calc(var(--panda-size) * 0.033) solid #1f1717;
+  border: calc(var(--panda-size) * 0.03) solid #201a1a;
   border-radius: 50%;
-  background: linear-gradient(180deg, #fff9e9, #e7dcc5);
-  box-shadow: 0 calc(var(--panda-size) * 0.118) 0 rgba(0, 0, 0, 0.18);
+  background:
+    radial-gradient(circle at 21% 63%, rgba(240, 138, 130, 0.5) 0 9%, transparent 10%),
+    radial-gradient(circle at 79% 63%, rgba(240, 138, 130, 0.5) 0 9%, transparent 10%),
+    radial-gradient(circle at 50% 18%, #fffdf4 0 32%, transparent 62%),
+    linear-gradient(180deg, #fff9e9, #ece0c8);
+  box-shadow:
+    inset 0 calc(var(--panda-size) * -0.06) calc(var(--panda-size) * 0.08) rgba(120, 90, 60, 0.16),
+    0 calc(var(--panda-size) * 0.05) calc(var(--panda-size) * 0.09) rgba(0, 0, 0, 0.28);
 }
 
 .v2-panda-ear,
@@ -4849,45 +4856,74 @@ button:disabled {
 }
 
 .v2-panda-ear {
-  top: calc(var(--panda-size) * 0.092);
-  width: calc(var(--panda-size) * 0.316);
-  height: calc(var(--panda-size) * 0.316);
+  top: calc(var(--panda-size) * 0.052);
+  width: calc(var(--panda-size) * 0.3);
+  height: calc(var(--panda-size) * 0.3);
   border-radius: 50%;
-  background: #1f1717;
+  background: radial-gradient(circle at 40% 30%, #2e2624, #17110f 76%);
 }
 
-.v2-panda-ear.left { left: calc(var(--panda-size) * 0.039); }
-.v2-panda-ear.right { right: calc(var(--panda-size) * 0.039); }
-
-.v2-panda-eye {
-  top: calc(var(--panda-size) * 0.382);
-  width: calc(var(--panda-size) * 0.224);
-  height: calc(var(--panda-size) * 0.283);
-  border-radius: 50%;
-  background: #1f1717;
-}
-
-.v2-panda-eye::after {
+/* Inner ear, so the ears are shapes rather than two flat dots. */
+.v2-panda-ear::after {
   position: absolute;
-  top: calc(var(--panda-size) * 0.066);
-  left: calc(var(--panda-size) * 0.079);
-  width: calc(var(--panda-size) * 0.053);
-  height: calc(var(--panda-size) * 0.053);
+  inset: 26%;
   border-radius: 50%;
-  background: white;
+  background: #6b4340;
+  opacity: 0.75;
   content: "";
 }
 
-.v2-panda-eye.left { left: calc(var(--panda-size) * 0.257); transform: rotate(16deg); }
-.v2-panda-eye.right { right: calc(var(--panda-size) * 0.257); transform: rotate(-16deg); }
+.v2-panda-ear.left { left: calc(var(--panda-size) * 0.026); }
+.v2-panda-ear.right { right: calc(var(--panda-size) * 0.026); }
+
+/* The element is the black patch; the eyeball and pupil sit inside it, which
+   is what makes it read as an eye instead of a hole. */
+.v2-panda-eye {
+  top: calc(var(--panda-size) * 0.372);
+  width: calc(var(--panda-size) * 0.238);
+  height: calc(var(--panda-size) * 0.296);
+  border-radius: 54% 46% 48% 52% / 58% 56% 44% 42%;
+  background: radial-gradient(circle at 50% 22%, #2c2422, #17110f 78%);
+}
+
+/* Eyeball. */
+.v2-panda-eye::before {
+  position: absolute;
+  top: 26%;
+  left: 22%;
+  width: 56%;
+  height: 46%;
+  border-radius: 50%;
+  background: #fffdf6;
+  content: "";
+}
+
+/* Pupil, with its catchlight baked into the gradient. */
+.v2-panda-eye::after {
+  position: absolute;
+  top: 32%;
+  left: 30%;
+  width: 34%;
+  height: 32%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 26%, #ffffff 0 26%, transparent 27%),
+    #14100f;
+  content: "";
+}
+
+.v2-panda-eye.left { left: calc(var(--panda-size) * 0.245); transform: rotate(14deg); }
+.v2-panda-eye.right { right: calc(var(--panda-size) * 0.245); transform: rotate(-14deg) scaleX(-1); }
 
 .v2-panda-nose {
-  top: calc(var(--panda-size) * 0.618);
+  top: calc(var(--panda-size) * 0.612);
   left: 50%;
-  width: calc(var(--panda-size) * 0.145);
-  height: calc(var(--panda-size) * 0.105);
-  border-radius: 50%;
-  background: #1f1717;
+  width: calc(var(--panda-size) * 0.152);
+  height: calc(var(--panda-size) * 0.108);
+  border-radius: 46% 46% 54% 54% / 38% 38% 62% 62%;
+  background:
+    radial-gradient(ellipse 38% 30% at 33% 24%, rgba(255, 255, 255, 0.42), transparent 70%),
+    #1d1614;
   transform: translateX(-50%);
 }
 
@@ -4908,33 +4944,52 @@ button:disabled {
   border-radius: 30px 30px 0 0;
 }
 
+/* An ellipse clipped to its upper strip, so the band follows the curve of the
+   skull instead of floating across it as a straight bar. */
+/* An ellipse masked to a curved strip, so both edges of the band follow the
+   skull instead of the band sitting on it as a flat-bottomed cap. */
 .v2-panda-headband {
-  top: calc(var(--panda-size) * 0.132);
-  left: calc(var(--panda-size) * 0.23);
-  width: calc(var(--panda-size) * 0.539);
-  height: calc(var(--panda-size) * 0.118);
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--v2-cinnabar), var(--v2-gold));
-  transform: rotate(-10deg);
+  top: calc(var(--panda-size) * 0.15);
+  left: 50%;
+  width: calc(var(--panda-size) * 0.79);
+  height: calc(var(--panda-size) * 0.5);
+  border-radius: 50%;
+  background: linear-gradient(96deg, var(--v2-cinnabar), #f0703c 48%, #ffa93d);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 100%, transparent 0 73%, #000 74%);
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 100%, transparent 0 73%, #000 74%);
+  transform: translateX(-50%) rotate(-4deg);
 }
 
 .v2-panda-backpack {
-  right: calc(var(--panda-size) * -0.013);
-  bottom: calc(var(--panda-size) * 0.23);
-  width: calc(var(--panda-size) * 0.25);
-  height: calc(var(--panda-size) * 0.355);
-  border-radius: 16px;
-  background: linear-gradient(180deg, var(--v2-jade), #0b716c);
+  right: calc(var(--panda-size) * -0.02);
+  bottom: calc(var(--panda-size) * 0.2);
+  width: calc(var(--panda-size) * 0.26);
+  height: calc(var(--panda-size) * 0.37);
+  border-radius: calc(var(--panda-size) * 0.09) calc(var(--panda-size) * 0.09)
+    calc(var(--panda-size) * 0.06) calc(var(--panda-size) * 0.06);
+  background: linear-gradient(160deg, #4fe3c0, var(--v2-jade) 44%, #0a6a66);
+  box-shadow: inset 0 calc(var(--panda-size) * 0.02) 0 rgba(255, 255, 255, 0.22);
 }
 
+/* Flap, so the pack is not a plain teal slab. */
+.v2-panda-backpack::after {
+  position: absolute;
+  inset: 12% 16% auto;
+  height: 30%;
+  border-radius: calc(var(--panda-size) * 0.05);
+  background: rgba(4, 52, 52, 0.5);
+  content: "";
+}
+
+/* Pinned to the pack rather than sitting on the cheek. */
 .v2-panda-star {
-  right: calc(var(--panda-size) * 0.132);
-  bottom: calc(var(--panda-size) * 0.211);
-  width: calc(var(--panda-size) * 0.145);
-  height: calc(var(--panda-size) * 0.145);
+  right: calc(var(--panda-size) * 0.012);
+  bottom: calc(var(--panda-size) * 0.5);
+  width: calc(var(--panda-size) * 0.125);
+  height: calc(var(--panda-size) * 0.125);
   background: var(--v2-gold);
   clip-path: polygon(50% 0, 61% 36%, 98% 36%, 68% 57%, 79% 92%, 50% 70%, 21% 92%, 32% 57%, 2% 36%, 39% 36%);
-  filter: drop-shadow(0 0 8px rgba(255, 215, 107, 0.8));
+  filter: drop-shadow(0 calc(var(--panda-size) * 0.01) calc(var(--panda-size) * 0.03) rgba(120, 70, 10, 0.55));
 }
 
 .v2-panda-bubble {

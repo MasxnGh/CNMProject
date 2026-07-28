@@ -93,6 +93,52 @@ describe("MatchingMission", () => {
     expect(screen.getByLabelText("คู่ที่จับแล้ว")).toHaveClass("md:hidden");
   });
 
+  it("lets a committed pair be taken back from either side", () => {
+    const missionView = {
+      id: "matching-undo",
+      leftCards: ["猫", "狗"],
+      rightCards: ["แมว", "หมา"],
+    };
+    const onSubmit = vi.fn();
+    const { container } = render(<MatchingMission missionView={missionView} onSubmit={onSubmit} disabled={false} feedback={null} />);
+    const pairCount = () => container.querySelectorAll(".match-pair-number").length;
+
+    // commit a pair, then take it back from the Chinese side
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+    expect(pairCount()).toBe(2);
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    expect(pairCount()).toBe(0);
+
+    // commit again, then take it back from the Thai side
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+    expect(pairCount()).toBe(2);
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+    expect(pairCount()).toBe(0);
+
+    // and the released answer is free to use for a different word
+    fireEvent.click(screen.getByRole("button", { name: /^狗/ }));
+    fireEvent.click(screen.getByRole("button", { name: "แมว" }));
+    fireEvent.click(screen.getByRole("button", { name: /^猫/ }));
+    fireEvent.click(screen.getByRole("button", { name: "หมา" }));
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
+    expect(onSubmit).toHaveBeenCalledWith({ 狗: "แมว", 猫: "หมา" });
+  });
+
+  it("deselects an armed Chinese card when it is tapped again", () => {
+    const missionView = { id: "matching-arm", leftCards: ["猫"], rightCards: ["แมว"] };
+    const { container } = render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+    const left = screen.getByRole("button", { name: /^猫/ });
+
+    fireEvent.click(left);
+    expect(container.querySelector(".match-item")).toHaveClass("active");
+    fireEvent.click(left);
+    expect(container.querySelector(".match-item")).not.toHaveClass("active");
+    // with nothing armed the answer column stays inert
+    expect(screen.getByRole("button", { name: "แมว" })).toBeDisabled();
+  });
+
   it("numbers each matched pair on both sides so the connection stays readable on phones", () => {
     const missionView = {
       id: "matching-pairs",
