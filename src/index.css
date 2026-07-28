@@ -5014,8 +5014,15 @@ button:disabled {
   font-size: 1.25rem;
 }
 
+/* The cards used to take half the board each, which left a thin gutter that
+   the connectors had to cram into. Cap the board and size the gutter as a
+   share of it, so the card-to-gutter ratio is the same on a phone and on a
+   1920 monitor rather than tracking the viewport. */
 .v2-mission-arena .matching-board {
-  gap: clamp(2.25rem, 11vw, 3rem);
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  column-gap: 22%;
+  row-gap: 0;
 }
 
 .v2-mission-arena .match-line-main {
@@ -5060,8 +5067,8 @@ button:disabled {
 
   .v2-mission-arena .match-item,
   .v2-mission-arena .match-answer {
-    min-height: 80px;
-    padding: 0.8rem;
+    min-height: 64px;
+    padding: 0.65rem 0.75rem;
   }
 
   .v2-mission-arena .match-item span {
