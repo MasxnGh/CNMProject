@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Headphones } from "lucide-react";
+import { Check, Headphones } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { shuffleOptions } from "../utils/shuffle";
+import useAnswerDraft from "./useAnswerDraft";
 
 export default function AudioChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio }) {
   const [speaking, setSpeaking] = useState(false);
@@ -9,6 +10,7 @@ export default function AudioChoiceMission({ missionView, onSubmit, disabled, fe
   const mountedRef = useRef(true);
   const reduceMotion = useReducedMotion();
   const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
+  const { selected, pick } = useAnswerDraft({ missionId: missionView.id, disabled, onPlayAudio });
 
   const releasePlayback = useCallback((updateState = true) => {
     cleanupRef.current?.();
@@ -91,17 +93,30 @@ export default function AudioChoiceMission({ missionView, onSubmit, disabled, fe
             <motion.button
               type="button"
               key={option}
-              className={`answer-button ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""}`}
+              className={`answer-button ${selected === option ? "picked" : ""} ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""}`}
               whileHover={reduceMotion ? undefined : { y: -3 }}
               whileTap={reduceMotion ? undefined : { y: 2 }}
-              onClick={() => onSubmit(option)}
+              onClick={() => pick(option)}
               disabled={disabled}
+              aria-pressed={selected === option}
             >
               {option}
             </motion.button>
           );
         })}
       </div>
+
+      <motion.button
+        type="button"
+        className="game-button primary w-full"
+        whileHover={reduceMotion ? undefined : { y: -2 }}
+        whileTap={reduceMotion ? undefined : { y: 2 }}
+        onClick={() => onSubmit(selected)}
+        disabled={disabled || selected === null}
+      >
+        <Check size={19} />
+        ตรวจคำตอบ
+      </motion.button>
     </div>
   );
 }

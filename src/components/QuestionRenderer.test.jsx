@@ -127,6 +127,8 @@ describe("QuestionRenderer safe mission boundary", () => {
     const { onSubmit } = renderMission(mission);
 
     fireEvent.click(screen.getByRole("button", { name: "má" }));
+    expect(onSubmit).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith("má");
@@ -149,6 +151,7 @@ describe("QuestionRenderer safe mission boundary", () => {
     expect(container).not.toHaveTextContent("Wǒ xǐhuān Zhōngguó cài.");
     expectSerializedDomNotToContain(container, "Wǒ xǐhuān Zhōngguó cài.");
     fireEvent.click(screen.getByRole("button", { name: "喜欢" }));
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
     expect(onSubmit).toHaveBeenCalledWith("喜欢");
   });
 
@@ -187,6 +190,7 @@ describe("QuestionRenderer safe mission boundary", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "ฟังเสียงภาษาจีน" }));
     fireEvent.click(screen.getByRole("button", { name: "你好" }));
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
 
     expect(onPlayAudio).toHaveBeenCalledWith(expect.objectContaining({
       onStart: expect.any(Function),
@@ -420,6 +424,39 @@ describe("QuestionRenderer safe mission boundary", () => {
       beforeAnswer: { chineseText: "猫", pinyinPattern: "m _ o", options: ["a", "e", "i", "u"] },
       answer: { correctAnswer: "a" },
     }), ".vowel-chip")).toEqual(["u", "i", "e", "a"]);
+  });
+
+  it("reads a picked Chinese answer aloud but stays silent on pinyin and Thai", () => {
+    const chinese = makeMission({
+      type: "fillBlank",
+      beforeAnswer: { chineseText: "我____。", options: ["喜欢", "去"] },
+      answer: { correctAnswer: "喜欢" },
+    });
+    const { onPlayAudio, unmount } = renderMission(chinese);
+    fireEvent.click(screen.getByRole("button", { name: "喜欢" }));
+    expect(onPlayAudio).toHaveBeenCalledWith({ text: "喜欢" });
+    unmount();
+
+    // tone options are bare pinyin - speaking the word would give the tone away
+    const tone = makeMission({
+      type: "toneChoice",
+      beforeAnswer: { chineseText: "老", options: ["lāo", "lǎo"] },
+      answer: { correctAnswer: "lǎo" },
+    });
+    const toneRender = renderMission(tone);
+    fireEvent.click(screen.getByRole("button", { name: "lǎo" }));
+    expect(toneRender.onPlayAudio).not.toHaveBeenCalled();
+    toneRender.unmount();
+
+    // a Thai gloss has nothing to read in Chinese
+    const culture = makeMission({
+      type: "cultureQuiz",
+      beforeAnswer: { chineseText: "红包", options: ["อั่งเปา", "โคมไฟ"] },
+      answer: { correctAnswer: "อั่งเปา" },
+    });
+    const cultureRender = renderMission(culture);
+    fireEvent.click(screen.getByRole("button", { name: "อั่งเปา" }));
+    expect(cultureRender.onPlayAudio).not.toHaveBeenCalled();
   });
 
   it("shows the mission instruction so the expected answer format stays explicit", () => {

@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
-import { Headphones, Volume2 } from "lucide-react";
+import { Check, Headphones, Volume2 } from "lucide-react";
 import React, { useMemo } from "react";
 import { shuffleOptions } from "../utils/shuffle";
+import useAnswerDraft from "./useAnswerDraft";
 
 export default function ChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio, audioOnly = false, boss = false }) {
   const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
+  const { selected, pick } = useAnswerDraft({ missionId: missionView.id, disabled, onPlayAudio });
   const headline = audioOnly ? "ฟังเสียงจากแผ่นหยก" : missionView.chineseText ?? missionView.question;
   const question = audioOnly || missionView.question === headline ? null : missionView.question;
   const directive = audioOnly ? "กดฟังเสียงแล้วเลือกคำที่ได้ยิน" : missionView.instruction;
@@ -39,18 +41,32 @@ export default function ChoiceMission({ missionView, onSubmit, disabled, feedbac
           const isWrongChoice = feedback && option === feedback.selectedValue && option !== feedback.correctOption;
           return (
             <motion.button
+              type="button"
               key={option}
-              className={`answer-button ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""}`}
+              className={`answer-button ${selected === option ? "picked" : ""} ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""}`}
               whileHover={{ y: -3, scale: 1.015 }}
               whileTap={{ y: 3, scale: 0.98 }}
-              onClick={() => onSubmit(option)}
+              onClick={() => pick(option)}
               disabled={disabled}
+              aria-pressed={selected === option}
             >
               {option}
             </motion.button>
           );
         })}
       </div>
+
+      <motion.button
+        type="button"
+        className="game-button primary w-full"
+        whileHover={{ y: -2 }}
+        whileTap={{ y: 2 }}
+        onClick={() => onSubmit(selected)}
+        disabled={disabled || selected === null}
+      >
+        <Check size={19} />
+        ตรวจคำตอบ
+      </motion.button>
     </div>
   );
 }

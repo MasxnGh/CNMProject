@@ -4006,20 +4006,49 @@ button:disabled {
   border-color: rgba(255, 92, 100, 0.5);
 }
 
+/* A picked-but-not-yet-checked answer. Distinct from correct/wrong, which
+   only appear after the check. */
+.v2-mission-arena .answer-button.picked {
+  border-color: var(--v2-jade);
+  background: linear-gradient(180deg, rgba(53, 208, 172, 0.3), rgba(9, 61, 66, 0.9));
+  box-shadow: 0 0 0 3px rgba(53, 208, 172, 0.22), 0 8px 0 rgba(0, 0, 0, 0.22);
+}
+
 /* ── Examiner's verdict ─────────────────────────────────────────────
    The imperial examiner marks the scroll: a jade seal for a pass, a
-   vermilion seal plus a list of corrections for a fail. */
+   vermilion seal plus a list of corrections for a fail. It rises from the
+   bottom of the screen so the answer stays visible above it. */
 
 .v2-verdict {
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
   overflow: hidden;
   display: grid;
   gap: 0.75rem;
-  margin-top: 1rem;
   border: 1px solid rgba(255, 215, 107, 0.28);
-  border-radius: 20px;
-  background: rgba(10, 37, 50, 0.86);
-  padding: 0.9rem 1rem;
+  border-width: 1px 0 0;
+  border-radius: 22px 22px 0 0;
+  background: rgba(8, 30, 42, 0.97);
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+}
+
+@media (min-width: 48rem) {
+  .v2-verdict {
+    left: 50%;
+    right: auto;
+    width: min(100%, 42rem);
+    transform: translateX(-50%);
+  }
+}
+
+/* Keep the last controls clear of the sheet. */
+.v2-mission-arena {
+  padding-bottom: 8.5rem;
 }
 
 .v2-verdict::before {

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import React from "react";
+import { createPortal } from "react-dom";
 
 /**
  * The examiner's verdict. A correct answer gets the jade seal; a wrong answer
@@ -23,14 +24,17 @@ export default function MissionVerdict({ feedback, explanation, onContinue, cont
       transition: { type: "spring", stiffness: 520, damping: 18, mass: 0.7 },
     };
 
-  return (
+  /* The arena carries a backdrop-filter, which makes it the containing block
+     for fixed descendants, so the sheet has to leave that subtree to pin
+     itself to the viewport. */
+  const sheet = (
     <motion.section
       className={`v2-verdict ${correct ? "right" : "wrong"}`}
       role="status"
       aria-live="polite"
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: "100%" }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduceMotion ? 0.001 : 0.26, ease: "easeOut" }}
+      transition={reduceMotion ? { duration: 0.001 } : { type: "spring", stiffness: 320, damping: 32 }}
     >
       <div className="v2-verdict-head">
         <motion.span className={`v2-seal ${seal}`} aria-hidden="true" {...stamp}>
@@ -73,4 +77,6 @@ export default function MissionVerdict({ feedback, explanation, onContinue, cont
       </button>
     </motion.section>
   );
+
+  return typeof document === "undefined" ? sheet : createPortal(sheet, document.body);
 }

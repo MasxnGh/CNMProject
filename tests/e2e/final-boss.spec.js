@@ -26,6 +26,7 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
   await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
   await page.getByRole("button", { name: "新年快乐", exact: true }).click();
+  await page.getByRole("button", { name: "ตรวจคำตอบ" }).click();
   await page.getByRole("button", { name: "ไปต่อ" }).click();
 
   await page.getByRole("button", { name: "ü", exact: true }).click();
@@ -34,6 +35,7 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
   await expect(page.getByText("ฟังเสียงเลือกคำ", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "我要去北京。", exact: true }).click();
+  await page.getByRole("button", { name: "ตรวจคำตอบ" }).click();
   await page.getByRole("button", { name: "ไปต่อ" }).click();
   await expect(page.getByText("เขียนฮั่นจื้อ", { exact: true })).toBeVisible();
 

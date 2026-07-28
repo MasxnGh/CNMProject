@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Volume2 } from "lucide-react";
+import { Check, Volume2 } from "lucide-react";
 import React, { useMemo } from "react";
 import { shuffleOptions } from "../utils/shuffle";
+import useAnswerDraft from "./useAnswerDraft";
 
 const toneMarks = [
   "āēīōūǖĀĒĪŌŪǕ",
@@ -36,6 +37,9 @@ function ToneContour({ tone }) {
 export default function ToneChoiceMission({ missionView, onSubmit, disabled, feedback, onPlayAudio }) {
   const reduceMotion = useReducedMotion();
   const options = useMemo(() => shuffleOptions(missionView.options), [missionView.id, missionView.options]);
+  /* Options here are bare pinyin, so the draft's speak-on-pick stays silent —
+     reading the hanzi aloud would announce the tone being asked for. */
+  const { selected, pick } = useAnswerDraft({ missionId: missionView.id, disabled, onPlayAudio });
   const headline = missionView.chineseText ?? missionView.question;
   const question = missionView.question === headline ? null : missionView.question;
 
@@ -64,11 +68,12 @@ export default function ToneChoiceMission({ missionView, onSubmit, disabled, fee
               type="button"
               key={option}
               aria-label={option}
-              className={`answer-button ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""} flex items-center justify-between gap-3`}
+              className={`answer-button ${selected === option ? "picked" : ""} ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "wrong" : ""} flex items-center justify-between gap-3`}
               whileHover={reduceMotion ? undefined : { y: -3 }}
               whileTap={reduceMotion ? undefined : { y: 2 }}
-              onClick={() => onSubmit(option)}
+              onClick={() => pick(option)}
               disabled={disabled}
+              aria-pressed={selected === option}
             >
               <span>{option}</span>
               <ToneContour tone={getTone(option)} />
@@ -76,6 +81,18 @@ export default function ToneChoiceMission({ missionView, onSubmit, disabled, fee
           );
         })}
       </div>
+
+      <motion.button
+        type="button"
+        className="game-button primary w-full"
+        whileHover={reduceMotion ? undefined : { y: -2 }}
+        whileTap={reduceMotion ? undefined : { y: 2 }}
+        onClick={() => onSubmit(selected)}
+        disabled={disabled || selected === null}
+      >
+        <Check size={19} />
+        ตรวจคำตอบ
+      </motion.button>
     </div>
   );
 }

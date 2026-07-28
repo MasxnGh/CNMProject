@@ -37,6 +37,7 @@ test("audio mission hides pinyin until after the answer", async ({ page }) => {
   await expect(page.getByText("xióngmāo", { exact: true })).toHaveCount(0);
 
   await page.getByRole("button", { name: "熊猫", exact: true }).click();
+  await page.getByRole("button", { name: "ตรวจคำตอบ" }).click();
   await expect(page.getByText("xióngmāo", { exact: true })).toBeVisible();
 });
 
