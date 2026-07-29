@@ -93,7 +93,7 @@ describe("MatchingMission", () => {
     expect(screen.getByLabelText("คู่ที่จับแล้ว")).toHaveClass("md:hidden");
   });
 
-  it("gives every Chinese word its own speaker instead of one button for the first word", () => {
+  it("reads a Chinese word aloud automatically when it is picked, instead of a separate speaker button", () => {
     const onPlayAudio = vi.fn();
     const missionView = {
       id: "matching-audio",
@@ -102,8 +102,10 @@ describe("MatchingMission", () => {
     };
     render(<MatchingMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} onPlayAudio={onPlayAudio} />);
 
+    expect(screen.queryByRole("button", { name: /ฟังเสียงคำว่า/ })).not.toBeInTheDocument();
+
     missionView.leftCards.forEach((word) => {
-      fireEvent.click(screen.getByRole("button", { name: `ฟังเสียงคำว่า ${word}` }));
+      fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${word}`) }));
       expect(onPlayAudio).toHaveBeenCalledWith({ text: word });
     });
     expect(onPlayAudio).toHaveBeenCalledTimes(3);

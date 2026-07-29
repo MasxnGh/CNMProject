@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Eraser, Undo2, Volume2 } from "lucide-react";
+import { Check, Eraser, Undo2 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const seedNumber = (seed) => {
@@ -142,7 +142,13 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
       releaseAnswer(([key]) => key !== left);
       return;
     }
-    setActiveLeft((current) => (current === left ? null : left));
+    setActiveLeft((current) => {
+      const next = current === left ? null : left;
+      // Selecting a word reads it aloud automatically, so there is no
+      // separate speaker button to tap per card.
+      if (next) onPlayAudio?.({ text: left });
+      return next;
+    });
   };
 
   const chooseMatch = (option) => {
@@ -185,11 +191,6 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
           <span className="mission-label">{missionView.title}</span>
           <small className="mission-directive">{missionView.instruction}</small>
         </div>
-        {missionView.hasAudio ? (
-          <motion.button className="sound-button" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => onPlayAudio?.()} disabled={disabled} aria-label="ฟังเสียงภาษาจีน">
-            <Volume2 size={25} />
-          </motion.button>
-        ) : null}
       </div>
 
       <div className={`matching-board ${feedback?.correct ? "correct" : feedback ? "wrong" : ""}`} ref={boardRef}>
@@ -250,15 +251,6 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
                     <b className="pair-expected">ควรเป็น {verdict.expected}</b>
                   ) : null}
                 </motion.button>
-                <button
-                  type="button"
-                  className="match-say"
-                  onClick={() => onPlayAudio?.({ text: left })}
-                  disabled={disabled}
-                  aria-label={`ฟังเสียงคำว่า ${left}`}
-                >
-                  <Volume2 size={19} aria-hidden="true" />
-                </button>
               </div>
             );
           })}

@@ -3859,41 +3859,15 @@ button:disabled {
   position: relative;
 }
 
-/* Each Chinese word carries its own speaker, since one button at the top of the
-   board could only ever read the first word. The card and the speaker are
-   separate controls in one shell, so neither nests inside the other. */
+/* Picking a word reads it aloud automatically, so the card is the only
+   control in its shell (no separate speaker button to lay out beside it). */
 .match-item-shell {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px;
-  align-items: stretch;
   min-width: 0;
 }
 
 .match-item-shell .match-item {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-right: 0;
-}
-
-.match-say {
-  display: grid;
-  place-items: center;
-  border: 3px solid rgba(94, 43, 17, 0.2);
-  border-left: 0;
-  border-radius: 0 18px 18px 0;
-  background: rgba(255, 250, 232, 0.5);
-  color: #4b1b0e;
-}
-
-.v2-mission-arena .match-say {
-  border-color: rgba(255, 215, 107, 0.18);
-  background: rgba(53, 208, 172, 0.12);
-  color: var(--v2-jade);
-}
-
-.v2-mission-arena .match-say:hover:not(:disabled) {
-  background: rgba(53, 208, 172, 0.24);
+  width: 100%;
 }
 
 /* Three labelled buttons do not fit one phone row without wrapping, so the
