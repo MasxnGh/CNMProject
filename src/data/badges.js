@@ -83,4 +83,11 @@ export const badges = [
     icon: "Crown",
     condition: { type: "all-levels" },
   },
+  {
+    id: "shortcut-scholar",
+    name: "ผู้ข้ามด่าน",
+    description: "สอบผ่านแบบทดสอบข้ามด่านเป็นครั้งแรก",
+    icon: "Zap",
+    condition: { type: "checkpoint-count", count: 1 },
+  },
 ];

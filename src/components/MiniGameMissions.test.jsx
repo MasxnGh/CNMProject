@@ -8,6 +8,8 @@ import PinyinDragMission from "./PinyinDragMission";
 import SentenceOrderMission from "./SentenceOrderMission";
 import ShoppingMission from "./ShoppingMission";
 import ToneChoiceMission from "./ToneChoiceMission";
+import TranslateSentenceMission from "./TranslateSentenceMission";
+import TranslationBlankMission from "./TranslationBlankMission";
 import { levels } from "../data/levels";
 import { orderRightAvoidingAlignedPairs } from "./MatchingMission";
 
@@ -310,6 +312,43 @@ describe("SentenceOrderMission", () => {
     fireEvent.click(screen.getByRole("button", { name: "ล้าง" }));
     expect(screen.getByText("แตะคำด้านล่างเพื่อเรียงประโยค")).toBeInTheDocument();
   });
+
+  it("reads a word aloud on pick and removes just the tapped word from the placed sequence", () => {
+    const onPlayAudio = vi.fn();
+    render(<SentenceOrderMission missionView={{
+      id: "sentence-2",
+      title: "เรียงประโยค",
+      thaiMeaning: "ฉันชอบชา",
+      options: ["我", "喜欢", "茶"],
+    }} onSubmit={vi.fn()} onPlayAudio={onPlayAudio} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "我" }));
+    fireEvent.click(screen.getByRole("button", { name: "喜欢" }));
+    fireEvent.click(screen.getByRole("button", { name: "茶" }));
+    expect(onPlayAudio).toHaveBeenCalledWith({ text: "我" });
+    expect(onPlayAudio).toHaveBeenCalledTimes(3);
+
+    fireEvent.click(screen.getByRole("button", { name: "เอา 喜欢 ออกจากช่องที่ 2" }));
+    expect(screen.getByRole("button", { name: "喜欢" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจ" }));
+  });
+
+  it("offers a slower playback speed alongside the normal one when listening first", () => {
+    const onPlayAudio = vi.fn();
+    render(<SentenceOrderMission missionView={{
+      id: "sentence-3",
+      title: "เรียงประโยค",
+      listenFirst: true,
+      hasAudio: true,
+      options: ["我", "喝", "茶"],
+    }} onSubmit={vi.fn()} onPlayAudio={onPlayAudio} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "ฟังเสียงประโยค" }));
+    expect(onPlayAudio).toHaveBeenCalledWith();
+
+    fireEvent.click(screen.getByRole("button", { name: "ฟังเสียงประโยคช้าๆ" }));
+    expect(onPlayAudio).toHaveBeenCalledWith({ slow: true });
+  });
 });
 
 describe("ShoppingMission", () => {
@@ -340,5 +379,65 @@ describe("ShoppingMission", () => {
     expect(screen.getByText("shuǐ")).toBeInTheDocument();
     expect(screen.getByText("chá")).toBeInTheDocument();
     expect(container.querySelector(".shop-item")).not.toHaveTextContent("水");
+  });
+});
+
+describe("TranslationBlankMission", () => {
+  const missionView = {
+    id: "blank-1",
+    title: "เติมคำแปลให้สมบูรณ์",
+    fixedLang: "zh",
+    fixedText: "我喜欢中国菜。",
+    blankTemplate: "ฉันชอบ___",
+    options: ["อาหารจีน", "น้ำ", "ชา"],
+  };
+
+  it("shows the fixed sentence whole and fills the blank from a picked chip", () => {
+    const onSubmit = vi.fn();
+    render(<TranslationBlankMission missionView={missionView} onSubmit={onSubmit} disabled={false} feedback={null} />);
+
+    expect(screen.getByText("我喜欢中国菜。")).toBeInTheDocument();
+    expect(screen.getByText("___")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "น้ำ" }));
+    expect(screen.getByText("น้ำ", { selector: ".translation-blank-slot" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจคำตอบ" }));
+    expect(onSubmit).toHaveBeenCalledWith("น้ำ");
+  });
+
+  it("disables the check button until a chip is picked", () => {
+    render(<TranslationBlankMission missionView={missionView} onSubmit={vi.fn()} disabled={false} feedback={null} />);
+    expect(screen.getByRole("button", { name: "ตรวจคำตอบ" })).toBeDisabled();
+  });
+});
+
+describe("TranslateSentenceMission", () => {
+  const missionView = {
+    id: "translate-1",
+    title: "แปลประโยค",
+    thaiMeaning: "ฉันรักแม่",
+    options: ["我", "爱", "妈妈"],
+  };
+
+  it("submits the arranged chip order in chip mode", () => {
+    const onSubmit = vi.fn();
+    render(<TranslateSentenceMission missionView={missionView} onSubmit={onSubmit} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "我" }));
+    fireEvent.click(screen.getByRole("button", { name: "爱" }));
+    fireEvent.click(screen.getByRole("button", { name: "妈妈" }));
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจ" }));
+    expect(onSubmit).toHaveBeenCalledWith(["我", "爱", "妈妈"]);
+  });
+
+  it("submits typed text once switched to keyboard mode", () => {
+    const onSubmit = vi.fn();
+    render(<TranslateSentenceMission missionView={missionView} onSubmit={onSubmit} disabled={false} feedback={null} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "พิมพ์คำตอบ" }));
+    fireEvent.change(screen.getByLabelText("พิมพ์คำแปลภาษาจีน"), { target: { value: "我爱妈妈。" } });
+    fireEvent.click(screen.getByRole("button", { name: "ตรวจ" }));
+    expect(onSubmit).toHaveBeenCalledWith("我爱妈妈。");
   });
 });

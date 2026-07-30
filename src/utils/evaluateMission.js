@@ -1,3 +1,5 @@
+import { isAcceptableTranslation } from "./gradeTranslation.js";
+
 const scalarTypes = new Set([
   "multiple",
   "multipleChoice",
@@ -13,6 +15,7 @@ const scalarTypes = new Set([
   "imageChoice",
   "dialogue",
   "finalBoss",
+  "translationBlank",
 ]);
 
 const exactArray = (candidate, expected) =>
@@ -44,6 +47,18 @@ const completeMapping = (candidate, expected) => {
 export const evaluateMission = (mission, candidate) => {
   if (!mission?.type || !mission.answer) return false;
 
+  // Best-effort by design (character-overlap, no phoneme backend): a
+  // self-report (browser can't recognize speech) always passes so the mic
+  // requirement never blocks a player, and "practice" mode passes on any
+  // real attempt - only "challenge" mode holds attempts to the overlap bar.
+  if (mission.type === "pronunciation") {
+    if (candidate?.type !== "pronunciation" || candidate.attempted !== true) return false;
+    if (candidate.selfReported === true) return true;
+    if ((mission.mechanics?.mode ?? "practice") === "practice") return true;
+    const threshold = Number(mission.mechanics?.minOverlap ?? 0.5);
+    return Number.isFinite(candidate.overlapScore) && candidate.overlapScore >= threshold;
+  }
+
   if (mission.type === "hanziTrace") {
     if (candidate?.type !== "hanziTrace" || candidate.attempted !== true) return false;
     const validMetrics = Number.isFinite(candidate.strokeCount)
@@ -65,6 +80,17 @@ export const evaluateMission = (mission, candidate) => {
 
   if (mission.type === "sentenceOrder" || mission.type === "sentence-order") {
     return exactArray(candidate, mission.answer.correctSequence ?? mission.answer.correctAnswer);
+  }
+
+  // translateSentence accepts either mode the player chose: chips (an
+  // ordered array, graded exactly like sentenceOrder) or typed free text
+  // (graded leniently - punctuation/whitespace shouldn't fail a correct
+  // sentence).
+  if (mission.type === "translateSentence") {
+    if (typeof candidate === "string") {
+      return isAcceptableTranslation(candidate, mission.answer.correctText, mission.answer.acceptedAnswers);
+    }
+    return exactArray(candidate, mission.answer.correctSequence);
   }
 
   if (mission.type === "shopping") {

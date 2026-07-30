@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("reset progress requires the in-game confirmation modal", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/classic");
   await expect(page.getByRole("button", { name: "เริ่มใหม่" })).toBeVisible({ timeout: 7000 });
   await page.getByRole("button", { name: "เริ่มใหม่" }).click();
   await expect(page.getByText("ต้องการเริ่มผจญภัยใหม่หรือไม่?", { exact: true })).toBeVisible();
@@ -27,7 +27,7 @@ test("Hanzi mission exposes a real canvas and drawing controls", async ({ page }
     reducedMotion: true,
     skipMissionIntro: false,
   });
-  await page.goto("/");
+  await page.goto("/classic");
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   await page.locator("article").filter({ hasText: "บททดสอบขั้นสูงและภารกิจสุดท้าย" }).getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 12" }).click();

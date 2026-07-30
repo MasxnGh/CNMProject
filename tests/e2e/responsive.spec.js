@@ -8,7 +8,7 @@ for (const viewport of [
 ]) {
   test(`home fits ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/");
+    await page.goto("/classic");
     await expect(page.getByRole("button", { name: "เริ่มการผจญภัย" })).toBeVisible({ timeout: 7000 });
     await assertDocumentFitsViewport(page, viewport.name);
   });

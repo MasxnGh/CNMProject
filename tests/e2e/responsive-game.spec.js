@@ -26,7 +26,7 @@ async function openFirstMission(page) {
 test("Game keeps mission controls reachable without sound-control collisions", async ({ page }, testInfo) => {
   const fixture = viewportFor(testInfo);
   await seedResponsiveProgress(page, { skipMissionIntro: true });
-  await page.goto("/");
+  await page.goto("/classic");
 
   await page.getByRole("button", { name: startAdventure }).click();
   await page.locator("article").filter({ hasText: "เริ่มต้นผจญภัยในเมืองจีน" }).getByRole("button", { name: openMap }).click();
@@ -55,7 +55,7 @@ test("phone game shell keeps the header, mission HUD, and Panda guide contained"
   test.skip(!isMobileViewport(fixture.viewport), "This geometry contract is for phone viewports.");
 
   await seedResponsiveProgress(page, { skipMissionIntro: true });
-  await page.goto("/");
+  await page.goto("/classic");
   await openFirstMission(page);
   await page.locator(".v2-game-header h1").evaluate((title) => {
     title.textContent = "An exceptionally long mission title that must stay inside the game header controls";
@@ -109,7 +109,7 @@ test("phone pause control is keyboard-accessible", async ({ page }, testInfo) =>
   test.skip(!isMobileViewport(fixture.viewport), "This keyboard contract is for phone viewports.");
 
   await seedResponsiveProgress(page, { skipMissionIntro: true });
-  await page.goto("/");
+  await page.goto("/classic");
   await openFirstMission(page);
 
   const pause = page.getByRole("button", { name: "หยุดชั่วคราว" });

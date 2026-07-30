@@ -12,6 +12,7 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:5175",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    reducedMotion: "reduce",
     ...devices["Desktop Chrome"],
   },
   webServer: {

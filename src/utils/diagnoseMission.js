@@ -144,12 +144,54 @@ const traceNotes = (parts) => parts
   .map((part) => (part.key === "attempt" ? "ยังไม่ได้เขียนตัวอักษร" : traceLabels[part.key]))
   .filter(Boolean);
 
+/** Chip mode diagnoses word-by-word like sentenceOrder; typed mode is a single right/wrong verdict. */
+const translateSentenceParts = (mission, candidate) => {
+  if (typeof candidate === "string") {
+    const expected = mission.answer.correctText;
+    return [{ key: "answer", got: candidate, expected, status: evaluateMission(mission, candidate) ? "correct" : "wrong" }];
+  }
+  return sentenceParts(mission, candidate);
+};
+
+const translateSentenceNotes = (parts) => (parts[0]?.key === "answer"
+  ? (parts[0].status === "correct" ? [] : [`คำตอบที่ถูกต้องคือ ${parts[0].expected}`])
+  : sentenceNotes(parts));
+
+const pronunciationParts = (mission, candidate) => {
+  const metrics = candidate && candidate.type === "pronunciation" ? candidate : {};
+  if (metrics.attempted !== true) {
+    return [{ key: "attempt", got: null, expected: null, status: "missing" }];
+  }
+  if (metrics.selfReported === true) {
+    return [{ key: "attempt", got: metrics.recognized ?? null, expected: null, status: "correct" }];
+  }
+
+  const practice = (mission.mechanics?.mode ?? "practice") === "practice";
+  if (practice) return [{ key: "attempt", got: metrics.recognized ?? "", expected: null, status: "correct" }];
+
+  const threshold = Number(mission.mechanics?.minOverlap ?? 0.5);
+  return [{
+    key: "overlap",
+    got: metrics.recognized ?? "",
+    expected: mission.answer.correctAnswer,
+    status: (metrics.overlapScore ?? 0) >= threshold ? "correct" : "wrong",
+  }];
+};
+
+const pronunciationNotes = (parts) => parts
+  .filter((part) => part.status !== "correct")
+  .map((part) => (part.key === "attempt"
+    ? "ยังไม่ได้กดไมค์พูดคำนี้"
+    : `ระบบได้ยินว่า "${part.got || "(ไม่ชัดเจน)"}" แต่คำที่ต้องพูดคือ ${part.expected}`));
+
 const byType = {
   sentenceOrder: { parts: sentenceParts, notes: sentenceNotes },
   "sentence-order": { parts: sentenceParts, notes: sentenceNotes },
+  translateSentence: { parts: translateSentenceParts, notes: translateSentenceNotes },
   matching: { parts: matchingParts, notes: matchingNotes },
   shopping: { parts: shoppingParts, notes: shoppingNotes },
   hanziTrace: { parts: traceParts, notes: traceNotes },
+  pronunciation: { parts: pronunciationParts, notes: pronunciationNotes },
 };
 
 export const diagnoseMission = (mission, candidate) => {

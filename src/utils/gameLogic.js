@@ -109,6 +109,8 @@ const conditionMet = (condition, progress) => {
       return levels.every((level) => getLevelStars(progress, level.id) === 3);
     case "all-levels":
       return levels.every((level) => isLevelCompleted(progress, level.id));
+    case "checkpoint-count":
+      return (progress.clearedCheckpoints ?? []).length >= condition.count;
     default:
       return false;
   }

@@ -28,7 +28,7 @@ const seedProgress = async (page, levelStars = {}) => {
 
 test("loads home, opens chapter map, and starts the first mission", async ({ page }) => {
   await seedProgress(page);
-  await page.goto("/");
+  await page.goto("/classic");
 
   const startButton = page.getByRole("button", { name: "เริ่มการผจญภัย" });
   await expect(startButton).toBeVisible({ timeout: 7000 });
@@ -51,7 +51,7 @@ test("loads home, opens chapter map, and starts the first mission", async ({ pag
 
 test("keeps locked chapters unavailable", async ({ page }) => {
   await seedProgress(page);
-  await page.goto("/");
+  await page.goto("/classic");
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
 
   const secondChapter = page.locator("article").filter({ hasText: "ชีวิตประจำวันและวัฒนธรรมจีน" });
@@ -62,7 +62,7 @@ test("keeps locked chapters unavailable", async ({ page }) => {
 
 test("shows the pinyin pattern without the full answer before input", async ({ page }) => {
   await seedProgress(page, { "1": 2, "2": 2, "3": 2, "4": 2, "5": 2, "6": 1, "7": 1, "8": 1 });
-  await page.goto("/");
+  await page.goto("/classic");
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   const secondChapter = page.locator("article").filter({ hasText: "ชีวิตประจำวันและวัฒนธรรมจีน" });
   await secondChapter.getByRole("button", { name: "เข้าแผนที่" }).click();

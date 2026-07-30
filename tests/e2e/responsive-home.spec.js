@@ -15,7 +15,7 @@ const startAdventure = "เริ่มการผจญภัย";
 const viewportFor = (testInfo) => responsiveViewports.find((viewport) => viewport.name === testInfo.project.name);
 
 async function visitHome(page) {
-  await page.goto("/");
+  await page.goto("/classic");
   await expect(page.locator(".v2-home-scene")).toBeVisible();
   await page.waitForTimeout(500);
 }

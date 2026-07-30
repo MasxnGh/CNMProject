@@ -836,6 +836,7 @@ button:disabled {
 }
 
 .order-zone span,
+.order-zone button,
 .word-chip {
   display: inline-flex;
   align-items: center;
@@ -3029,6 +3030,43 @@ button:disabled {
   color: var(--v2-muted);
 }
 
+/* The unlock-test's progress bar is solid gold end to end, so it reads as a
+   different kind of run (a test, not a normal lesson) at a glance. */
+.v2-mission-progress.checkpoint .progress-fill {
+  background: linear-gradient(90deg, var(--v2-gold-deep, #d99124), var(--v2-gold, #ffd76b));
+}
+
+.v2-mission-progress.checkpoint strong {
+  color: var(--v2-gold, #ffd76b);
+}
+
+/* Floats above the mission arena on every 5th consecutive correct answer;
+   color escalates with the tier so a longer streak visibly feels bigger. */
+.v2-combo-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  z-index: 20;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 1000;
+  font-size: 1.05rem;
+  color: #06231f;
+  background: linear-gradient(160deg, #ffe9a8, var(--v2-gold, #ffd76b));
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+.v2-combo-badge.tier-2 {
+  background: linear-gradient(160deg, #ffd8a8, var(--v2-cinnabar, #d6352c));
+  color: #fff5e6;
+}
+
+.v2-combo-badge.tier-3 {
+  background: linear-gradient(160deg, #c8fff0, var(--v2-jade, #35d0ac));
+  color: #06231f;
+}
+
 .v2-page-top,
 .v2-game-header {
   display: flex;
@@ -3963,6 +4001,61 @@ button:disabled {
   mix-blend-mode: screen;
 }
 
+.pronunciation-recorder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.pronunciation-mic {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(160deg, #ffe9a8, var(--v2-gold, #ffd76b));
+  color: #4a2a06;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.pronunciation-mic.listening {
+  background: linear-gradient(160deg, #ffd8a8, var(--v2-cinnabar, #d6352c));
+  color: #fff5e6;
+}
+
+.pronunciation-mic:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pronunciation-status {
+  min-height: 1.4em;
+  font-weight: 800;
+  text-align: center;
+  color: var(--v2-muted);
+}
+
+.pronunciation-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.pronunciation-fallback p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--v2-muted);
+  font-weight: 700;
+}
+
 .v2-hint-panel,
 .v2-feedback {
   display: flex;
@@ -4218,6 +4311,115 @@ button:disabled {
   font-weight: 600;
 }
 
+/* ── Translation blank (fill the gap in whichever language is missing) ── */
+
+.translation-blank-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  border: 3px dashed rgba(94, 43, 17, 0.25);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.35);
+  padding: 1rem 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #4b1b0e;
+}
+
+.translation-blank-slot {
+  display: inline-flex;
+  min-width: 3.5rem;
+  justify-content: center;
+  border-bottom: 3px solid rgba(94, 43, 17, 0.4);
+  padding: 0.1rem 0.4rem;
+  color: rgba(74, 29, 19, 0.45);
+}
+
+.translation-blank-slot.filled {
+  border-bottom-color: var(--jade, #2f8f74);
+  color: #0f5e4d;
+  font-weight: 1000;
+}
+
+.v2-mission-arena .translation-blank-line {
+  border-color: rgba(255, 215, 107, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.055));
+  color: var(--v2-ink);
+}
+
+.v2-mission-arena .translation-blank-slot {
+  border-bottom-color: rgba(248, 240, 219, 0.4);
+  color: var(--v2-muted);
+}
+
+.v2-mission-arena .translation-blank-slot.filled {
+  border-bottom-color: var(--v2-jade, #35d0ac);
+  color: var(--v2-ink);
+}
+
+/* ── Translate-sentence mode toggle + keyboard input ─────────────────── */
+
+.translate-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.translate-mode-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border: 2px solid rgba(94, 43, 17, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  color: #4b1b0e;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+.translate-mode-toggle button.active {
+  background: var(--jade, #2f8f74);
+  border-color: var(--jade, #2f8f74);
+  color: #fff;
+}
+
+.v2-mission-arena .translate-mode-toggle button {
+  border-color: rgba(255, 215, 107, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--v2-ink);
+}
+
+.v2-mission-arena .translate-mode-toggle button.active {
+  background: var(--v2-jade, #35d0ac);
+  border-color: var(--v2-jade, #35d0ac);
+  color: #06231f;
+}
+
+.translate-keyboard {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.translate-keyboard-input {
+  min-height: 3.2rem;
+  border: 3px dashed rgba(94, 43, 17, 0.25);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.35);
+  padding: 0.7rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #4b1b0e;
+}
+
+.v2-mission-arena .translate-keyboard-input {
+  border-color: rgba(255, 215, 107, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.055));
+  color: var(--v2-ink);
+}
+
 /* ── Examiner's verdict ─────────────────────────────────────────────
    The imperial examiner marks the scroll: a jade seal for a pass, a
    vermilion seal plus a list of corrections for a fail. It rises from the
@@ -4374,19 +4576,25 @@ button:disabled {
    crowds the other. */
 .order-zone span.slot-wrong,
 .order-zone span.slot-missing,
-.order-zone span.slot-correct {
+.order-zone span.slot-correct,
+.order-zone button.slot-wrong,
+.order-zone button.slot-missing,
+.order-zone button.slot-correct {
   align-items: flex-start;
   flex-direction: column;
 }
 
 .order-zone span.slot-wrong,
-.order-zone span.slot-missing {
+.order-zone span.slot-missing,
+.order-zone button.slot-wrong,
+.order-zone button.slot-missing {
   position: relative;
   border-color: rgba(214, 53, 44, 0.75);
   background: rgba(214, 53, 44, 0.2);
 }
 
-.order-zone span.slot-correct {
+.order-zone span.slot-correct,
+.order-zone button.slot-correct {
   border-color: rgba(53, 208, 172, 0.6);
 }
 

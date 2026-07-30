@@ -12,6 +12,8 @@ const freshSession = (levelId, missionCount, phase) => ({
   score: 0,
   showHint: false,
   feedback: null,
+  wrongMissionIds: [],
+  combo: 0,
 });
 
 export const createGameSession = (level, { skipIntro = false } = {}) =>
@@ -26,12 +28,17 @@ export const gameSessionReducer = (state, action) => {
       if (state.phase !== "playing") return state;
       const isCorrect = action.isCorrect === true;
       const correct = state.correct + (isCorrect ? 1 : 0);
+      const wrongMissionIds = isCorrect || action.missionId == null
+        ? state.wrongMissionIds
+        : [...state.wrongMissionIds, action.missionId];
       return {
         ...state,
         phase: "feedback",
         hearts: Math.max(0, state.hearts - (isCorrect ? 0 : 1)),
         correct,
         score: Math.max(0, (correct * 20) - state.hintPenalty),
+        wrongMissionIds,
+        combo: isCorrect ? state.combo + 1 : 0,
         feedback: {
           correct: isCorrect,
           selectedValue: action.candidate,

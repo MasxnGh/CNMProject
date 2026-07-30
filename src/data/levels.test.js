@@ -11,15 +11,15 @@ const expectedMissionIdTypes = {
   3: ["3-1:sentenceOrder", "3-2:dialogue", "3-3:sentenceOrder", "3-4:fillBlank", "3-5:audioChoice"],
   4: ["4-1:multipleChoice", "4-2:toneChoice", "4-3:fillBlank", "4-4:sentenceOrder", "4-5:audioChoice"],
   5: ["5-1:multipleChoice", "5-2:audioChoice", "5-3:matching", "5-4:fillBlank", "5-5:shopping"],
-  6: ["6-1:shopping", "6-2:dialogue", "6-3:fillBlank", "6-4:audioChoice", "6-5:matching"],
+  6: ["6-1:shopping", "6-2:dialogue", "6-3:fillBlank", "6-4:pronunciation", "6-5:matching"],
   7: ["7-1:cultureQuiz", "7-2:imageChoice", "7-3:matching", "7-4:audioChoice", "7-5:shopping"],
   8: ["8-1:matching", "8-2:fillBlank", "8-3:shopping", "8-4:audioChoice", "8-5:pinyinDrag"],
   9: ["9-1:pinyinDrag", "9-2:audioChoice", "9-3:matching", "9-4:toneChoice", "9-5:shopping"],
-  10: ["10-1:fillBlank", "10-2:sentenceOrder", "10-3:matching", "10-4:audioChoice", "10-5:toneChoice"],
+  10: ["10-1:fillBlank", "10-2:translateSentence", "10-3:matching", "10-4:audioChoice", "10-5:toneChoice"],
   11: ["11-1:shopping", "11-2:matching", "11-3:fillBlank", "11-4:audioChoice", "11-5:pinyinDrag"],
   12: ["12-1:hanziTrace", "12-2:hanziTrace", "12-3:matching", "12-4:toneChoice", "12-5:audioChoice"],
-  13: ["13-1:sentenceOrder", "13-2:fillBlank", "13-3:sentenceOrder", "13-4:fillBlank", "13-5:audioChoice"],
-  14: ["14-1:pinyinDrag", "14-2:toneChoice", "14-3:cultureQuiz", "14-4:sentenceOrder", "14-5:matching"],
+  13: ["13-1:sentenceOrder", "13-2:translationBlank", "13-3:sentenceOrder", "13-4:translationBlank", "13-5:audioChoice"],
+  14: ["14-1:pinyinDrag", "14-2:toneChoice", "14-3:cultureQuiz", "14-4:translateSentence", "14-5:matching"],
   15: ["15-1:finalBoss", "15-2:pinyinDrag", "15-3:audioChoice", "15-4:hanziTrace", "15-5:sentenceOrder"],
 };
 
@@ -319,6 +319,28 @@ describe("leak-safe mission type data", () => {
     missions.filter((mission) => mission.type === "fillBlank").forEach((mission) => {
       expect(mission.beforeAnswer.chineseText).toMatch(/_{3,}/);
       expect(mission.beforeAnswer).not.toHaveProperty("pinyin");
+    });
+  });
+
+  test("never reveals the blanked word in translation-blank prompt data", () => {
+    missions.filter((mission) => mission.type === "translationBlank").forEach((mission) => {
+      expect(mission.beforeAnswer.blankTemplate).toContain("___");
+      expect(mission.beforeAnswer.blankTemplate).not.toContain(mission.answer.correctAnswer);
+      expect(mission.beforeAnswer.fixedText).not.toContain(mission.answer.correctAnswer);
+      // A reading only ever belongs to the side shown whole - attaching it
+      // to the blanked side would spell out the missing word.
+      if (mission.beforeAnswer.fixedLang !== "zh") {
+        expect(mission.beforeAnswer.fixedPinyin).toBeFalsy();
+      }
+    });
+  });
+
+  test("keeps the Chinese sentence out of before-answer data for translate-sentence missions", () => {
+    missions.filter((mission) => mission.type === "translateSentence").forEach((mission) => {
+      expect(mission.beforeAnswer).not.toHaveProperty("chineseText");
+      expect(mission.beforeAnswer).not.toHaveProperty("pinyin");
+      expect(mission.answer.correctSequence).toEqual(expect.any(Array));
+      expect(mission.answer.correctText).toEqual(expect.any(String));
     });
   });
 

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "u1",
+    "title": "เริ่มต้นผจญภัยในเมืองจีน",
+    "theme": "market",
+    "lessons": [
+      {
+        "id": "u1_l1",
+        "title": "บทที่ 1",
+        "type": "learn",
+        "nodeIds": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "id": "u1_l2",
+        "title": "บทที่ 2",
+        "type": "practice",
+        "nodeIds": [
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "u2",
+    "title": "ชีวิตประจำวันและวัฒนธรรมจีน",
+    "theme": "festival",
+    "lessons": [
+      {
+        "id": "u2_l1",
+        "title": "บทที่ 1",
+        "type": "learn",
+        "nodeIds": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "id": "u2_l2",
+        "title": "บทที่ 2",
+        "type": "practice",
+        "nodeIds": [
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "u3",
+    "title": "บททดสอบขั้นสูงและภารกิจสุดท้าย",
+    "theme": "palace",
+    "lessons": [
+      {
+        "id": "u3_l1",
+        "title": "บทที่ 1",
+        "type": "learn",
+        "nodeIds": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "id": "u3_l2",
+        "title": "บทที่ 2",
+        "type": "practice",
+        "nodeIds": [
+          14,
+          15
+        ]
+      }
+    ]
+  }
+]

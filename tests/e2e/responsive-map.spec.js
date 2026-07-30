@@ -7,7 +7,7 @@ const longThaiTitle = "ภารกิจฝึกออกเสียงภา
 const longThaiDescription = "ฝึกอ่านคำศัพท์ บทสนทนา และการออกเสียงภาษาจีนอย่างละเอียดเพื่อใช้ในสถานการณ์ชีวิตประจำวันได้อย่างมั่นใจ ".repeat(6);
 
 async function openChapterSelect(page) {
-  await page.goto("/");
+  await page.goto("/classic");
   await page.locator(".v2-hero-actions .primary").click();
   await expect(page.locator(".v2-chapter-grid")).toBeVisible();
 }

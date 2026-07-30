@@ -73,6 +73,31 @@ describe("gameSessionReducer", () => {
     expect(answered.feedback.correct).toBe(false);
   });
 
+  it("records the mission id of a wrong answer, and never a correct one", () => {
+    const playing = reduce(createGameSession(level, { skipIntro: true }), { type: "START" });
+    const wrong = reduce(playing, { type: "ANSWER", candidate: "x", correctOption: "y", isCorrect: false, missionId: "7-1" });
+    expect(wrong.wrongMissionIds).toEqual(["7-1"]);
+
+    const afterContinue = reduce(wrong, { type: "CONTINUE" });
+    const right = reduce(afterContinue, { type: "ANSWER", candidate: "y", correctOption: "y", isCorrect: true, missionId: "7-2" });
+    expect(right.wrongMissionIds).toEqual(["7-1"]);
+  });
+
+  it("counts a consecutive-correct combo and resets it on any wrong answer", () => {
+    const threeQuestionLevel = { id: 7, questions: [{ id: "7-1" }, { id: "7-2" }, { id: "7-3" }] };
+    let state = reduce(createGameSession(threeQuestionLevel, { skipIntro: true }), { type: "START" });
+    state = reduce(state, { type: "ANSWER", candidate: "y", correctOption: "y", isCorrect: true });
+    expect(state.combo).toBe(1);
+
+    state = reduce(state, { type: "CONTINUE" });
+    state = reduce(state, { type: "ANSWER", candidate: "y", correctOption: "y", isCorrect: true });
+    expect(state.combo).toBe(2);
+
+    state = reduce(state, { type: "CONTINUE" });
+    state = reduce(state, { type: "ANSWER", candidate: "x", correctOption: "y", isCorrect: false });
+    expect(state.combo).toBe(0);
+  });
+
   it("charges one hint and ignores repeated hint use on the same mission", () => {
     const session = createGameSession(level, { skipIntro: true });
     const hinted = reduce(session, { type: "USE_HINT" });
