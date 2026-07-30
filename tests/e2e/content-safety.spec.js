@@ -19,7 +19,7 @@ const seed = async (page, levelStars) => {
 };
 
 const openLevel = async (page, chapterText, levelText) => {
-  await page.goto("/");
+  await page.goto("/classic");
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   const chapter = page.locator("article").filter({ hasText: chapterText });
   await chapter.getByRole("button", { name: "เข้าแผนที่" }).click();

@@ -9,9 +9,12 @@ import HanziTraceMission from "./HanziTraceMission";
 import ImageChoiceMission from "./ImageChoiceMission";
 import MatchingMission from "./MatchingMission";
 import PinyinDragMission from "./PinyinDragMission";
+import PronunciationMission from "./PronunciationMission";
 import SentenceOrderMission from "./SentenceOrderMission";
 import ShoppingMission from "./ShoppingMission";
 import ToneChoiceMission from "./ToneChoiceMission";
+import TranslateSentenceMission from "./TranslateSentenceMission";
+import TranslationBlankMission from "./TranslationBlankMission";
 
 function MissionReveal({ missionView, feedback }) {
   if (!feedback || !missionView.explanation) return null;
@@ -69,6 +72,15 @@ export default function QuestionRenderer({ missionView, onSubmit, disabled, feed
       break;
     case "finalBoss":
       missionContent = <FinalBossMission {...props} />;
+      break;
+    case "translationBlank":
+      missionContent = <TranslationBlankMission {...props} />;
+      break;
+    case "translateSentence":
+      missionContent = <TranslateSentenceMission {...props} />;
+      break;
+    case "pronunciation":
+      missionContent = <PronunciationMission {...props} />;
       break;
     case "multiple":
     case "multipleChoice":

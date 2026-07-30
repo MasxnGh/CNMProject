@@ -2,16 +2,19 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Coins, Map, Medal, RotateCcw, Sparkles, Star } from "lucide-react";
 import { useEffect } from "react";
 import { badges } from "../data/badges";
+import { getLevelById } from "../data/levels";
 import { playWinSound } from "../utils/speech";
 import Confetti from "./Confetti";
 import PandaGuide from "./PandaGuide";
 import ProgressBar from "./ProgressBar";
 
-export default function ResultPage({ result, progress, onNext, onMap, onRetry, onVictory }) {
+export default function ResultPage({ result, progress, onNext, onMap, onRetry, onVictory, onPracticeWeakNode }) {
   const passed = result?.passed;
+  const isCheckpoint = Boolean(result?.level?.isCheckpoint);
   const earnedBadges = badges.filter((badge) => result?.earned.badges.includes(badge.id));
   const nextAction = result?.isVictory ? onVictory : onNext;
   const reduceMotion = useReducedMotion();
+  const worstNodeTitle = isCheckpoint && result?.worstNodeId != null ? getLevelById(result.worstNodeId)?.title : null;
 
   // The level is stamped the way a finished scroll is: 過 for passed,
   // 再 for "again".
@@ -66,8 +69,14 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
             ))}
           </div>
 
-          {passed && result.earned.newRecord ? <div className="v2-record-ribbon">ทำสถิติใหม่! ได้ดาวเพิ่ม +{result.earned.stars}</div> : null}
-          {!passed ? <div className="v2-record-ribbon muted">ต้องตอบถูกอย่างน้อย 3 ภารกิจเพื่อผ่านด่าน</div> : null}
+          {passed && isCheckpoint ? <div className="v2-record-ribbon">ปลดล็อค {result.stars} ด่านพร้อมกัน!</div> : null}
+          {passed && !isCheckpoint && result.earned.newRecord ? <div className="v2-record-ribbon">ทำสถิติใหม่! ได้ดาวเพิ่ม +{result.earned.stars}</div> : null}
+          {!passed && isCheckpoint ? (
+            <div className="v2-record-ribbon muted">
+              ผิดเกิน 2 ข้อ ยังไม่ปลดล็อค{worstNodeTitle ? ` — ลองไปเล่นด่าน "${worstNodeTitle}" ก่อนแล้วค่อยกลับมาสอบใหม่` : ""}
+            </div>
+          ) : null}
+          {!passed && !isCheckpoint ? <div className="v2-record-ribbon muted">ต้องตอบถูกอย่างน้อย 3 ภารกิจเพื่อผ่านด่าน</div> : null}
 
           <div className="v2-reward-grid">
             <div><Sparkles /><strong>+{result.earned.xp}</strong><span>ค่าประสบการณ์</span></div>
@@ -98,8 +107,16 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
 
           <div className="v2-result-actions">
             <motion.button className="v2-button glass" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onMap}><Map size={20} /> กลับแผนที่</motion.button>
-            <motion.button className="v2-button ghost" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onRetry}><RotateCcw size={20} /> เล่นซ้ำเก็บ 3 ดาว</motion.button>
-            <motion.button className="v2-button primary" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={nextAction} disabled={!passed}><ArrowRight size={20} /> {result?.isVictory ? "ไปห้องสมบัติ" : "ไปด่านถัดไป"}</motion.button>
+            <motion.button className="v2-button ghost" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onRetry}><RotateCcw size={20} /> {isCheckpoint ? "ลองทำแบบทดสอบอีกครั้ง" : "เล่นซ้ำเก็บ 3 ดาว"}</motion.button>
+            {isCheckpoint ? (
+              passed ? (
+                <motion.button className="v2-button primary" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={nextAction}><ArrowRight size={20} /> ไปสำรวจด่านที่ปลดล็อค</motion.button>
+              ) : (
+                <motion.button className="v2-button primary" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={onPracticeWeakNode} disabled={result.worstNodeId == null}><ArrowRight size={20} /> ไปฝึกด่านที่พลาด</motion.button>
+              )
+            ) : (
+              <motion.button className="v2-button primary" whileHover={{ y: -3 }} whileTap={{ y: 3 }} onClick={nextAction} disabled={!passed}><ArrowRight size={20} /> {result?.isVictory ? "ไปห้องสมบัติ" : "ไปด่านถัดไป"}</motion.button>
+            )}
           </div>
         </motion.main>
       </div>

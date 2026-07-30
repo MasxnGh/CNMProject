@@ -1,0 +1,80 @@
+[
+  {
+    "id": "s_ni_hao",
+    "hanzi": "你好！",
+    "pinyin": "Nǐ hǎo!",
+    "th": "สวัสดี",
+    "lessonId": "u1_l1",
+    "audio": "/audio/s_ni_hao.mp3",
+    "tokens": [
+      "v_ni",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "s_wo_jiao_xiaoming",
+    "hanzi": "我叫小明。",
+    "pinyin": "Wǒ jiào Xiǎomíng.",
+    "th": "ฉันชื่อเสี่ยวหมิง",
+    "lessonId": "u1_l1",
+    "audio": "/audio/s_wo_jiao_xiaoming.mp3",
+    "tokens": [
+      "v_wo",
+      "v_jiao",
+      "v_xiaoming"
+    ]
+  },
+  {
+    "id": "s_jintian_wo_he_cha",
+    "hanzi": "今天我喝茶。",
+    "pinyin": "Jīntiān wǒ hē chá.",
+    "th": "วันนี้ฉันดื่มชา",
+    "lessonId": "u1_l2",
+    "audio": "/audio/s_jintian_wo_he_cha.mp3",
+    "tokens": [
+      "v_jintian",
+      "v_wo",
+      "v_he",
+      "v_cha"
+    ]
+  },
+  {
+    "id": "s_wo_shi2_xuesheng",
+    "hanzi": "我是学生。",
+    "pinyin": "Wǒ shì xuéshēng.",
+    "th": "ฉันเป็นนักเรียน",
+    "lessonId": "u3_l1",
+    "audio": "/audio/s_wo_shi2_xuesheng.mp3",
+    "tokens": [
+      "v_wo",
+      "v_shi2",
+      "v_xuesheng"
+    ]
+  },
+  {
+    "id": "s_ta_qu_xuexiao",
+    "hanzi": "他去学校。",
+    "pinyin": "Tā qù xuéxiào.",
+    "th": "เขาไปโรงเรียน",
+    "lessonId": "u3_l1",
+    "audio": "/audio/s_ta_qu_xuexiao.mp3",
+    "tokens": [
+      "v_ta",
+      "v_qu",
+      "v_xuexiao"
+    ]
+  },
+  {
+    "id": "s_wo_xihuan_zhongguocai",
+    "hanzi": "我喜欢中国菜。",
+    "pinyin": "Wǒ xǐhuān Zhōngguó cài.",
+    "th": "ฉันชอบอาหารจีน",
+    "lessonId": "u3_l2",
+    "audio": "/audio/s_wo_xihuan_zhongguocai.mp3",
+    "tokens": [
+      "v_wo",
+      "v_xihuan",
+      "v_zhongguocai"
+    ]
+  }
+]

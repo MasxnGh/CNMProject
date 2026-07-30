@@ -12,8 +12,10 @@ import {
   speakChinese,
 } from "../utils/speech";
 import soundManager from "../utils/soundManager";
+import ComboBadge from "./ComboBadge";
 import MissionIntro from "./MissionIntro";
 import MissionVerdict from "./MissionVerdict";
+import Modal from "./Modal";
 import PandaGuide from "./PandaGuide";
 import PauseOverlay from "./PauseOverlay";
 import PlayerStatus from "./PlayerStatus";
@@ -38,6 +40,11 @@ const missionNames = {
   cultureQuiz: "ปริศนาวัฒนธรรม",
   shopping: "เลือกซื้อของ",
   finalBoss: "บอสด่านสุดท้าย",
+  imageChoice: "เลือกภาพให้ตรงคำ",
+  dialogue: "บทสนทนา",
+  translationBlank: "เติมคำแปลให้สมบูรณ์",
+  translateSentence: "แปลประโยค",
+  pronunciation: "ฝึกออกเสียง",
 };
 
 const isEditable = (element) =>
@@ -61,6 +68,7 @@ export default function GamePage({
   soundOn = true,
   reducedMotion = false,
   skipMissionIntro = false,
+  isCheckpoint = false,
   onToggleSound = () => {},
   onToggleReducedMotion = () => {},
   onToggleSkipIntro = () => {},
@@ -71,6 +79,8 @@ export default function GamePage({
     ({ level: initialLevel, skipMissionIntro: skipIntro }) => createGameSession(initialLevel, { skipIntro }),
   );
   const [speechMessage, setSpeechMessage] = useState("");
+  const [comboFlash, setComboFlash] = useState(0);
+  const comboFlashTimeoutRef = useRef(null);
   const sceneRef = useRef(null);
   const backgroundRef = useRef(null);
   const arenaRef = useRef(null);
@@ -152,12 +162,26 @@ export default function GamePage({
   useEffect(() => {
     if (state.phase !== "finished" || state.levelId !== level.id || finishReportedRef.current) return;
     finishReportedRef.current = true;
-    onFinish(level, state.correct, { hintsUsed: state.hintsUsed, score: state.score });
-  }, [level, onFinish, state.correct, state.hintsUsed, state.levelId, state.phase, state.score]);
+    onFinish(level, state.correct, {
+      hintsUsed: state.hintsUsed,
+      score: state.score,
+      wrongMissionIds: state.wrongMissionIds,
+      attemptedCount: state.index + 1,
+    });
+  }, [level, onFinish, state.correct, state.hintsUsed, state.index, state.levelId, state.phase, state.score, state.wrongMissionIds]);
 
   useEffect(() => {
     if (!soundOn) cancelSessionAudio();
   }, [cancelSessionAudio, soundOn]);
+
+  // Flashes a "รัวๆ! xN" badge every 5th consecutive correct answer, clearing
+  // itself so the next milestone (or a fresh streak later) can flash again.
+  useEffect(() => {
+    if (state.combo === 0 || state.combo % 5 !== 0) return undefined;
+    setComboFlash(state.combo);
+    comboFlashTimeoutRef.current = window.setTimeout(() => setComboFlash(0), 1400);
+    return () => window.clearTimeout(comboFlashTimeoutRef.current);
+  }, [state.combo]);
 
   const start = useCallback(() => dispatch({ type: "START" }), []);
   const continueMission = useCallback(() => dispatch({ type: "CONTINUE" }), []);
@@ -182,6 +206,14 @@ export default function GamePage({
     onMap();
   }, [cancelSessionAudio, onMap]);
 
+  const [confirmExitOpen, setConfirmExitOpen] = useState(false);
+  const requestExit = useCallback(() => setConfirmExitOpen(true), []);
+  const cancelExit = useCallback(() => setConfirmExitOpen(false), []);
+  const confirmExit = useCallback(() => {
+    setConfirmExitOpen(false);
+    backToMap();
+  }, [backToMap]);
+
   const submitCandidate = useCallback((candidate) => {
     if (state.phase !== "playing" || !mission) return;
     const { correct: isCorrect, parts, notes } = diagnoseMission(mission, candidate);
@@ -195,6 +227,7 @@ export default function GamePage({
       isCorrect,
       parts,
       notes,
+      missionId: mission.id,
     });
   }, [mission, state.phase]);
 
@@ -286,7 +319,7 @@ export default function GamePage({
         inert={paused ? "" : undefined}
       >
         <div className="v2-game-header">
-          <button className="v2-icon-button" type="button" onClick={backToMap} disabled={paused} aria-label="กลับไปที่แผนที่">
+          <button className="v2-icon-button" type="button" onClick={requestExit} disabled={paused} aria-label="กลับไปที่แผนที่">
             <ArrowLeft size={23} />
           </button>
           <div className="v2-game-title">
@@ -330,7 +363,7 @@ export default function GamePage({
                   {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
                 </button>
               </section>
-              <button className="v2-button ghost v2-console-map" type="button" onClick={backToMap} disabled={paused}>
+              <button className="v2-button ghost v2-console-map" type="button" onClick={requestExit} disabled={paused}>
                 <Map size={20} /> กลับแผนที่
               </button>
             </aside>
@@ -340,13 +373,15 @@ export default function GamePage({
               tabIndex={-1}
               className={`v2-mission-arena ${mission.type === "finalBoss" ? "boss" : ""} ${state.feedback?.correct ? "is-correct" : state.feedback ? "is-wrong" : ""}`}
             >
-              <div className="v2-mission-progress">
+              <div className={`v2-mission-progress ${isCheckpoint ? "checkpoint" : ""}`}>
                 <div>
                   <span>ภารกิจ {state.index + 1}/{level.questions.length}</span>
                   <strong>{missionNames[mission.type] ?? mission.type}</strong>
                 </div>
                 <ProgressBar value={state.index + 1} max={level.questions.length} />
               </div>
+
+              <ComboBadge combo={comboFlash} />
 
               <AnimatePresence mode="wait">
                 <motion.div key={mission.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -389,9 +424,19 @@ export default function GamePage({
           onToggleSound={onToggleSound}
           onToggleReducedMotion={onToggleReducedMotion}
           onRestart={restart}
-          onMap={backToMap}
+          onMap={requestExit}
         />
       ) : null}
+      <Modal
+        open={confirmExitOpen}
+        title="ออกจากภารกิจตอนนี้เลยหรือไม่?"
+        confirmText="ออกจากภารกิจ"
+        cancelText="เล่นต่อ"
+        onCancel={cancelExit}
+        onConfirm={confirmExit}
+      >
+        ความคืบหน้าของภารกิจนี้จะไม่ถูกบันทึกจนกว่าจะตอบครบทุกข้อ
+      </Modal>
     </motion.section>
   );
 }

@@ -19,7 +19,7 @@ test("seeded final boss can be defeated and opens Victory", async ({ page }) => 
     skipMissionIntro: false,
   });
 
-  await page.goto("/");
+  await page.goto("/classic");
   await page.getByRole("button", { name: "เริ่มการผจญภัย" }).click();
   await page.locator("article").filter({ hasText: "บททดสอบขั้นสูงและภารกิจสุดท้าย" }).getByRole("button", { name: "เข้าแผนที่" }).click();
   await page.locator(".v2-level-island").filter({ hasText: "ด่าน 15" }).click();

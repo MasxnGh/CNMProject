@@ -176,7 +176,12 @@ describe("GamePage safe session integration", () => {
     expect(props.onFinish).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "ไปต่อ" }));
-    await waitFor(() => expect(props.onFinish).toHaveBeenCalledWith(level, 1, { hintsUsed: 0, score: 20 }));
+    await waitFor(() => expect(props.onFinish).toHaveBeenCalledWith(level, 1, {
+      hintsUsed: 0,
+      score: 20,
+      wrongMissionIds: [],
+      attemptedCount: 1,
+    }));
   });
 
   it("uses Escape for pause/resume and exposes persisted pause settings", () => {
@@ -278,6 +283,7 @@ describe("GamePage safe session integration", () => {
     expect(cancelPendingSound).toHaveBeenCalledTimes(3);
 
     fireEvent.click(screen.getByRole("button", { name: "กลับแผนที่" }));
+    fireEvent.click(screen.getByRole("button", { name: "ออกจากภารกิจ" }));
     expect(cancelSpeech).toHaveBeenCalledTimes(4);
     expect(cancelPendingSound).toHaveBeenCalledTimes(4);
     expect(props.onMap).toHaveBeenCalledTimes(1);
@@ -345,6 +351,7 @@ describe("GamePage safe session integration", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Correct candidate" }));
     fireEvent.click(screen.getByRole("button", { name: "กลับแผนที่" }));
+    fireEvent.click(screen.getByRole("button", { name: "ออกจากภารกิจ" }));
     vi.runAllTimers();
 
     expect(props.onMap).toHaveBeenCalledTimes(1);

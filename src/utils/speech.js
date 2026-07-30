@@ -42,7 +42,7 @@ export const speakChinese = (text, optionsOrUnsupported) => {
   cancelSpeech();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "zh-CN";
-  utterance.rate = 0.82;
+  utterance.rate = options.slow ? 0.5 : 0.82;
   utterance.pitch = 1;
 
   let started = false;

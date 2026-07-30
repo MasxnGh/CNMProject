@@ -170,6 +170,39 @@ const fillMission = (levelId, order, config) =>
     hint: "พิจารณาความหมายของประโยคและหน้าที่ของคำที่หายไป",
   });
 
+/* One sentence complete in one language, its translation missing one word in
+   the other. fixedLang picks which side is shown whole: "zh" blanks the Thai
+   translation (fill-the-Thai-gap), "th" blanks the Chinese sentence
+   (fill-the-Chinese-gap) - same shape, same component, just which side has
+   the hole. fixedPinyin is only ever attached to the *fixed* side, since
+   attaching it to the blanked side would spell out the missing word. */
+const translationBlankMission = (levelId, order, config) =>
+  mission({
+    levelId,
+    order,
+    type: "translationBlank",
+    beforeAnswer: {
+      title: "ภารกิจเติมคำแปลให้สมบูรณ์",
+      instruction: config.fixedLang === "zh"
+        ? "อ่านประโยคจีน แล้วเลือกคำไทยเติมคำแปลให้ถูกต้อง"
+        : "อ่านคำแปลไทย แล้วเลือกคำจีนเติมประโยคให้ถูกต้อง",
+      fixedLang: config.fixedLang,
+      fixedText: config.fixedText,
+      fixedPinyin: config.fixedLang === "zh" ? config.pinyin : undefined,
+      blankTemplate: config.blankTemplate,
+      options: config.options,
+    },
+    answer: { correctAnswer: config.correctAnswer },
+    afterAnswer: reveal({
+      chineseText: config.chineseText,
+      pinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+      explanation: config.explanation,
+    }),
+    hint: config.hint,
+    audioText: config.audioText ?? config.chineseText,
+  });
+
 /* Pick the picture. The prompt is the word; the pictures carry only a Thai
    label, so the choice is made on meaning rather than on matching glyphs. */
 const imageChoiceMission = (levelId, order, config) =>
@@ -286,9 +319,9 @@ const shoppingMission = (levelId, order, config) =>
 /* Readings for the sentence-builder tiles. The answer there is the word order,
    so showing how each tile sounds costs nothing and is how the tiles read in
    a textbook. */
-const wordPinyin = {
+export const wordPinyin = {
   你: "nǐ", 好: "hǎo", 我: "wǒ", 叫: "jiào", 小明: "Xiǎomíng",
-  今天: "jīntiān", 喝: "hē", 茶: "chá", 爱: "ài", 妈妈: "māma",
+  今天: "jīntiān", 明天: "míngtiān", 喝: "hē", 茶: "chá", 爱: "ài", 妈妈: "māma",
   是: "shì", 学生: "xuéshēng", 他: "tā", 去: "qù", 学校: "xuéxiào",
   这: "zhè", 的: "de", 书: "shū", 喜欢: "xǐhuān", 中国菜: "Zhōngguó cài",
 };
@@ -307,10 +340,17 @@ const sentenceMission = (levelId, order, config) =>
          grading, diagnosis and sequence-leak check. */
       thaiMeaning: config.listenFirst ? undefined : config.thaiMeaning,
       listenFirst: config.listenFirst ?? undefined,
-      options: config.options,
+      // Distractor tiles mixed into the pool - correctSequence below is the
+      // only thing grading ever looks at, so a decoy in the tray costs
+      // nothing to add and nothing to grade specially.
+      options: [...config.options, ...(config.distractorWords ?? [])],
       optionPinyin: Object.fromEntries(
-        config.options.filter((word) => wordPinyin[word]).map((word) => [word, wordPinyin[word]]),
+        [...config.options, ...(config.distractorWords ?? [])].filter((word) => wordPinyin[word]).map((word) => [word, wordPinyin[word]]),
       ),
+      // How many tiles complete the sentence - a count, never the words
+      // themselves, so the check button can enable at the right moment
+      // even with decoy tiles left over in the tray.
+      answerLength: config.correctSequence.length,
     },
     answer: {
       correctSequence: config.correctSequence,
@@ -323,6 +363,39 @@ const sentenceMission = (levelId, order, config) =>
       explanation: config.explanation,
     }),
     hint: "แยกชิ้นคำเป็นเวลา ประธาน กริยา และกรรม แล้วเทียบกับความหมายภาษาไทย",
+    audioText: config.audioText ?? config.chineseText,
+  });
+
+/* Translate the whole sentence, in whichever mode the player prefers: chip
+   order (graded exactly, like sentenceOrder) or free-text keyboard (graded
+   leniently via gradeTranslation.js - the component picks the mode). */
+const sentenceTranslateMission = (levelId, order, config) =>
+  mission({
+    levelId,
+    order,
+    type: "translateSentence",
+    beforeAnswer: {
+      title: "ภารกิจแปลประโยค",
+      instruction: "เรียงคำหรือพิมพ์ประโยคภาษาจีนให้ตรงกับคำแปลไทย",
+      thaiMeaning: config.thaiMeaning,
+      options: [...config.options, ...(config.distractorWords ?? [])],
+      optionPinyin: Object.fromEntries(
+        [...config.options, ...(config.distractorWords ?? [])].filter((word) => wordPinyin[word]).map((word) => [word, wordPinyin[word]]),
+      ),
+      answerLength: config.correctSequence.length,
+    },
+    answer: {
+      correctSequence: config.correctSequence,
+      correctText: config.chineseText,
+      acceptedAnswers: config.acceptedAnswers,
+    },
+    afterAnswer: reveal({
+      chineseText: config.chineseText,
+      pinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+      explanation: config.explanation,
+    }),
+    hint: config.hint ?? "แยกชิ้นคำเป็นเวลา ประธาน กริยา และกรรม แล้วเทียบกับความหมายภาษาไทย",
     audioText: config.audioText ?? config.chineseText,
   });
 
@@ -352,6 +425,34 @@ const traceMission = (levelId, order, config) =>
     mechanics: {
       mode: config.mode ?? "practice",
       minStrokePoints: config.minStrokePoints ?? 28,
+    },
+  });
+
+const pronunciationMission = (levelId, order, config) =>
+  mission({
+    levelId,
+    order,
+    type: "pronunciation",
+    beforeAnswer: {
+      title: "ภารกิจฝึกออกเสียง",
+      instruction: "กดไมค์แล้วอ่านออกเสียงคำนี้ให้ชัดเจน",
+      question: config.question,
+      chineseText: config.chineseText,
+      promptPinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+    },
+    answer: { correctAnswer: config.chineseText },
+    afterAnswer: reveal({
+      chineseText: config.chineseText,
+      pinyin: config.pinyin,
+      thaiMeaning: config.thaiMeaning,
+      explanation: config.explanation,
+    }),
+    hint: config.hint ?? "ลองอ่านออกเสียงทีละพยางค์ช้า ๆ ก่อนพูดรวดเดียวเต็มคำ",
+    audioText: config.chineseText,
+    mechanics: {
+      mode: config.mode ?? "practice",
+      minOverlap: config.minOverlap ?? 0.5,
     },
   });
 
@@ -635,6 +736,7 @@ const rawLevels = [
         pinyin: "Jīntiān wǒ hē chá.",
         thaiMeaning: "วันนี้ฉันดื่มชา",
         options: ["喝", "今天", "茶", "我"],
+        distractorWords: ["明天"],
         correctSequence: ["今天", "我", "喝", "茶"],
         hint: "คำบอกเวลา 今天 วางหน้าได้",
         explanation: "今天我喝茶。แปลว่า วันนี้ฉันดื่มชา",
@@ -761,7 +863,14 @@ const rawLevels = [
         explanation: "我要这个。ใช้เมื่อต้องการสั่งสิ่งที่ชี้อยู่",
         audioText: "我要这个",
       }),
-      audioMission(6, 4, term("好吃", "hǎochī", "อร่อย"), ["好吃", "菜单", "米饭", "多少钱？"]),
+      pronunciationMission(6, 4, {
+        question: "อ่านออกเสียงคำว่า 好吃 ให้ชัดเจน",
+        chineseText: "好吃",
+        pinyin: "hǎochī",
+        thaiMeaning: "อร่อย",
+        hint: "好吃 อ่านว่า hǎo-chī สองพยางค์เสียงที่ 3 และเสียงที่ 1",
+        explanation: "好吃 (hǎochī) แปลว่า อร่อย ใช้ชมรสชาติอาหาร",
+      }),
       matchingMission(6, 5, [
         term("菜单", "càidān", "เมนู"),
         term("好吃", "hǎochī", "อร่อย"),
@@ -1003,8 +1112,7 @@ const rawLevels = [
         explanation: "这是我的家。แปลว่า นี่คือบ้านของฉัน",
         audioText: "家",
       }),
-      sentenceMission(10, 2, {
-        question: "เรียงประโยคว่า ฉันรักแม่",
+      sentenceTranslateMission(10, 2, {
         chineseText: "我爱妈妈。",
         pinyin: "Wǒ ài māma.",
         thaiMeaning: "ฉันรักแม่",
@@ -1186,16 +1294,18 @@ const rawLevels = [
         hint: "โครงสร้างคือ ประธาน + 是 + คำนาม",
         explanation: "我是学生。แปลว่า ฉันเป็นนักเรียน",
       }),
-      fillMission(13, 2, {
-        question: "我____中国菜。= ฉันชอบอาหารจีน",
-        chineseText: "我____中国菜。",
+      translationBlankMission(13, 2, {
+        fixedLang: "zh",
+        fixedText: "我喜欢中国菜。",
+        blankTemplate: "ฉันชอบ___",
+        options: ["อาหารจีน", "น้ำ", "ชา", "ข้าวสวย"],
+        correctAnswer: "อาหารจีน",
         pinyin: "Wǒ xǐhuān Zhōngguó cài.",
         thaiMeaning: "ฉันชอบอาหารจีน",
-        options: ["喜欢", "是", "去", "叫"],
-        correctAnswer: "喜欢",
-        hint: "喜欢 แปลว่า ชอบ",
+        chineseText: "我喜欢中国菜。",
+        hint: "喜欢 แปลว่า ชอบ ตามด้วยสิ่งที่ชอบ",
         explanation: "我喜欢中国菜。แปลว่า ฉันชอบอาหารจีน",
-        audioText: "喜欢",
+        audioText: "我喜欢中国菜",
       }),
       sentenceMission(13, 3, {
         question: "ฟังเสียงแล้วเรียงประโยคที่ได้ยิน",
@@ -1204,17 +1314,20 @@ const rawLevels = [
         pinyin: "Tā qù xuéxiào.",
         thaiMeaning: "เขาไปโรงเรียน",
         options: ["学校", "去", "他"],
+        distractorWords: ["学生"],
         correctSequence: ["他", "去", "学校"],
         hint: "去 แปลว่า ไป",
         explanation: "他去学校。แปลว่า เขาไปโรงเรียน",
       }),
-      fillMission(13, 4, {
-        question: "这是我的____。",
-        chineseText: "这是我的____。",
-        pinyin: "Zhè shì wǒ de shū.",
-        thaiMeaning: "นี่คือหนังสือของฉัน",
+      translationBlankMission(13, 4, {
+        fixedLang: "th",
+        fixedText: "นี่คือหนังสือของฉัน",
+        blankTemplate: "这是我的___。",
         options: ["书", "饭", "狗", "飞机"],
         correctAnswer: "书",
+        pinyin: "Zhè shì wǒ de shū.",
+        thaiMeaning: "นี่คือหนังสือของฉัน",
+        chineseText: "这是我的书。",
         hint: "书 แปลว่า หนังสือ",
         explanation: "这是我的书。แปลว่า นี่คือหนังสือของฉัน",
         audioText: "书",
@@ -1277,8 +1390,7 @@ const rawLevels = [
         explanation: "春节 แปลว่า ตรุษจีน",
         audioText: "春节",
       }),
-      sentenceMission(14, 4, {
-        question: "เรียงประโยคว่า นี่คือหนังสือของฉัน",
+      sentenceTranslateMission(14, 4, {
         chineseText: "这是我的书。",
         pinyin: "Zhè shì wǒ de shū.",
         thaiMeaning: "นี่คือหนังสือของฉัน",

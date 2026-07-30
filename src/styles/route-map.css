@@ -1,0 +1,403 @@
+/* Scoped stylesheet for the new HelloChinese-style route map (Phase 1+).
+   Deliberately separate from the huge legacy index.css: this UI track is
+   being built in parallel with the existing scroll/seal design while the
+   old app stays live at /classic, so its styles shouldn't intermix. Reuses
+   the shared --v2- and --dq-face- tokens from index.css for brand continuity. */
+
+.rm-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: radial-gradient(circle at 20% 0%, #123b34, #081f1c 60%);
+  color: var(--v2-ink, #f8f0db);
+  font-family: var(--dq-face-ui);
+}
+
+/* --- Top bar --- */
+.rm-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(180deg, rgba(8, 31, 28, 0.96), rgba(8, 31, 28, 0.86));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 215, 107, 0.16);
+}
+
+.rm-topbar-brand {
+  font-family: var(--dq-face-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--v2-gold, #ffd76b);
+  white-space: nowrap;
+}
+
+.rm-topbar-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rm-chip.streak { color: #ff9d4d; }
+.rm-chip.coins { color: var(--v2-gold, #ffd76b); }
+
+.rm-chip-button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.rm-chip-button.gift {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: linear-gradient(160deg, #ffe9a8, var(--v2-gold, #ffd76b));
+  color: #4a2a06;
+}
+
+.rm-chip-button.gift[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* --- Scroll area / route --- */
+.rm-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 6rem;
+}
+
+.rm-unit-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0 auto;
+  max-width: 30rem;
+  padding: 0.6rem 1.1rem;
+  text-align: center;
+  font-family: var(--dq-face-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: #06231f;
+  background: linear-gradient(180deg, #fff4c1, var(--v2-gold, #ffd76b));
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.rm-route {
+  position: relative;
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 1.5rem;
+}
+
+.rm-route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.rm-route-svg path {
+  fill: none;
+  stroke: rgba(255, 215, 107, 0.35);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 2 20;
+}
+
+.rm-node-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  padding: 0.6rem 0;
+}
+
+.rm-node-row.lane-0 { justify-content: flex-start; }
+.rm-node-row.lane-1 { justify-content: center; }
+.rm-node-row.lane-2 { justify-content: flex-end; }
+
+.rm-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 999px;
+  border: none;
+  font: inherit;
+}
+
+.rm-node.cleared {
+  background: linear-gradient(180deg, #ecfff5, #b6f2d6);
+  color: #0f5e4d;
+  box-shadow: 0 6px 0 rgba(15, 94, 77, 0.35);
+}
+
+.rm-node.current {
+  background: linear-gradient(180deg, #fff4c1, var(--v2-gold, #ffd76b));
+  color: #4a2a06;
+  box-shadow: 0 6px 0 var(--v2-gold-deep, #d99124), 0 0 0 6px rgba(255, 215, 107, 0.22);
+  cursor: pointer;
+}
+
+.rm-node.locked {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(248, 240, 219, 0.4);
+  cursor: default;
+}
+
+.rm-node.locked.testable {
+  background: rgba(255, 215, 107, 0.14);
+  color: var(--v2-gold, #ffd76b);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(255, 215, 107, 0.25);
+}
+
+.rm-node-kind {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: var(--v2-jade, #35d0ac);
+  color: #06231f;
+  border: 2px solid #081f1c;
+}
+
+.rm-node-kind.testable {
+  right: auto;
+  left: -6px;
+  background: var(--v2-gold, #ffd76b);
+  color: #4a2a06;
+}
+
+/* --- Start sheet --- */
+.rm-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(4, 14, 12, 0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.rm-sheet {
+  width: 100%;
+  max-width: 30rem;
+  padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: linear-gradient(180deg, #123b34, #0a2622);
+  border-top: 1px solid rgba(255, 215, 107, 0.25);
+  text-align: center;
+}
+
+.rm-sheet h2 {
+  font-family: var(--dq-face-display);
+  color: var(--v2-gold, #ffd76b);
+  font-size: 1.4rem;
+  margin: 0 0 0.25rem;
+}
+
+.rm-sheet p {
+  color: var(--v2-muted, rgba(248, 240, 219, 0.72));
+  margin: 0 0 1.25rem;
+}
+
+/* --- Daily reward modal --- */
+.rm-reward-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(4, 14, 12, 0.7);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.rm-reward-modal {
+  width: 100%;
+  max-width: 22rem;
+  padding: 1.75rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, #123b34, #0a2622);
+  border: 1px solid rgba(255, 215, 107, 0.3);
+  text-align: center;
+}
+
+.rm-reward-modal h2 {
+  font-family: var(--dq-face-display);
+  color: var(--v2-gold, #ffd76b);
+  margin: 0.5rem 0;
+}
+
+.rm-reward-amount {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--v2-gold, #ffd76b);
+}
+
+/* --- Buttons --- */
+.rm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  border: none;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.rm-button.primary {
+  background: linear-gradient(180deg, #4be3b5, var(--v2-jade, #35d0ac));
+  color: #06231f;
+  box-shadow: 0 5px 0 #1c7a61;
+}
+
+.rm-button.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--v2-ink, #f8f0db);
+}
+
+/* --- Bottom nav --- */
+.rm-bottomnav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: linear-gradient(180deg, rgba(8, 31, 28, 0.9), rgba(8, 31, 28, 0.98));
+  border-top: 1px solid rgba(255, 215, 107, 0.16);
+}
+
+.rm-navbutton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.6rem 0.25rem;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(248, 240, 219, 0.5);
+  min-height: 44px;
+}
+
+.rm-navbutton.active {
+  color: var(--v2-gold, #ffd76b);
+}
+
+.rm-navbutton[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (min-width: 768px) {
+  .rm-bottomnav {
+    position: sticky;
+    max-width: 30rem;
+    margin: 0 auto;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 215, 107, 0.16);
+    margin-bottom: 1rem;
+  }
+}
+
+/* --- Route-chunk loading skeleton (replaces a blank white flash) --- */
+
+.rm-skeleton-topbar {
+  height: 3.5rem;
+  margin: 0.75rem 1rem;
+  border-radius: 999px;
+}
+
+.rm-skeleton-body {
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.rm-skeleton-title {
+  height: 2rem;
+  width: 60%;
+  border-radius: 0.75rem;
+}
+
+.rm-skeleton-line {
+  height: 1rem;
+  width: 85%;
+  border-radius: 0.5rem;
+}
+
+.rm-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.rm-skeleton-tile {
+  height: 6rem;
+  border-radius: 1rem;
+}
+
+.rm-skeleton-bar,
+.rm-skeleton-tile {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.14) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: rm-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes rm-skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-skeleton-bar,
+  .rm-skeleton-tile {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}
