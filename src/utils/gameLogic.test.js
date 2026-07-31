@@ -80,12 +80,16 @@ describe("star rewards", () => {
   });
 
   it("marks level 15 completion as victory only after a pass", () => {
-    const finalResult = completeLevel(defaultProgress, level(15), { correct: 5, hintsUsed: 0, score: 100 });
-    const failedResult = completeLevel(defaultProgress, level(15), { correct: 2, hintsUsed: 0, score: 40 });
+    // isVictory looks for a finalBoss-type mission (not level.id === levels
+    // .length - the Phase 3 pilot chapter appends levels past 15 on a
+    // separate track), so the mock level needs one to exercise that path.
+    const bossLevel = { ...level(15), questions: [{ type: "finalBoss" }, {}, {}, {}, {}] };
+    const finalResult = completeLevel(defaultProgress, bossLevel, { correct: 5, hintsUsed: 0, score: 100 });
+    const failedResult = completeLevel(defaultProgress, bossLevel, { correct: 2, hintsUsed: 0, score: 40 });
 
     expect(finalResult.isVictory).toBe(true);
     expect(failedResult.isVictory).toBe(false);
-    expect(levels).toHaveLength(15);
+    expect(levels).toHaveLength(20);
   });
 
   it("keeps reward tiers explicit for UI and tests", () => {

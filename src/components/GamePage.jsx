@@ -14,9 +14,9 @@ import {
 import soundManager from "../utils/soundManager";
 import ComboBadge from "./ComboBadge";
 import MissionIntro from "./MissionIntro";
+import InkDrop from "./InkDrop";
 import MissionVerdict from "./MissionVerdict";
 import Modal from "./Modal";
-import PandaGuide from "./PandaGuide";
 import PauseOverlay from "./PauseOverlay";
 import PlayerStatus from "./PlayerStatus";
 import ProgressBar from "./ProgressBar";
@@ -341,7 +341,7 @@ export default function GamePage({
           <div className="v2-game-layout">
             <aside className="v2-game-console" aria-label="Mission dashboard">
               <section className="v2-mission-status" role="group" aria-label="Mission status">
-                <PandaGuide compact text={state.hearts > 1 ? "ค่อย ๆ คิด ใช้คำใบ้ได้เมื่อจำเป็น" : "เหลือหัวใจเดียวแล้ว ตรวจให้ดีก่อนตอบ"} mood={state.hearts <= 1 ? "sad" : "happy"} />
+                <InkDrop compact text={state.hearts > 1 ? "ค่อย ๆ คิด ใช้คำใบ้ได้เมื่อจำเป็น" : "เหลือหัวใจเดียวแล้ว ตรวจให้ดีก่อนตอบ"} mood={state.hearts <= 1 ? "sad" : "happy"} />
                 <div className="v2-heart-row" aria-label={`${state.hearts} hearts remaining`}>
                   {[0, 1, 2].map((heart) => (
                     <span key={heart} className={heart < state.hearts ? "alive" : "lost"}>

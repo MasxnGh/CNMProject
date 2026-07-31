@@ -2,6 +2,12 @@ import { badges } from "../data/badges.js";
 import { levels, stageSets } from "../data/levels.js";
 import { calculatePlayerLevel } from "./storage.js";
 
+// Scoped to stageSets' own levels - the Phase 3 pilot chapter appends levels
+// past these (a separate track, reachable only from the new chapter map, not
+// from stageSets/MapPage), and they must never surface in classic's own
+// unlock/progress computations.
+const classicLevels = levels.filter((level) => stageSets.some((set) => set.levels.includes(level.id)));
+
 export const getLevelStars = (progress, levelId) => Number(progress.levelStars?.[String(levelId)] ?? 0);
 
 export const getTotalStars = (progress) =>
@@ -43,11 +49,11 @@ export const isSetUnlocked = (progress, setId) => {
 };
 
 export const getUnlockedLevels = (progress) =>
-  levels.filter((level) => isLevelUnlocked(progress, level.id)).map((level) => level.id);
+  classicLevels.filter((level) => isLevelUnlocked(progress, level.id)).map((level) => level.id);
 
 export const getCurrentLevelId = (progress) => {
-  const nextPlayable = levels.find((level) => isLevelUnlocked(progress, level.id) && !isLevelCompleted(progress, level.id));
-  return nextPlayable?.id ?? levels[levels.length - 1].id;
+  const nextPlayable = classicLevels.find((level) => isLevelUnlocked(progress, level.id) && !isLevelCompleted(progress, level.id));
+  return nextPlayable?.id ?? classicLevels[classicLevels.length - 1].id;
 };
 
 export const getSetProgress = (progress, setId) => {
@@ -106,9 +112,9 @@ const conditionMet = (condition, progress) => {
     case "perfect-count":
       return perfectLevelCount(progress) >= condition.count;
     case "all-perfect":
-      return levels.every((level) => getLevelStars(progress, level.id) === 3);
+      return classicLevels.every((level) => getLevelStars(progress, level.id) === 3);
     case "all-levels":
-      return levels.every((level) => isLevelCompleted(progress, level.id));
+      return classicLevels.every((level) => isLevelCompleted(progress, level.id));
     case "checkpoint-count":
       return (progress.clearedCheckpoints ?? []).length >= condition.count;
     default:
@@ -194,6 +200,10 @@ export const completeLevel = (progress, level, performanceOrCorrect, hintsUsed =
     hintsUsed: usedHints,
     missionMetrics: performance.missionMetrics ?? {},
     earned,
-    isVictory: passed && level.id === levels.length,
+    // Not `level.id === levels.length` - the Phase 3 pilot chapter appends
+    // levels past the final boss on a separate track, so the count alone no
+    // longer identifies it. The final boss is the one level with a
+    // finalBoss-type mission.
+    isVictory: passed && level.questions.some((question) => question.type === "finalBoss"),
   };
 };

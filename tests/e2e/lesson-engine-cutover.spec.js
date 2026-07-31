@@ -7,7 +7,7 @@ import { expect, test } from "@playwright/test";
  * to the new progress store correctly (node completed, next node unlocked,
  * coins/xp awarded, result page shows real numbers).
  */
-test("completing node 1 through /lesson/1 unlocks node 2 and shows a real result", async ({ page }) => {
+test("completing node 1 through /lesson/1 unlocks node 6 and shows a real result", async ({ page }) => {
   await page.goto("/lesson/1");
   await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
@@ -52,11 +52,13 @@ test("completing node 1 through /lesson/1 unlocks node 2 and shows a real result
   await expect(page.getByText("ตอบถูก 5/5", { exact: false })).toBeVisible();
 
   await page.getByRole("button", { name: "ไปด่านถัดไป" }).click();
-  await expect(page).toHaveURL(/\/lesson\/2$/);
+  await expect(page).toHaveURL(/\/lesson\/6$/);
+
+  await page.goto("/chapter/ch6");
+  await expect(page.locator(".rm-node.cleared")).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /โหนด 6 - ด่านปัจจุบัน/ })).toBeVisible();
 
   await page.goto("/");
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(1);
-  await expect(page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ })).toBeVisible();
   await expect(page.locator(".rm-chip.coins")).not.toHaveText("0");
 });
 

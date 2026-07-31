@@ -21,6 +21,13 @@ const expectedMissionIdTypes = {
   13: ["13-1:sentenceOrder", "13-2:translationBlank", "13-3:sentenceOrder", "13-4:translationBlank", "13-5:audioChoice"],
   14: ["14-1:pinyinDrag", "14-2:toneChoice", "14-3:cultureQuiz", "14-4:translateSentence", "14-5:matching"],
   15: ["15-1:finalBoss", "15-2:pinyinDrag", "15-3:audioChoice", "15-4:hanziTrace", "15-5:sentenceOrder"],
+  // Phase 3 pilot chapter (ประเทศและภาษา) - a separate setId-4 track with 10
+  // missions per level instead of 5, per the doc's full-depth format.
+  16: ["16-1:multipleChoice", "16-2:multipleChoice", "16-3:toneChoice", "16-4:audioChoice", "16-5:matching", "16-6:imageChoice", "16-7:fillBlank", "16-8:sentenceOrder", "16-9:dialogue", "16-10:translationBlank"],
+  17: ["17-1:multipleChoice", "17-2:multipleChoice", "17-3:multipleChoice", "17-4:audioChoice", "17-5:matching", "17-6:toneChoice", "17-7:fillBlank", "17-8:imageChoice", "17-9:sentenceOrder", "17-10:dialogue"],
+  18: ["18-1:toneChoice", "18-2:multipleChoice", "18-3:dialogue", "18-4:sentenceOrder", "18-5:fillBlank", "18-6:translationBlank", "18-7:translateSentence", "18-8:matching", "18-9:pronunciation", "18-10:dialogue"],
+  19: ["19-1:multipleChoice", "19-2:multipleChoice", "19-3:toneChoice", "19-4:audioChoice", "19-5:matching", "19-6:imageChoice", "19-7:fillBlank", "19-8:sentenceOrder", "19-9:translationBlank", "19-10:dialogue"],
+  20: ["20-1:dialogue", "20-2:dialogue", "20-3:dialogue", "20-4:sentenceOrder", "20-5:matching", "20-6:fillBlank", "20-7:audioChoice", "20-8:toneChoice", "20-9:pronunciation", "20-10:translationBlank"],
 };
 
 const expectedKnowledgeCore = {
@@ -130,6 +137,41 @@ const expectedKnowledgeCore = {
     "15-k-4 | 中 | zhōng | กลาง / จีน",
     "15-k-5 | 我喜欢中国菜。 | Wǒ xǐhuān Zhōngguó cài. | ฉันชอบอาหารจีน",
   ],
+  16: [
+    "16-k-1 | 泰国 | Tàiguó | ประเทศไทย",
+    "16-k-2 | 中国 | Zhōngguó | ประเทศจีน",
+    "16-k-3 | 人 | rén | คน",
+    "16-k-4 | 泰国人 | Tàiguórén | คนไทย",
+    "16-k-5 | 中国人 | Zhōngguórén | คนจีน",
+  ],
+  17: [
+    "17-k-1 | 汉语 | Hànyǔ | ภาษาจีน",
+    "17-k-2 | 泰语 | Tàiyǔ | ภาษาไทย",
+    "17-k-3 | 英语 | Yīngyǔ | ภาษาอังกฤษ",
+    "17-k-4 | 说 | shuō | พูด",
+    "17-k-5 | 会 | huì | สามารถ (ทำได้)",
+  ],
+  18: [
+    "18-k-1 | 是 | shì | เป็น / คือ",
+    "18-k-2 | 哪 | nǎ | ไหน",
+    "18-k-3 | 吗 | ma | คำลงท้ายประโยคคำถาม",
+    "18-k-4 | 和 | hé | กับ / และ",
+    "18-k-5 | 会 | huì | สามารถ (ทำได้)",
+  ],
+  19: [
+    "19-k-1 | 泰国人 | Tàiguórén | คนไทย",
+    "19-k-2 | 中国人 | Zhōngguórén | คนจีน",
+    "19-k-3 | 汉语 | Hànyǔ | ภาษาจีน",
+    "19-k-4 | 泰语 | Tàiyǔ | ภาษาไทย",
+    "19-k-5 | 英语 | Yīngyǔ | ภาษาอังกฤษ",
+  ],
+  20: [
+    "20-k-1 | 是 | shì | เป็น / คือ",
+    "20-k-2 | 泰国人 | Tàiguórén | คนไทย",
+    "20-k-3 | 中国人 | Zhōngguórén | คนจีน",
+    "20-k-4 | 汉语 | Hànyǔ | ภาษาจีน",
+    "20-k-5 | 会 | huì | สามารถ (ทำได้)",
+  ],
 };
 
 const expectUnique = (values) => {
@@ -143,12 +185,14 @@ const collectKeys = (value) => {
 };
 
 describe("mission data contract", () => {
-  test("preserves the 15 levels and 75 missions topology", () => {
-    expect(levels).toHaveLength(15);
-    expect(missions).toHaveLength(75);
+  test("preserves the 20 levels and 125 missions topology", () => {
+    expect(levels).toHaveLength(20);
+    expect(missions).toHaveLength(125);
 
     levels.forEach((level) => {
-      expect(level.questions).toHaveLength(5);
+      // Levels 1-15 are the original 5-mission-per-node format; 16-20 are
+      // the Phase 3 pilot chapter, authored at the doc's full 10-per-node depth.
+      expect(level.questions).toHaveLength(level.id <= 15 ? 5 : 10);
       level.questions.forEach((mission) => expect(mission.levelId).toBe(level.id));
     });
   });
@@ -246,9 +290,14 @@ describe("mission data contract", () => {
       13: ["grammar-keeper"],
       14: ["wall-runner"],
       15: ["dujeen-master"],
+      16: [],
+      17: [],
+      18: [],
+      19: [],
+      20: ["global-citizen"],
     };
 
-    expect(levels.flatMap((level) => level.knowledge)).toHaveLength(76);
+    expect(levels.flatMap((level) => level.knowledge)).toHaveLength(101);
     levels.forEach((level) => {
       expect(level.reward).toEqual({ xp: 100, coins: 50, stars: 3 });
       expect(level.badgeUnlock).toEqual(expectedBadges[level.id]);
@@ -260,7 +309,7 @@ describe("mission data contract", () => {
   });
 
   test("passes the content leak validator without errors", () => {
-    expect(validateLevels(levels)).toMatchObject({ total: 75, passed: 75, warnings: 0, errors: 0 });
+    expect(validateLevels(levels)).toMatchObject({ total: 125, passed: 125, warnings: 0, errors: 0 });
   });
 });
 

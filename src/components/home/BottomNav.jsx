@@ -1,15 +1,11 @@
-import { BookOpen, Dumbbell, GraduationCap, MessageCircle, User } from "lucide-react";
+import { Dumbbell, GraduationCap, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const TABS = [
-  { key: "learn", label: "เรียนรู้", icon: GraduationCap, enabled: true, path: "/" },
-  { key: "practice", label: "ฝึกฝน", icon: Dumbbell, enabled: true, path: "/practice" },
-  { key: "articles", label: "บทความ", icon: BookOpen, enabled: false },
-  { key: "chat", label: "สนทนา", icon: MessageCircle, enabled: false },
-  { key: "profile", label: "ฉัน", icon: User, enabled: false },
+  { key: "learn", label: "เรียน", icon: GraduationCap, enabled: true, path: "/" },
+  { key: "practice", label: "ทวน", icon: Dumbbell, enabled: true, path: "/practice" },
+  { key: "profile", label: "ฉัน", icon: User, enabled: true, path: "/profile" },
 ];
-
-/** "เรียนรู้" and "ฝึกฝน" are wired up; the rest are placeholders for later phases. */
 export default function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();

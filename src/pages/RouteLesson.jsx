@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GamePage from "../components/GamePage.jsx";
 import { getLevelById } from "../data/levels.js";
+import { getChapterIdForNode } from "../lib/checkpointProgression.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 import { completeNode, toLegacyProgressView } from "../lib/nodeProgression.js";
 import { setAudioEnabled } from "../utils/speech.js";
@@ -14,6 +15,8 @@ export default function RouteLesson() {
   const navigate = useNavigate();
   const { progress, setProgress } = useProgress();
   const level = getLevelById(Number(lessonId));
+  const chapterId = getChapterIdForNode(Number(lessonId));
+  const mapPath = chapterId ? `/chapter/${chapterId}` : "/";
 
   useEffect(() => {
     setAudioEnabled(progress.soundEnabled);
@@ -45,7 +48,7 @@ export default function RouteLesson() {
       level={level}
       progress={toLegacyProgressView(progress)}
       onFinish={handleFinish}
-      onMap={() => navigate("/")}
+      onMap={() => navigate(mapPath)}
       soundOn={progress.soundEnabled}
       reducedMotion={progress.reducedMotion}
       skipMissionIntro={progress.skipMissionIntro}

@@ -1,12 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-test("route map loads with the first node unlocked and everything else locked", async ({ page }) => {
+test("the chapter grid shows the first chapter available and the rest locked or draft", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.locator(".rm-node")).toHaveCount(15);
+  await expect(page.getByRole("button", { name: /แนะนำตัวเอง/ })).toBeEnabled();
+  // ch4/ch5/ch8/ch10 are drafts ("เร็วๆ นี้"); every other later chapter is
+  // simply locked until the player reaches it.
+  await expect(page.getByText("เร็วๆ นี้").first()).toBeVisible();
+  await expect(page.getByText("ยังไม่ปลดล็อค").first()).toBeVisible();
+});
+
+test("a chapter's own path shows its first node unlocked and the rest locked", async ({ page }) => {
+  await page.goto("/chapter/ch1");
+
+  await expect(page.locator(".rm-node")).toHaveCount(2);
   await expect(page.locator(".rm-node.current")).toHaveCount(1);
-  await expect(page.locator(".rm-node.locked")).toHaveCount(14);
-  await expect(page.getByRole("button", { name: /โหนด 1 - ด่านปัจจุบัน/ })).toBeVisible();
+  await expect(page.locator(".rm-node.locked")).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ })).toBeVisible();
 });
 
 test("tapping the current node opens a start sheet and starting it navigates to the lesson route", async ({ page }) => {
@@ -14,34 +24,37 @@ test("tapping the current node opens a start sheet and starting it navigates to 
   // prefers-reduced-motion), which otherwise never lets Playwright's
   // actionability check see it as "stable" long enough to click.
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/chapter/ch1");
 
-  await page.getByRole("button", { name: /โหนด 1 - ด่านปัจจุบัน/ }).click();
+  await page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ }).click();
   await expect(page.locator(".rm-sheet")).toBeVisible();
-  await expect(page.locator(".rm-sheet")).toContainText("ตลาดจีน");
+  await expect(page.locator(".rm-sheet")).toContainText("ร้านชาโบราณ");
 
   await page.getByRole("button", { name: "เริ่ม" }).click();
-  await expect(page).toHaveURL(/\/lesson\/1$/);
+  await expect(page).toHaveURL(/\/lesson\/2$/);
 });
 
 test("locked nodes stay inert except in the next testable lesson", async ({ page }) => {
-  await page.goto("/");
-
-  // Node 2 is locked but shares the current lesson (u1_l1) with node 1, so
-  // Phase 4's unlock-test shortcut makes it tappable (see unlock-test.spec.js).
-  const eligible = page.getByRole("button", { name: /โหนด 2 - ล็อค - ทำแบบทดสอบข้ามด่านได้/ });
+  // Node 3 is locked but shares chapter 1's only lesson with node 2 (the
+  // current node), so Phase 4's unlock-test shortcut makes it tappable.
+  await page.goto("/chapter/ch1");
+  const eligible = page.getByRole("button", { name: /โหนด 3 - ล็อค - ทำแบบทดสอบข้ามด่านได้/ });
   await expect(eligible).toBeEnabled();
 
-  // Node 6 belongs to a lesson further out - no shortcut reaches that far yet.
-  const inert = page.getByRole("button", { name: /โหนด 6 - ล็อค$/ });
+  // Chapter 2's node belongs to a lesson further out - no shortcut reaches
+  // that far yet.
+  await page.goto("/chapter/ch2");
+  const inert = page.getByRole("button", { name: /โหนด 4 - ล็อค$/ });
   await expect(inert).toBeDisabled();
 });
 
 test("the map shows no star counts anywhere - locked/current/cleared is the whole story", async ({ page }) => {
   await page.goto("/");
-
   await expect(page.locator(".rm-scroll")).not.toContainText("ดาว");
   await expect(page.locator(".rm-topbar")).not.toContainText("ดาว");
+
+  await page.goto("/chapter/ch1");
+  await expect(page.locator(".rm-scroll")).not.toContainText("ดาว");
   await expect(page.getByRole("button", { name: /ด่านปัจจุบัน|ผ่านแล้ว|ล็อค/ }).first()).toBeVisible();
 });
 

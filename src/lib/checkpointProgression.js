@@ -29,6 +29,11 @@ const nodeLessonLookup = (() => {
 
 export const getLessonForNode = (nodeId) => nodeLessonLookup.get(nodeId) ?? null;
 
+/** Which chapter a node belongs to - lets "back to map" from a lesson/result/
+    checkpoint screen return into that chapter's own path instead of jumping
+    all the way out to the top-level chapter grid. */
+export const getChapterIdForNode = (nodeId) => nodeLessonLookup.get(nodeId)?.unit.id ?? null;
+
 export const getCheckpointId = (lessonId) => `checkpoint-${lessonId}`;
 
 /** The first lesson (in route order) with any node not yet in progress.unlocked. */

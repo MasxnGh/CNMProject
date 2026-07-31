@@ -26,15 +26,18 @@ export default function MissionVerdict({ feedback, explanation, onContinue, cont
 
   /* The arena carries a backdrop-filter, which makes it the containing block
      for fixed descendants, so the sheet has to leave that subtree to pin
-     itself to the viewport. */
+     itself to the viewport. A fixed-duration tween (not a spring) sweeps it
+     in like a brush stroke - springs have no fixed settle time, and an
+     open-ended settle here once caused a real E2E flake (Playwright's
+     actionability check kept finding the continue button "not stable"). */
   const sheet = (
     <motion.section
       className={`v2-verdict ${correct ? "right" : "wrong"}`}
       role="status"
       aria-live="polite"
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: "100%" }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={reduceMotion ? { duration: 0.001 } : { type: "spring", stiffness: 320, damping: 32 }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: correct ? "-6%" : "6%" }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={reduceMotion ? { duration: 0.001 } : { duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="v2-verdict-head">
         <motion.span className={`v2-seal ${seal}`} aria-hidden="true" {...stamp}>

@@ -18,7 +18,7 @@ export default function LessonStartSheet({ title, topic, lessonLabel, onStart, o
         <button type="button" className="rm-navbutton" style={{ marginLeft: "auto" }} onClick={onClose} aria-label="ปิด">
           <X size={20} />
         </button>
-        <small style={{ color: "var(--v2-gold, #ffd76b)", fontWeight: 800 }}>{lessonLabel}</small>
+        <small style={{ color: "var(--v2-gold, #C08A34)", fontWeight: 800 }}>{lessonLabel}</small>
         <h2>{title}</h2>
         <p>{topic}</p>
         <button type="button" className="rm-button primary" onClick={onStart}>

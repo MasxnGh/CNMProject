@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import ResultPage from "../components/ResultPage.jsx";
+import { getChapterIdForNode } from "../lib/checkpointProgression.js";
 import { getNextNodeId, toLegacyProgressView } from "../lib/nodeProgression.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 
@@ -22,14 +23,17 @@ export default function RouteResult() {
 
   const nextNodeId = outcome.level.isCheckpoint ? null : getNextNodeId(outcome.level.id);
   const retryPath = outcome.level.isCheckpoint ? `/unlock/${outcome.level.lessonId}` : `/lesson/${outcome.level.id}`;
+  const anchorNodeId = outcome.level.isCheckpoint ? outcome.level.coveredNodeIds[0] : outcome.level.id;
+  const chapterId = getChapterIdForNode(anchorNodeId);
+  const mapPath = chapterId ? `/chapter/${chapterId}` : "/";
 
   return (
     <ResultPage
       result={outcome}
       progress={toLegacyProgressView(progress)}
-      onMap={() => navigate("/")}
+      onMap={() => navigate(mapPath)}
       onRetry={() => navigate(retryPath)}
-      onNext={() => navigate(nextNodeId != null ? `/lesson/${nextNodeId}` : "/")}
+      onNext={() => navigate(nextNodeId != null ? `/lesson/${nextNodeId}` : mapPath)}
       onVictory={() => navigate("/")}
       onPracticeWeakNode={() => outcome.worstNodeId != null && navigate(`/lesson/${outcome.worstNodeId}`)}
     />
