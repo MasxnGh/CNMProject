@@ -149,6 +149,9 @@ export const completeNode = (progress, level, performanceOrCorrect, hintsUsed = 
     level,
     correct: correctCount,
     total: level.questions.length,
-    isVictory: passed && level.id === levels.length,
+    // Not `level.id === levels.length` - the Phase 3 pilot chapter appends
+    // levels past the final boss, so the count alone no longer identifies
+    // it. The final boss is the one level with a finalBoss-type mission.
+    isVictory: passed && level.questions.some((question) => question.type === "finalBoss"),
   };
 };

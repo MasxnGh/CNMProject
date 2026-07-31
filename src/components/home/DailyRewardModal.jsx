@@ -14,7 +14,7 @@ export default function DailyRewardModal({ amount, onClaim, onClose }) {
         transition={{ type: "spring", stiffness: 220, damping: 20 }}
         onClick={(event) => event.stopPropagation()}
       >
-        <Coins size={40} color="var(--v2-gold, #ffd76b)" />
+        <Coins size={40} color="var(--v2-gold, #C08A34)" />
         <h2>รางวัลประจำวัน</h2>
         <p className="rm-reward-amount">+{amount}</p>
         <button type="button" className="rm-button primary" onClick={onClaim}>

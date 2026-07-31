@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, BookMarked, Compass, Crown, GraduationCap, Lock, Medal, Mountain, Sparkles, Star } from "lucide-react";
 import { badges } from "../data/badges";
 import PlayerStatus from "./PlayerStatus";
+import Stamp from "./Stamp";
 
 const iconMap = { Compass, Medal, Sparkles, Star, GraduationCap, BookMarked, Mountain, Crown };
 
@@ -57,6 +58,7 @@ export default function AchievementPage({ progress, onBack }) {
                 onClick={() => setSelectedBadge(badge)}
               >
                 <div className="v2-medal-icon">{isEarned ? <Icon size={34} /> : <Lock size={32} />}</div>
+                {isEarned ? <Stamp size={40} animate={false} label={`ได้รับตรา ${badge.name} แล้ว`} /> : null}
                 <h2>{badge.name}</h2>
                 <p>{badge.description}</p>
                 <span>{isEarned ? "ได้รับแล้ว" : "ยังไม่ปลดล็อก"}</span>

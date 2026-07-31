@@ -4,7 +4,7 @@
     "hanzi": "水",
     "pinyin": "shuǐ",
     "th": "น้ำ",
-    "lessonId": "u1_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_shui.mp3",
     "audioSlow": null,
     "visual": {
@@ -17,7 +17,7 @@
     "hanzi": "茶",
     "pinyin": "chá",
     "th": "ชา",
-    "lessonId": "u1_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_cha.mp3",
     "audioSlow": null,
     "visual": {
@@ -30,7 +30,7 @@
     "hanzi": "米饭",
     "pinyin": "mǐfàn",
     "th": "ข้าวสวย",
-    "lessonId": "u1_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_mifan.mp3",
     "audioSlow": null,
     "visual": {
@@ -43,7 +43,7 @@
     "hanzi": "面条",
     "pinyin": "miàntiáo",
     "th": "บะหมี่",
-    "lessonId": "u1_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_miantiao.mp3",
     "audioSlow": null,
     "visual": {
@@ -56,7 +56,7 @@
     "hanzi": "饺子",
     "pinyin": "jiǎozi",
     "th": "เกี๊ยว",
-    "lessonId": "u1_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_jiaozi.mp3",
     "audioSlow": null,
     "visual": {
@@ -69,7 +69,7 @@
     "hanzi": "你好",
     "pinyin": "nǐ hǎo",
     "th": "สวัสดี",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_nihao.mp3",
     "audioSlow": null,
     "visual": {
@@ -82,7 +82,7 @@
     "hanzi": "谢谢",
     "pinyin": "xièxie",
     "th": "ขอบคุณ",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_xiexie.mp3",
     "audioSlow": null,
     "visual": {
@@ -95,7 +95,7 @@
     "hanzi": "再见",
     "pinyin": "zàijiàn",
     "th": "ลาก่อน",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_zaijian.mp3",
     "audioSlow": null,
     "visual": {
@@ -108,7 +108,7 @@
     "hanzi": "老师",
     "pinyin": "lǎoshī",
     "th": "ครู",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_laoshi.mp3",
     "audioSlow": null,
     "visual": {
@@ -121,7 +121,7 @@
     "hanzi": "学生",
     "pinyin": "xuéshēng",
     "th": "นักเรียน",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_xuesheng.mp3",
     "audioSlow": null,
     "visual": {
@@ -134,7 +134,7 @@
     "hanzi": "你好！",
     "pinyin": "Nǐ hǎo!",
     "th": "สวัสดี",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_nihao2.mp3",
     "audioSlow": null,
     "visual": {
@@ -147,7 +147,7 @@
     "hanzi": "你叫什么名字？",
     "pinyin": "Nǐ jiào shénme míngzi?",
     "th": "คุณชื่ออะไร",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_nijiaoshenmemingzi.mp3",
     "audioSlow": null,
     "visual": {
@@ -160,7 +160,7 @@
     "hanzi": "我叫小明。",
     "pinyin": "Wǒ jiào Xiǎomíng.",
     "th": "ฉันชื่อเสี่ยวหมิง",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_wojiaoxiaoming.mp3",
     "audioSlow": null,
     "visual": {
@@ -173,7 +173,7 @@
     "hanzi": "很高兴认识你。",
     "pinyin": "Hěn gāoxìng rènshi nǐ.",
     "th": "ยินดีที่ได้รู้จัก",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_hengaoxingrenshini.mp3",
     "audioSlow": null,
     "visual": {
@@ -186,7 +186,7 @@
     "hanzi": "再见！",
     "pinyin": "Zàijiàn!",
     "th": "ลาก่อน",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_zaijian2.mp3",
     "audioSlow": null,
     "visual": {
@@ -199,7 +199,7 @@
     "hanzi": "一",
     "pinyin": "yī",
     "th": "หนึ่ง",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_yi.mp3",
     "audioSlow": null,
     "visual": {
@@ -212,7 +212,7 @@
     "hanzi": "二",
     "pinyin": "èr",
     "th": "สอง",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_er.mp3",
     "audioSlow": null,
     "visual": {
@@ -225,7 +225,7 @@
     "hanzi": "三",
     "pinyin": "sān",
     "th": "สาม",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_san.mp3",
     "audioSlow": null,
     "visual": {
@@ -238,7 +238,7 @@
     "hanzi": "十",
     "pinyin": "shí",
     "th": "สิบ",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_shi.mp3",
     "audioSlow": null,
     "visual": {
@@ -251,7 +251,7 @@
     "hanzi": "今天",
     "pinyin": "jīntiān",
     "th": "วันนี้",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_jintian.mp3",
     "audioSlow": null,
     "visual": {
@@ -264,7 +264,7 @@
     "hanzi": "明天",
     "pinyin": "míngtiān",
     "th": "พรุ่งนี้",
-    "lessonId": "u1_l2",
+    "lessonId": "ch2_l1",
     "audio": "/audio/v_mingtian.mp3",
     "audioSlow": null,
     "visual": {
@@ -277,7 +277,7 @@
     "hanzi": "火车",
     "pinyin": "huǒchē",
     "th": "รถไฟ",
-    "lessonId": "u1_l2",
+    "lessonId": "ch9_l1",
     "audio": "/audio/v_huoche.mp3",
     "audioSlow": null,
     "visual": {
@@ -290,7 +290,7 @@
     "hanzi": "飞机",
     "pinyin": "fēijī",
     "th": "เครื่องบิน",
-    "lessonId": "u1_l2",
+    "lessonId": "ch9_l1",
     "audio": "/audio/v_feiji.mp3",
     "audioSlow": null,
     "visual": {
@@ -303,7 +303,7 @@
     "hanzi": "车站",
     "pinyin": "chēzhàn",
     "th": "สถานี",
-    "lessonId": "u1_l2",
+    "lessonId": "ch9_l1",
     "audio": "/audio/v_chezhan.mp3",
     "audioSlow": null,
     "visual": {
@@ -316,7 +316,7 @@
     "hanzi": "票",
     "pinyin": "piào",
     "th": "ตั๋ว",
-    "lessonId": "u1_l2",
+    "lessonId": "ch9_l1",
     "audio": "/audio/v_piao.mp3",
     "audioSlow": null,
     "visual": {
@@ -329,7 +329,7 @@
     "hanzi": "我要去北京。",
     "pinyin": "Wǒ yào qù Běijīng.",
     "th": "ฉันต้องการไปปักกิ่ง",
-    "lessonId": "u1_l2",
+    "lessonId": "ch9_l1",
     "audio": "/audio/v_woyaoqubeijing.mp3",
     "audioSlow": null,
     "visual": {
@@ -342,7 +342,7 @@
     "hanzi": "菜单",
     "pinyin": "càidān",
     "th": "เมนู",
-    "lessonId": "u2_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_caidan.mp3",
     "audioSlow": null,
     "visual": {
@@ -355,7 +355,7 @@
     "hanzi": "好吃",
     "pinyin": "hǎochī",
     "th": "อร่อย",
-    "lessonId": "u2_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_haochi.mp3",
     "audioSlow": null,
     "visual": {
@@ -368,7 +368,7 @@
     "hanzi": "多少钱？",
     "pinyin": "Duōshǎo qián?",
     "th": "ราคาเท่าไหร่",
-    "lessonId": "u2_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_duoshaoqian.mp3",
     "audioSlow": null,
     "visual": {
@@ -381,7 +381,7 @@
     "hanzi": "我要这个。",
     "pinyin": "Wǒ yào zhège.",
     "th": "ฉันเอาอันนี้",
-    "lessonId": "u2_l1",
+    "lessonId": "ch6_l1",
     "audio": "/audio/v_woyaozhege.mp3",
     "audioSlow": null,
     "visual": {
@@ -394,7 +394,7 @@
     "hanzi": "春节",
     "pinyin": "Chūnjié",
     "th": "ตรุษจีน",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_chunjie.mp3",
     "audioSlow": null,
     "visual": {
@@ -407,7 +407,7 @@
     "hanzi": "红包",
     "pinyin": "hóngbāo",
     "th": "อั่งเปา",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_hongbao.mp3",
     "audioSlow": null,
     "visual": {
@@ -420,7 +420,7 @@
     "hanzi": "灯笼",
     "pinyin": "dēnglóng",
     "th": "โคมไฟ",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_denglong.mp3",
     "audioSlow": null,
     "visual": {
@@ -433,7 +433,7 @@
     "hanzi": "舞龙",
     "pinyin": "wǔlóng",
     "th": "เชิดมังกร",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_wulong.mp3",
     "audioSlow": null,
     "visual": {
@@ -446,7 +446,7 @@
     "hanzi": "新年快乐",
     "pinyin": "xīnnián kuàilè",
     "th": "สวัสดีปีใหม่",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_xinniankuaile.mp3",
     "audioSlow": null,
     "visual": {
@@ -459,7 +459,7 @@
     "hanzi": "书",
     "pinyin": "shū",
     "th": "หนังสือ",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_shu.mp3",
     "audioSlow": null,
     "visual": {
@@ -472,7 +472,7 @@
     "hanzi": "笔",
     "pinyin": "bǐ",
     "th": "ปากกา",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_bi.mp3",
     "audioSlow": null,
     "visual": {
@@ -485,7 +485,7 @@
     "hanzi": "桌子",
     "pinyin": "zhuōzi",
     "th": "โต๊ะ",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_zhuozi.mp3",
     "audioSlow": null,
     "visual": {
@@ -498,7 +498,7 @@
     "hanzi": "椅子",
     "pinyin": "yǐzi",
     "th": "เก้าอี้",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_yizi.mp3",
     "audioSlow": null,
     "visual": {
@@ -511,7 +511,7 @@
     "hanzi": "教室",
     "pinyin": "jiàoshì",
     "th": "ห้องเรียน",
-    "lessonId": "u2_l1",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_jiaoshi.mp3",
     "audioSlow": null,
     "visual": {
@@ -524,7 +524,7 @@
     "hanzi": "熊猫",
     "pinyin": "xióngmāo",
     "th": "แพนด้า",
-    "lessonId": "u2_l2",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_xiongmao.mp3",
     "audioSlow": null,
     "visual": {
@@ -537,7 +537,7 @@
     "hanzi": "狗",
     "pinyin": "gǒu",
     "th": "สุนัข",
-    "lessonId": "u2_l2",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_gou.mp3",
     "audioSlow": null,
     "visual": {
@@ -550,7 +550,7 @@
     "hanzi": "猫",
     "pinyin": "māo",
     "th": "แมว",
-    "lessonId": "u2_l2",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_mao.mp3",
     "audioSlow": null,
     "visual": {
@@ -563,7 +563,7 @@
     "hanzi": "鸟",
     "pinyin": "niǎo",
     "th": "นก",
-    "lessonId": "u2_l2",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_niao.mp3",
     "audioSlow": null,
     "visual": {
@@ -576,7 +576,7 @@
     "hanzi": "鱼",
     "pinyin": "yú",
     "th": "ปลา",
-    "lessonId": "u2_l2",
+    "lessonId": "ch11_l1",
     "audio": "/audio/v_yu.mp3",
     "audioSlow": null,
     "visual": {
@@ -589,7 +589,7 @@
     "hanzi": "爸爸",
     "pinyin": "bàba",
     "th": "พ่อ",
-    "lessonId": "u2_l2",
+    "lessonId": "ch3_l1",
     "audio": "/audio/v_baba.mp3",
     "audioSlow": null,
     "visual": {
@@ -602,7 +602,7 @@
     "hanzi": "妈妈",
     "pinyin": "māma",
     "th": "แม่",
-    "lessonId": "u2_l2",
+    "lessonId": "ch3_l1",
     "audio": "/audio/v_mama.mp3",
     "audioSlow": null,
     "visual": {
@@ -615,7 +615,7 @@
     "hanzi": "哥哥",
     "pinyin": "gēge",
     "th": "พี่ชาย",
-    "lessonId": "u2_l2",
+    "lessonId": "ch3_l1",
     "audio": "/audio/v_gege.mp3",
     "audioSlow": null,
     "visual": {
@@ -628,7 +628,7 @@
     "hanzi": "姐姐",
     "pinyin": "jiějie",
     "th": "พี่สาว",
-    "lessonId": "u2_l2",
+    "lessonId": "ch3_l1",
     "audio": "/audio/v_jiejie.mp3",
     "audioSlow": null,
     "visual": {
@@ -641,7 +641,7 @@
     "hanzi": "家",
     "pinyin": "jiā",
     "th": "บ้าน / ครอบครัว",
-    "lessonId": "u2_l2",
+    "lessonId": "ch3_l1",
     "audio": "/audio/v_jia.mp3",
     "audioSlow": null,
     "visual": {
@@ -654,7 +654,7 @@
     "hanzi": "苹果",
     "pinyin": "píngguǒ",
     "th": "แอปเปิล",
-    "lessonId": "u3_l1",
+    "lessonId": "ch7_l1",
     "audio": "/audio/v_pingguo.mp3",
     "audioSlow": null,
     "visual": {
@@ -667,7 +667,7 @@
     "hanzi": "香蕉",
     "pinyin": "xiāngjiāo",
     "th": "กล้วย",
-    "lessonId": "u3_l1",
+    "lessonId": "ch7_l1",
     "audio": "/audio/v_xiangjiao.mp3",
     "audioSlow": null,
     "visual": {
@@ -680,7 +680,7 @@
     "hanzi": "红色",
     "pinyin": "hóngsè",
     "th": "สีแดง",
-    "lessonId": "u3_l1",
+    "lessonId": "ch7_l1",
     "audio": "/audio/v_hongse.mp3",
     "audioSlow": null,
     "visual": {
@@ -693,7 +693,7 @@
     "hanzi": "黄色",
     "pinyin": "huángsè",
     "th": "สีเหลือง",
-    "lessonId": "u3_l1",
+    "lessonId": "ch7_l1",
     "audio": "/audio/v_huangse.mp3",
     "audioSlow": null,
     "visual": {
@@ -706,7 +706,7 @@
     "hanzi": "绿色",
     "pinyin": "lǜsè",
     "th": "สีเขียว",
-    "lessonId": "u3_l1",
+    "lessonId": "ch7_l1",
     "audio": "/audio/v_luse.mp3",
     "audioSlow": null,
     "visual": {
@@ -719,7 +719,7 @@
     "hanzi": "人",
     "pinyin": "rén",
     "th": "คน",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_ren.mp3",
     "audioSlow": null,
     "visual": {
@@ -732,7 +732,7 @@
     "hanzi": "口",
     "pinyin": "kǒu",
     "th": "ปาก",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_kou.mp3",
     "audioSlow": null,
     "visual": {
@@ -745,7 +745,7 @@
     "hanzi": "山",
     "pinyin": "shān",
     "th": "ภูเขา",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_shan.mp3",
     "audioSlow": null,
     "visual": {
@@ -758,7 +758,7 @@
     "hanzi": "日",
     "pinyin": "rì",
     "th": "พระอาทิตย์",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_ri.mp3",
     "audioSlow": null,
     "visual": {
@@ -771,7 +771,7 @@
     "hanzi": "月",
     "pinyin": "yuè",
     "th": "ดวงจันทร์",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_yue.mp3",
     "audioSlow": null,
     "visual": {
@@ -784,7 +784,7 @@
     "hanzi": "我是学生。",
     "pinyin": "Wǒ shì xuéshēng.",
     "th": "ฉันเป็นนักเรียน",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_woshixuesheng.mp3",
     "audioSlow": null,
     "visual": {
@@ -797,7 +797,7 @@
     "hanzi": "我喜欢中国菜。",
     "pinyin": "Wǒ xǐhuān Zhōngguó cài.",
     "th": "ฉันชอบอาหารจีน",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_woxihuanzhongguocai.mp3",
     "audioSlow": null,
     "visual": {
@@ -810,7 +810,7 @@
     "hanzi": "他去学校。",
     "pinyin": "Tā qù xuéxiào.",
     "th": "เขาไปโรงเรียน",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_taquxuexiao.mp3",
     "audioSlow": null,
     "visual": {
@@ -823,7 +823,7 @@
     "hanzi": "这是我的书。",
     "pinyin": "Zhè shì wǒ de shū.",
     "th": "นี่คือหนังสือของฉัน",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_zheshiwodeshu.mp3",
     "audioSlow": null,
     "visual": {
@@ -836,7 +836,7 @@
     "hanzi": "你好吗？",
     "pinyin": "Nǐ hǎo ma?",
     "th": "คุณสบายดีไหม",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_nihaoma.mp3",
     "audioSlow": null,
     "visual": {
@@ -849,7 +849,7 @@
     "hanzi": "马",
     "pinyin": "mǎ",
     "th": "ม้า",
-    "lessonId": "u3_l2",
+    "lessonId": "ch13_l1",
     "audio": "/audio/v_ma.mp3",
     "audioSlow": null,
     "visual": {
@@ -862,8 +862,177 @@
     "hanzi": "中",
     "pinyin": "zhōng",
     "th": "กลาง / จีน",
-    "lessonId": "u3_l2",
+    "lessonId": "ch13_l1",
     "audio": "/audio/v_zhong.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_taiguo",
+    "hanzi": "泰国",
+    "pinyin": "Tàiguó",
+    "th": "ประเทศไทย",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_taiguo.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_zhongguo",
+    "hanzi": "中国",
+    "pinyin": "Zhōngguó",
+    "th": "ประเทศจีน",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_zhongguo.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_taiguoren",
+    "hanzi": "泰国人",
+    "pinyin": "Tàiguórén",
+    "th": "คนไทย",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_taiguoren.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_zhongguoren",
+    "hanzi": "中国人",
+    "pinyin": "Zhōngguórén",
+    "th": "คนจีน",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_zhongguoren.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_hanyu",
+    "hanzi": "汉语",
+    "pinyin": "Hànyǔ",
+    "th": "ภาษาจีน",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_hanyu.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_taiyu",
+    "hanzi": "泰语",
+    "pinyin": "Tàiyǔ",
+    "th": "ภาษาไทย",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_taiyu.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_yingyu",
+    "hanzi": "英语",
+    "pinyin": "Yīngyǔ",
+    "th": "ภาษาอังกฤษ",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_yingyu.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_shuo",
+    "hanzi": "说",
+    "pinyin": "shuō",
+    "th": "พูด",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_shuo.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_hui",
+    "hanzi": "会",
+    "pinyin": "huì",
+    "th": "สามารถ (ทำได้)",
+    "lessonId": "ch4_l1",
+    "audio": "/audio/v_hui.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_shi2",
+    "hanzi": "是",
+    "pinyin": "shì",
+    "th": "เป็น / คือ",
+    "lessonId": "ch4_l2",
+    "audio": "/audio/v_shi2.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_na",
+    "hanzi": "哪",
+    "pinyin": "nǎ",
+    "th": "ไหน",
+    "lessonId": "ch4_l2",
+    "audio": "/audio/v_na.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_ma2",
+    "hanzi": "吗",
+    "pinyin": "ma",
+    "th": "คำลงท้ายประโยคคำถาม",
+    "lessonId": "ch4_l2",
+    "audio": "/audio/v_ma2.mp3",
+    "audioSlow": null,
+    "visual": {
+      "type": null,
+      "value": null
+    }
+  },
+  {
+    "id": "v_he",
+    "hanzi": "和",
+    "pinyin": "hé",
+    "th": "กับ / และ",
+    "lessonId": "ch4_l2",
+    "audio": "/audio/v_he.mp3",
     "audioSlow": null,
     "visual": {
       "type": null,
@@ -875,7 +1044,7 @@
     "hanzi": "你",
     "pinyin": "nǐ",
     "th": "",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_ni.mp3",
     "audioSlow": null,
     "visual": {
@@ -888,7 +1057,7 @@
     "hanzi": "好",
     "pinyin": "hǎo",
     "th": "",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_hao.mp3",
     "audioSlow": null,
     "visual": {
@@ -901,7 +1070,7 @@
     "hanzi": "我",
     "pinyin": "wǒ",
     "th": "",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_wo.mp3",
     "audioSlow": null,
     "visual": {
@@ -914,7 +1083,7 @@
     "hanzi": "叫",
     "pinyin": "jiào",
     "th": "",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_jiao.mp3",
     "audioSlow": null,
     "visual": {
@@ -927,7 +1096,7 @@
     "hanzi": "小明",
     "pinyin": "Xiǎomíng",
     "th": "",
-    "lessonId": "u1_l1",
+    "lessonId": "ch1_l1",
     "audio": "/audio/v_xiaoming.mp3",
     "audioSlow": null,
     "visual": {
@@ -936,25 +1105,12 @@
     }
   },
   {
-    "id": "v_he",
+    "id": "v_he2",
     "hanzi": "喝",
     "pinyin": "hē",
     "th": "",
-    "lessonId": "u1_l2",
-    "audio": "/audio/v_he.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shi2",
-    "hanzi": "是",
-    "pinyin": "shì",
-    "th": "",
-    "lessonId": "u3_l1",
-    "audio": "/audio/v_shi2.mp3",
+    "lessonId": "ch2_l1",
+    "audio": "/audio/v_he2.mp3",
     "audioSlow": null,
     "visual": {
       "type": null,
@@ -966,7 +1122,7 @@
     "hanzi": "他",
     "pinyin": "tā",
     "th": "",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_ta.mp3",
     "audioSlow": null,
     "visual": {
@@ -979,7 +1135,7 @@
     "hanzi": "去",
     "pinyin": "qù",
     "th": "",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_qu.mp3",
     "audioSlow": null,
     "visual": {
@@ -992,7 +1148,7 @@
     "hanzi": "学校",
     "pinyin": "xuéxiào",
     "th": "",
-    "lessonId": "u3_l1",
+    "lessonId": "ch12_l1",
     "audio": "/audio/v_xuexiao.mp3",
     "audioSlow": null,
     "visual": {
@@ -1005,7 +1161,7 @@
     "hanzi": "喜欢",
     "pinyin": "xǐhuān",
     "th": "",
-    "lessonId": "u3_l2",
+    "lessonId": "ch13_l1",
     "audio": "/audio/v_xihuan.mp3",
     "audioSlow": null,
     "visual": {
@@ -1018,7 +1174,7 @@
     "hanzi": "中国菜",
     "pinyin": "Zhōngguó cài",
     "th": "",
-    "lessonId": "u3_l2",
+    "lessonId": "ch13_l1",
     "audio": "/audio/v_zhongguocai.mp3",
     "audioSlow": null,
     "visual": {

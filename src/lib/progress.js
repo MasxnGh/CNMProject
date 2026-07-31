@@ -7,7 +7,7 @@ const STORAGE_KEY = "dujeen-quest-progress-v2";
 export const defaultProgress = {
   version: 1,
   completed: [],
-  unlocked: [1],
+  unlocked: [2],
   coins: 0,
   xp: 0,
   level: 1,

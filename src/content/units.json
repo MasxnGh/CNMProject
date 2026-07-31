@@ -1,80 +1,106 @@
 [
   {
-    "id": "u1",
-    "title": "เริ่มต้นผจญภัยในเมืองจีน",
-    "theme": "market",
-    "lessons": [
-      {
-        "id": "u1_l1",
-        "title": "บทที่ 1",
-        "type": "learn",
-        "nodeIds": [
-          1,
-          2,
-          3
-        ]
-      },
-      {
-        "id": "u1_l2",
-        "title": "บทที่ 2",
-        "type": "practice",
-        "nodeIds": [
-          4,
-          5
-        ]
-      }
-    ]
-  },
-  {
-    "id": "u2",
-    "title": "ชีวิตประจำวันและวัฒนธรรมจีน",
-    "theme": "festival",
-    "lessons": [
-      {
-        "id": "u2_l1",
-        "title": "บทที่ 1",
-        "type": "learn",
-        "nodeIds": [
-          6,
-          7,
-          8
-        ]
-      },
-      {
-        "id": "u2_l2",
-        "title": "บทที่ 2",
-        "type": "practice",
-        "nodeIds": [
-          9,
-          10
-        ]
-      }
-    ]
-  },
-  {
-    "id": "u3",
-    "title": "บททดสอบขั้นสูงและภารกิจสุดท้าย",
+    "id": "ch1",
+    "title": "แนะนำตัวเอง",
     "theme": "palace",
     "lessons": [
-      {
-        "id": "u3_l1",
-        "title": "บทที่ 1",
-        "type": "learn",
-        "nodeIds": [
-          11,
-          12,
-          13
-        ]
-      },
-      {
-        "id": "u3_l2",
-        "title": "บทที่ 2",
-        "type": "practice",
-        "nodeIds": [
-          14,
-          15
-        ]
-      }
+      { "id": "ch1_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [2, 3] }
+    ]
+  },
+  {
+    "id": "ch2",
+    "title": "ตัวเลขและอายุ",
+    "theme": "market",
+    "lessons": [
+      { "id": "ch2_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [4] }
+    ]
+  },
+  {
+    "id": "ch3",
+    "title": "ครอบครัว",
+    "theme": "festival",
+    "lessons": [
+      { "id": "ch3_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [10] }
+    ]
+  },
+  {
+    "id": "ch4",
+    "title": "ประเทศและภาษา",
+    "theme": "market",
+    "lessons": [
+      { "id": "ch4_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [16, 17] },
+      { "id": "ch4_l2", "title": "บทที่ 2", "type": "learn", "nodeIds": [18] },
+      { "id": "ch4_l3", "title": "บทที่ 3", "type": "practice", "nodeIds": [19] },
+      { "id": "ch4_l4", "title": "บทที่ 4", "type": "review", "nodeIds": [20] }
+    ]
+  },
+  {
+    "id": "ch5",
+    "title": "อาชีพ",
+    "theme": "market",
+    "draft": true,
+    "lessons": []
+  },
+  {
+    "id": "ch6",
+    "title": "อาหาร",
+    "theme": "restaurant",
+    "lessons": [
+      { "id": "ch6_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [1, 6] }
+    ]
+  },
+  {
+    "id": "ch7",
+    "title": "ซื้อของ",
+    "theme": "market",
+    "lessons": [
+      { "id": "ch7_l1", "title": "บทที่ 1", "type": "practice", "nodeIds": [11] }
+    ]
+  },
+  {
+    "id": "ch8",
+    "title": "เวลาและวัน",
+    "theme": "market",
+    "draft": true,
+    "lessons": []
+  },
+  {
+    "id": "ch9",
+    "title": "การเดินทาง",
+    "theme": "market",
+    "lessons": [
+      { "id": "ch9_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [5] }
+    ]
+  },
+  {
+    "id": "ch10",
+    "title": "งานอดิเรก",
+    "theme": "festival",
+    "draft": true,
+    "lessons": []
+  },
+  {
+    "id": "ch11",
+    "title": "วัฒนธรรมจีน",
+    "theme": "festival",
+    "lessons": [
+      { "id": "ch11_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [7, 8, 9] }
+    ]
+  },
+  {
+    "id": "ch12",
+    "title": "ตัวอักษรและไวยากรณ์",
+    "theme": "ancient",
+    "lessons": [
+      { "id": "ch12_l1", "title": "บทที่ 1", "type": "learn", "nodeIds": [12, 13] }
+    ]
+  },
+  {
+    "id": "ch13",
+    "title": "ทบทวนและด่านสุดท้าย",
+    "theme": "palace",
+    "lessons": [
+      { "id": "ch13_l1", "title": "บทที่ 1", "type": "practice", "nodeIds": [14, 15] }
     ]
   }
 ]

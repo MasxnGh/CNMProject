@@ -82,7 +82,7 @@ describe("loadProgress / saveProgress", () => {
     window.localStorage.setItem("dujeen-quest-progress-v2", JSON.stringify({ coins: 10 }));
     const loaded = loadProgress();
     expect(loaded.coins).toBe(10);
-    expect(loaded.unlocked).toEqual([1]);
+    expect(loaded.unlocked).toEqual([2]);
     expect(loaded.mistakes).toEqual([]);
   });
 });

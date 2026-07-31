@@ -1,70 +1,39 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { Clock3, Lock } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../components/home/BottomNav.jsx";
 import DailyRewardModal from "../components/home/DailyRewardModal.jsx";
-import LessonStartSheet from "../components/home/LessonStartSheet.jsx";
-import NodeRoute from "../components/home/NodeRoute.jsx";
-import TopBar from "../components/home/TopBar.jsx";
-import UnlockOfferModal from "../components/home/UnlockOfferModal.jsx";
+import Stamp from "../components/Stamp.jsx";
 import units from "../content/units.json";
-import { getLevelById } from "../data/levels.js";
-import {
-  canPayToUnlock,
-  getLessonForNode,
-  isCheckpointEligible,
-  isCheckpointAvailableToday,
-  PAY_TO_UNLOCK_COST,
-  payToUnlockLesson,
-} from "../lib/checkpointProgression.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 import { claimDailyReward } from "../lib/progress.js";
+import TopBar from "../components/home/TopBar.jsx";
 import "../styles/route-map.css";
 
+const chapterStatus = (chapter, progress) => {
+  if (chapter.draft) return "draft";
+  const nodeIds = chapter.lessons.flatMap((lesson) => lesson.nodeIds);
+  if (nodeIds.length === 0) return "draft";
+  if (nodeIds.every((nodeId) => progress.completed.includes(nodeId))) return "cleared";
+  if (nodeIds.some((nodeId) => progress.unlocked.includes(nodeId) || progress.completed.includes(nodeId))) return "current";
+  return "locked";
+};
+
+/** The chapter-select grid ("หน้าเลือกบท") - the outer layer of the 2-layer
+    navigation. Drilling into a chapter (/chapter/:chapterId) shows that
+    chapter's own node path, which is what this page used to render directly
+    for every chapter at once before the professor's second prompt asked for
+    a HelloChinese-style chapter list first. */
 export default function RouteHome() {
   const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [unlockOfferNodeId, setUnlockOfferNodeId] = useState(null);
   const [rewardOpen, setRewardOpen] = useState(false);
   const [rewardAmount, setRewardAmount] = useState(0);
 
-  const lessonByNodeId = useMemo(() => {
-    const map = new Map();
-    units.forEach((unit) => {
-      unit.lessons.forEach((lesson, lessonIndex) => {
-        lesson.nodeIds.forEach((nodeId) => {
-          map.set(nodeId, { unit, lesson, lessonIndex });
-        });
-      });
-    });
-    return map;
-  }, []);
-
-  const nodeStatus = (nodeId) => {
-    if (progress.completed.includes(nodeId)) return "cleared";
-    if (progress.unlocked.includes(nodeId)) return "current";
-    return "locked";
-  };
-
-  const handleSelectNode = (nodeId) => {
-    setSelectedNode(nodeId);
-  };
-
-  const handleSelectLockedNode = (nodeId) => {
-    setUnlockOfferNodeId(nodeId);
-  };
-
-  const handleStart = () => {
-    if (selectedNode == null) return;
-    navigate(`/lesson/${selectedNode}`);
-  };
-
   const handleOpenReward = () => {
     const result = claimDailyReward(progress);
-    // Not claimable right now (already claimed today) - the button is
-    // disabled in that case, but stay defensive if state raced.
     if (!result) return;
     setRewardAmount(result.amount);
     setRewardOpen(true);
@@ -76,27 +45,6 @@ export default function RouteHome() {
     setRewardOpen(false);
   };
 
-  const handleStartTest = () => {
-    if (unlockOfferNodeId == null) return;
-    const info = getLessonForNode(unlockOfferNodeId);
-    if (!info) return;
-    setUnlockOfferNodeId(null);
-    navigate(`/unlock/${info.lesson.id}`);
-  };
-
-  const handlePayToUnlock = () => {
-    if (unlockOfferNodeId == null) return;
-    const info = getLessonForNode(unlockOfferNodeId);
-    if (!info) return;
-    const next = payToUnlockLesson(progress, info.lesson.id);
-    if (next) setProgress(next);
-    setUnlockOfferNodeId(null);
-  };
-
-  const selectedInfo = selectedNode != null ? lessonByNodeId.get(selectedNode) : null;
-  const selectedLevel = selectedNode != null ? getLevelById(selectedNode) : null;
-  const unlockOfferInfo = unlockOfferNodeId != null ? getLessonForNode(unlockOfferNodeId) : null;
-
   return (
     <motion.div
       className="rm-page"
@@ -107,42 +55,46 @@ export default function RouteHome() {
     >
       <TopBar progress={progress} onOpenReward={handleOpenReward} />
       <main className="rm-scroll">
-        <NodeRoute
-          units={units}
-          nodeStatus={nodeStatus}
-          onSelectNode={handleSelectNode}
-          isEligibleLocked={(nodeId) => isCheckpointEligible(progress, nodeId)}
-          onSelectLockedNode={handleSelectLockedNode}
-        />
+        <div className="rm-chapter-grid">
+          {units.map((chapter, index) => {
+            const status = chapterStatus(chapter, progress);
+            const nodeIds = chapter.lessons.flatMap((lesson) => lesson.nodeIds);
+            const clearedCount = nodeIds.filter((nodeId) => progress.completed.includes(nodeId)).length;
+            const interactive = status !== "locked" && status !== "draft";
+            return (
+              <motion.button
+                type="button"
+                key={chapter.id}
+                className={`rm-chapter-card ${status}`}
+                disabled={!interactive}
+                onClick={() => interactive && navigate(`/chapter/${chapter.id}`)}
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: reduceMotion ? 0 : index * 0.03 }}
+                whileTap={interactive ? { scale: 0.97 } : undefined}
+              >
+                <span className="rm-chapter-index">{index + 1}</span>
+                <div className="rm-chapter-body">
+                  <strong>{chapter.title}</strong>
+                  {status === "draft" ? (
+                    <span className="rm-chapter-meta">
+                      <Clock3 size={14} /> เร็วๆ นี้
+                    </span>
+                  ) : status === "locked" ? (
+                    <span className="rm-chapter-meta">
+                      <Lock size={14} /> ยังไม่ปลดล็อค
+                    </span>
+                  ) : (
+                    <span className="rm-chapter-meta">{clearedCount}/{nodeIds.length} ด่าน</span>
+                  )}
+                </div>
+                {status === "cleared" ? <Stamp size={36} animate={false} label={`${chapter.title} ผ่านครบแล้ว`} /> : null}
+              </motion.button>
+            );
+          })}
+        </div>
       </main>
       <BottomNav />
-
-      <AnimatePresence>
-        {selectedNode != null && selectedInfo ? (
-          <LessonStartSheet
-            title={selectedLevel?.title ?? `โหนด ${selectedNode}`}
-            topic={selectedLevel?.topic ?? ""}
-            lessonLabel={`${selectedInfo.unit.title} · บทที่ ${selectedInfo.lessonIndex + 1}/${selectedInfo.unit.lessons.length}`}
-            onStart={handleStart}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : null}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {unlockOfferInfo ? (
-          <UnlockOfferModal
-            unit={unlockOfferInfo.unit}
-            lesson={unlockOfferInfo.lesson}
-            availableToday={isCheckpointAvailableToday(progress, unlockOfferInfo.lesson.id)}
-            canPay={canPayToUnlock(progress)}
-            payCost={PAY_TO_UNLOCK_COST}
-            onStartTest={handleStartTest}
-            onPay={handlePayToUnlock}
-            onClose={() => setUnlockOfferNodeId(null)}
-          />
-        ) : null}
-      </AnimatePresence>
 
       {rewardOpen ? (
         <DailyRewardModal amount={rewardAmount} onClaim={handleClaimReward} onClose={() => setRewardOpen(false)} />

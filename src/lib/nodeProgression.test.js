@@ -5,7 +5,9 @@ import { completeNode, getNextNodeId, isNodeCompleted, isNodeUnlocked } from "./
 
 describe("getNextNodeId", () => {
   it("returns the next node on the route", () => {
-    expect(getNextNodeId(1)).toBe(2);
+    // Chapter 1 (แนะนำตัวเอง) leads with nodes [2, 3] - node 2 is the actual
+    // start of the route since the Phase 2 chapter restructure.
+    expect(getNextNodeId(2)).toBe(3);
   });
 
   it("returns null past the last node", () => {
@@ -18,22 +20,22 @@ describe("getNextNodeId", () => {
 });
 
 describe("completeNode", () => {
-  const level1 = getLevelById(1);
+  const level1 = getLevelById(2);
 
   it("unlocks the next node and marks this one completed on a pass", () => {
     const outcome = completeNode(defaultProgress, level1, { correct: level1.questions.length, hintsUsed: 0, score: 100 });
 
     expect(outcome.passed).toBe(true);
-    expect(isNodeCompleted(outcome.progress, 1)).toBe(true);
-    expect(isNodeUnlocked(outcome.progress, 2)).toBe(true);
+    expect(isNodeCompleted(outcome.progress, 2)).toBe(true);
+    expect(isNodeUnlocked(outcome.progress, 3)).toBe(true);
   });
 
   it("does not unlock or complete anything on a fail", () => {
     const outcome = completeNode(defaultProgress, level1, { correct: 0, hintsUsed: 0, score: 0 });
 
     expect(outcome.passed).toBe(false);
-    expect(isNodeCompleted(outcome.progress, 1)).toBe(false);
-    expect(isNodeUnlocked(outcome.progress, 2)).toBe(false);
+    expect(isNodeCompleted(outcome.progress, 2)).toBe(false);
+    expect(isNodeUnlocked(outcome.progress, 3)).toBe(false);
   });
 
   it("awards xp/coins and produces a ResultPage-compatible shape", () => {
@@ -47,7 +49,7 @@ describe("completeNode", () => {
   });
 
   it("does not re-award xp/coins for repeating an already 3-starred level", () => {
-    const maxed = { ...defaultProgress, levelStars: { 1: 3 } };
+    const maxed = { ...defaultProgress, levelStars: { 2: 3 } };
     const outcome = completeNode(maxed, level1, { correct: level1.questions.length, hintsUsed: 0, score: 100 });
 
     expect(outcome.passed).toBe(true);
@@ -64,7 +66,7 @@ describe("completeNode", () => {
 
     expect(outcome.stars).toBe(1);
     expect(outcome.passed).toBe(true);
-    expect(isNodeUnlocked(outcome.progress, 2)).toBe(true);
+    expect(isNodeUnlocked(outcome.progress, 3)).toBe(true);
   });
 
   it("flags victory on the final node", () => {

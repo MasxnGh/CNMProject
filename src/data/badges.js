@@ -90,4 +90,11 @@ export const badges = [
     icon: "Zap",
     condition: { type: "checkpoint-count", count: 1 },
   },
+  {
+    id: "global-citizen",
+    name: "ทูตน้อยแห่งอาเซียน",
+    description: "ผ่านด่านทบทวนประเทศและภาษา",
+    icon: "Sparkles",
+    condition: { type: "level-complete", levelId: 20 },
+  },
 ];

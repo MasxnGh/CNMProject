@@ -18,7 +18,7 @@ export default function UnlockOfferModal({ unit, lesson, availableToday, canPay,
         <button type="button" className="rm-navbutton" style={{ marginLeft: "auto" }} onClick={onClose} aria-label="ปิด">
           <X size={20} />
         </button>
-        <KeyRound size={32} color="var(--v2-gold, #ffd76b)" />
+        <KeyRound size={32} color="var(--v2-gold, #C08A34)" />
         <h2>ข้ามไป {lesson.title} เลยไหม?</h2>
         <p>
           ทำแบบทดสอบรวมความรู้ {lesson.nodeIds.length} ด่านของ {unit.title} — ตอบให้ถูกจนจบ ผิดได้ไม่เกิน 2 ข้อ

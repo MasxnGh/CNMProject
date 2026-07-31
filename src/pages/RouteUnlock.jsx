@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GamePage from "../components/GamePage.jsx";
-import { buildCheckpointLevel, completeCheckpoint } from "../lib/checkpointProgression.js";
+import { buildCheckpointLevel, completeCheckpoint, getChapterIdForNode } from "../lib/checkpointProgression.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 import { toLegacyProgressView } from "../lib/nodeProgression.js";
 import { setAudioEnabled } from "../utils/speech.js";
@@ -11,10 +11,12 @@ import { setAudioEnabled } from "../utils/speech.js";
    (buildCheckpointLevel pools questions from every node in the lesson) and
    the finish handler unlocks the whole lesson at once instead of one node. */
 export default function RouteUnlock() {
-  const { unitId: lessonId } = useParams();
+  const { lessonId } = useParams();
   const navigate = useNavigate();
   const { progress, setProgress } = useProgress();
   const level = buildCheckpointLevel(lessonId);
+  const chapterId = level ? getChapterIdForNode(level.coveredNodeIds[0]) : null;
+  const mapPath = chapterId ? `/chapter/${chapterId}` : "/";
 
   useEffect(() => {
     setAudioEnabled(progress.soundEnabled);
@@ -45,7 +47,7 @@ export default function RouteUnlock() {
       level={level}
       progress={toLegacyProgressView(progress)}
       onFinish={handleFinish}
-      onMap={() => navigate("/")}
+      onMap={() => navigate(mapPath)}
       soundOn={progress.soundEnabled}
       reducedMotion={progress.reducedMotion}
       skipMissionIntro={progress.skipMissionIntro}

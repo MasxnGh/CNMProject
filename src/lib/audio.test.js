@@ -93,7 +93,7 @@ describe("lib/audio", () => {
 
   it("preloads every entry in a lesson and none from other lessons", async () => {
     const { preloadLesson } = await import("./audio.js");
-    preloadLesson("u1_l1");
+    preloadLesson("ch1_l1");
 
     const preloaded = instances.filter((audio) => audio.preload === "auto");
     expect(preloaded.length).toBeGreaterThan(0);

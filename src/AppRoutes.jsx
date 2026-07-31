@@ -14,10 +14,12 @@ import RouteHome from "./pages/RouteHome.jsx";
    without it React Router unmounts the old page instantly, before its exit
    animation ever gets a chance to run. */
 const App = lazy(() => import("./App.jsx"));
+const ChapterPath = lazy(() => import("./pages/ChapterPath.jsx"));
 const RouteLesson = lazy(() => import("./pages/RouteLesson.jsx"));
 const RouteUnlock = lazy(() => import("./pages/RouteUnlock.jsx"));
 const RouteResult = lazy(() => import("./pages/RouteResult.jsx"));
 const RoutePractice = lazy(() => import("./pages/RoutePractice.jsx"));
+const RouteProfile = lazy(() => import("./pages/RouteProfile.jsx"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -28,10 +30,12 @@ export default function AppRoutes() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<RouteHome />} />
           <Route path="/classic" element={<App />} />
+          <Route path="/chapter/:chapterId" element={<ChapterPath />} />
           <Route path="/lesson/:lessonId" element={<RouteLesson />} />
-          <Route path="/unlock/:unitId" element={<RouteUnlock />} />
+          <Route path="/unlock/:lessonId" element={<RouteUnlock />} />
           <Route path="/result/:lessonId" element={<RouteResult />} />
           <Route path="/practice" element={<RoutePractice />} />
+          <Route path="/profile" element={<RouteProfile />} />
         </Routes>
       </AnimatePresence>
     </Suspense>
