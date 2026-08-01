@@ -28,7 +28,7 @@ test("tapping the current node opens a start sheet and starting it navigates to 
 
   await page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ }).click();
   await expect(page.locator(".ln-sheet")).toBeVisible();
-  await expect(page.locator(".ln-sheet")).toContainText("ร้านชาโบราณ");
+  await expect(page.locator(".ln-sheet")).toContainText("บทที่ 1");
 
   await page.getByRole("button", { name: "เริ่ม" }).click();
   await expect(page).toHaveURL(/\/lesson\/2$/);
@@ -82,7 +82,7 @@ test("the legacy app is still fully reachable at /classic", async ({ page }) => 
 
 test("a direct refresh on a deep link does not 404 in dev", async ({ page }) => {
   await page.goto("/lesson/1");
-  await expect(page.getByRole("heading", { name: "ตลาดจีน" })).toBeVisible();
+  await expect(page.locator(".ln-quiz-close")).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("heading", { name: "ตลาดจีน" })).toBeVisible();
+  await expect(page.locator(".ln-quiz-close")).toBeVisible();
 });

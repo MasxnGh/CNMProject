@@ -9,7 +9,6 @@ import { expect, test } from "@playwright/test";
  */
 test("completing node 1 through /lesson/1 unlocks node 6 and shows a real result", async ({ page }) => {
   await page.goto("/lesson/1");
-  await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
 
   // 1/5 matching: hanzi <-> Thai meaning
   const pairs = [
@@ -64,6 +63,5 @@ test("completing node 1 through /lesson/1 unlocks node 6 and shows a real result
 
 test("retrying a node re-mounts a fresh game session", async ({ page }) => {
   await page.goto("/lesson/1");
-  await page.getByRole("button", { name: "เริ่มเล่นเลย" }).click();
-  await expect(page.locator(".v2-mission-progress").getByText("ภารกิจ 1/5")).toBeVisible();
+  await expect(page.locator(".match-item").first()).toBeVisible();
 });

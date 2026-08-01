@@ -24,9 +24,9 @@ test("chapter 4's first node plays all 10 full-depth missions and unlocks the ne
   await seedProgress(page);
   await page.goto("/lesson/16");
 
-  // skipMissionIntro is seeded true, so the mission starts immediately with
-  // no "เริ่มเล่นเลย" intro button to click first.
-  await expect(page.locator(".v2-mission-progress").getByText("ภารกิจ 1/10")).toBeVisible();
+  // The lantern-district lesson screen always starts immediately with no
+  // "เริ่มเล่นเลย" intro screen at all.
+  await expect(page.locator(".ln-quiz-progress")).toBeVisible();
 
   // 1. multipleChoice: 泰国 = ประเทศไทย
   await page.getByRole("button", { name: "ประเทศไทย", exact: true }).click();

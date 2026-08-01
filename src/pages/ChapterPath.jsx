@@ -151,7 +151,7 @@ export default function ChapterPath() {
                   <Lantern
                     state={status}
                     icon={indexInLesson === 0 ? "学" : "练"}
-                    label={level?.title ?? `โหนด ${nodeId}`}
+                    label={chapter.lessons[lessonIndexByNodeId.get(nodeId) ?? 0]?.title ?? level?.title ?? `โหนด ${nodeId}`}
                     disabled={!interactive}
                     aria-label={`โหนด ${nodeId} - ${statusLabel}`}
                     onClick={() => handleTapNode(nodeId, status, eligibleLocked)}
@@ -195,7 +195,7 @@ export default function ChapterPath() {
         <small style={{ color: "var(--lantern)", fontWeight: 600 }}>
           {chapter.title} · บทที่ {selectedLessonIndex + 1}/{chapter.lessons.length}
         </small>
-        <h3>{selectedLevel?.title ?? (selectedNode != null ? `โหนด ${selectedNode}` : "")}</h3>
+        <h3>{chapter.lessons[selectedLessonIndex]?.title ?? selectedLevel?.title ?? (selectedNode != null ? `โหนด ${selectedNode}` : "")}</h3>
         <p>{selectedLevel?.topic ?? ""}</p>
         <Button onClick={handleStart}>เริ่ม</Button>
         <Button variant="ghost" onClick={() => setSelectedNode(null)}>

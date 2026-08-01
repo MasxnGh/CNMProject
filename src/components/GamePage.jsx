@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Heart, Lightbulb, Map, Pause, Shield, Star, Target, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, Heart, Lightbulb, Map, Pause, Shield, Star, Target, Volume2, VolumeX, X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { diagnoseMission } from "../utils/diagnoseMission";
 import { createGameSession, gameSessionReducer } from "../utils/gameSessionReducer";
@@ -14,7 +14,6 @@ import {
 import soundManager from "../utils/soundManager";
 import ComboBadge from "./ComboBadge";
 import MissionIntro from "./MissionIntro";
-import InkDrop from "./InkDrop";
 import MissionVerdict from "./MissionVerdict";
 import Modal from "./Modal";
 import PauseOverlay from "./PauseOverlay";
@@ -69,14 +68,18 @@ export default function GamePage({
   reducedMotion = false,
   skipMissionIntro = false,
   isCheckpoint = false,
+  variant = "classic",
+  heartsEnabled = true,
   onToggleSound = () => {},
   onToggleReducedMotion = () => {},
   onToggleSkipIntro = () => {},
 }) {
+  const isLantern = variant === "lantern";
   const [state, dispatch] = useReducer(
     gameSessionReducer,
-    { level, skipMissionIntro },
-    ({ level: initialLevel, skipMissionIntro: skipIntro }) => createGameSession(initialLevel, { skipIntro }),
+    { level, skipMissionIntro, heartsEnabled },
+    ({ level: initialLevel, skipMissionIntro: skipIntro, heartsEnabled: startHeartsEnabled }) =>
+      createGameSession(initialLevel, { skipIntro, heartsEnabled: startHeartsEnabled }),
   );
   const [speechMessage, setSpeechMessage] = useState("");
   const [comboFlash, setComboFlash] = useState(0);
@@ -318,19 +321,37 @@ export default function GamePage({
         aria-hidden={paused ? "true" : undefined}
         inert={paused ? "" : undefined}
       >
-        <div className="v2-game-header">
-          <button className="v2-icon-button" type="button" onClick={requestExit} disabled={paused} aria-label="กลับไปที่แผนที่">
-            <ArrowLeft size={23} />
-          </button>
-          <div className="v2-game-title">
-            <h1 title={level.title}>{level.title}</h1>
-            <p>{level.location} - {level.topic}</p>
+        {isLantern ? (
+          <div className="ln-quiz-top">
+            <button className="v2-icon-button ln-quiz-close" type="button" onClick={requestExit} disabled={paused} aria-label="ปิด">
+              <X size={20} />
+            </button>
+            <ProgressBar className="ln-quiz-progress" value={state.index} max={level.questions.length} />
+            {isCheckpoint ? (
+              <div className="ln-quiz-lives" aria-label={`เหลือ ${state.hearts} ชีวิต`}>
+                {[0, 1, 2].map((heart) => (
+                  <span key={heart} className={`ln-quiz-life-lantern ${heart < state.hearts ? "is-lit" : "is-lost"}`} />
+                ))}
+              </div>
+            ) : null}
           </div>
-          <div className="v2-mission-chip"><Shield size={18} /> Lv. {progress.level}</div>
-        </div>
-        <PlayerStatus progress={progress} compact />
+        ) : (
+          <>
+            <div className="v2-game-header">
+              <button className="v2-icon-button" type="button" onClick={requestExit} disabled={paused} aria-label="กลับไปที่แผนที่">
+                <ArrowLeft size={23} />
+              </button>
+              <div className="v2-game-title">
+                <h1 title={level.title}>{level.title}</h1>
+                <p>{level.location} - {level.topic}</p>
+              </div>
+              <div className="v2-mission-chip"><Shield size={18} /> Lv. {progress.level}</div>
+            </div>
+            <PlayerStatus progress={progress} compact />
+          </>
+        )}
 
-        {state.phase === "intro" ? (
+        {state.phase === "intro" && !isLantern ? (
           <MissionIntro
             intro={intro}
             skipMissionIntro={skipMissionIntro}
@@ -339,47 +360,50 @@ export default function GamePage({
           />
         ) : mission ? (
           <div className="v2-game-layout">
-            <aside className="v2-game-console" aria-label="Mission dashboard">
-              <section className="v2-mission-status" role="group" aria-label="Mission status">
-                <InkDrop compact text={state.hearts > 1 ? "ค่อย ๆ คิด ใช้คำใบ้ได้เมื่อจำเป็น" : "เหลือหัวใจเดียวแล้ว ตรวจให้ดีก่อนตอบ"} mood={state.hearts <= 1 ? "sad" : "happy"} />
-                <div className="v2-heart-row" aria-label={`${state.hearts} hearts remaining`}>
-                  {[0, 1, 2].map((heart) => (
-                    <span key={heart} className={heart < state.hearts ? "alive" : "lost"}>
-                      <Heart size={20} fill="currentColor" aria-hidden="true" />
-                    </span>
-                  ))}
-                </div>
-                <div className="v2-console-stat v2-mission-counter"><Target size={18} aria-hidden="true" /> ภารกิจ {state.index + 1}/{level.questions.length}</div>
-                <div className="v2-console-stat"><Star size={18} fill="currentColor" aria-hidden="true" /> คะแนน {state.score}</div>
-              </section>
-              <section className="v2-mission-actions" role="group" aria-label="Mission actions">
-                <button className="v2-button hint" type="button" onClick={useHint} disabled={state.hints <= 0 || state.showHint || disabled}>
-                  <Lightbulb size={20} /> คำใบ้ {state.hints}/2
+            {!isLantern ? (
+              <aside className="v2-game-console" aria-label="Mission dashboard">
+                <section className="v2-mission-status" role="group" aria-label="Mission status">
+                  <div className="v2-heart-row" aria-label={`${state.hearts} hearts remaining`}>
+                    {[0, 1, 2].map((heart) => (
+                      <span key={heart} className={heart < state.hearts ? "alive" : "lost"}>
+                        <Heart size={20} fill="currentColor" aria-hidden="true" />
+                      </span>
+                    ))}
+                  </div>
+                  <div className="v2-console-stat v2-mission-counter"><Target size={18} aria-hidden="true" /> ภารกิจ {state.index + 1}/{level.questions.length}</div>
+                  <div className="v2-console-stat"><Star size={18} fill="currentColor" aria-hidden="true" /> คะแนน {state.score}</div>
+                </section>
+                <section className="v2-mission-actions" role="group" aria-label="Mission actions">
+                  <button className="v2-button hint" type="button" onClick={useHint} disabled={state.hints <= 0 || state.showHint || disabled}>
+                    <Lightbulb size={20} /> คำใบ้ {state.hints}/2
+                  </button>
+                  <button className="v2-icon-button v2-console-pause" type="button" onClick={pause} disabled={paused || state.phase === "finished"} aria-label="หยุดชั่วคราว">
+                    <Pause size={20} />
+                  </button>
+                  <button className="v2-icon-button v2-console-sound" type="button" onClick={onToggleSound} aria-label={soundOn ? "ปิดเสียง" : "เปิดเสียง"}>
+                    {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                  </button>
+                </section>
+                <button className="v2-button ghost v2-console-map" type="button" onClick={requestExit} disabled={paused}>
+                  <Map size={20} /> กลับแผนที่
                 </button>
-                <button className="v2-icon-button v2-console-pause" type="button" onClick={pause} disabled={paused || state.phase === "finished"} aria-label="หยุดชั่วคราว">
-                  <Pause size={20} />
-                </button>
-                <button className="v2-icon-button v2-console-sound" type="button" onClick={onToggleSound} aria-label={soundOn ? "ปิดเสียง" : "เปิดเสียง"}>
-                  {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
-                </button>
-              </section>
-              <button className="v2-button ghost v2-console-map" type="button" onClick={requestExit} disabled={paused}>
-                <Map size={20} /> กลับแผนที่
-              </button>
-            </aside>
+              </aside>
+            ) : null}
 
             <main
               ref={arenaRef}
               tabIndex={-1}
               className={`v2-mission-arena ${mission.type === "finalBoss" ? "boss" : ""} ${state.feedback?.correct ? "is-correct" : state.feedback ? "is-wrong" : ""}`}
             >
-              <div className={`v2-mission-progress ${isCheckpoint ? "checkpoint" : ""}`}>
-                <div>
-                  <span>ภารกิจ {state.index + 1}/{level.questions.length}</span>
-                  <strong>{missionNames[mission.type] ?? mission.type}</strong>
+              {!isLantern ? (
+                <div className={`v2-mission-progress ${isCheckpoint ? "checkpoint" : ""}`}>
+                  <div>
+                    <span>ภารกิจ {state.index + 1}/{level.questions.length}</span>
+                    <strong>{missionNames[mission.type] ?? mission.type}</strong>
+                  </div>
+                  <ProgressBar value={state.index + 1} max={level.questions.length} />
                 </div>
-                <ProgressBar value={state.index + 1} max={level.questions.length} />
-              </div>
+              ) : null}
 
               <ComboBadge combo={comboFlash} />
 

@@ -2695,7 +2695,7 @@ button:disabled {
   --v2-stone: var(--dim);           /* locked-node / disabled state */
   /* Not aliased to --v2-night/--v2-void here (unlike before) - this stays a
      fixed light accent color used for contrast against dark/saturated
-     shapes (inkdrop eyes, stamp glyph), independent of the scene bg. */
+     shapes (the stamp glyph), independent of the scene bg. */
   --v2-paper: var(--ln-paper);
   --v2-paper-deep: #E4D3B0;
   --v2-scene-mid: var(--night3);   /* .v2-scene's 3-stop gradient midpoint */
@@ -2711,7 +2711,7 @@ button:disabled {
   --v2-glass-strong-rgb: 37, 50, 90;
 }
 
-/* GamePage/QuestionRenderer/InkDrop/etc. have no --dq-*-only fallback of
+/* GamePage/QuestionRenderer/etc. have no --dq-*-only fallback of
    their own - their entire structural + mission-type CSS lives under
    .v2-* selectors, shared verbatim between /classic and the new lantern
    routes (confirmed: no .dq-game-layout/.dq-mission-arena equivalent
@@ -5616,77 +5616,6 @@ button:disabled {
   font-weight: 1000;
   line-height: 1.45;
   box-shadow: 0 16px 35px rgba(0, 0, 0, 0.24);
-}
-
-/* ── InkDrop mascot (ink-wash route/lesson screens) ─────────────────── */
-.v2-inkdrop-guide {
-  --inkdrop-size: 132px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-width: 0;
-}
-
-.v2-inkdrop-guide.compact {
-  --inkdrop-size: 78px;
-  grid-template-columns: var(--inkdrop-size) minmax(0, 1fr);
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.v2-inkdrop {
-  width: var(--inkdrop-size);
-  height: var(--inkdrop-size);
-  filter: drop-shadow(0 8px 14px rgba(36, 31, 26, 0.18));
-}
-
-.v2-inkdrop-body {
-  fill: var(--v2-ink);
-}
-
-.v2-inkdrop-sheen {
-  fill: rgba(255, 253, 246, 0.22);
-}
-
-path.v2-inkdrop-eye {
-  fill: none;
-  stroke: var(--v2-paper);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-}
-
-circle.v2-inkdrop-eye {
-  fill: var(--v2-paper);
-  stroke: none;
-}
-
-.v2-inkdrop-mouth {
-  fill: none;
-  stroke: var(--v2-paper, #F3EEE1);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-}
-
-.v2-inkdrop-bubble {
-  max-width: min(260px, 100%);
-  margin-top: 0;
-  border: 1px solid var(--v2-border);
-  border-radius: 18px;
-  background: var(--v2-glass-strong);
-  padding: 0.7rem 0.9rem;
-  color: var(--v2-ink);
-  font-size: 0.9rem;
-  font-weight: 1000;
-  line-height: 1.45;
-  box-shadow: 0 16px 35px rgba(36, 31, 26, 0.12);
-}
-
-@media (max-width: 26rem) {
-  .v2-inkdrop-bubble {
-    padding: 0.5rem 0.65rem;
-    font-size: 0.8rem;
-    line-height: 1.32;
-  }
 }
 
 /* ── Stamp (印章 seal) — the redesign's signature element ────────────── */
