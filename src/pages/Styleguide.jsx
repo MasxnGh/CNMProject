@@ -1,4 +1,7 @@
 import { useState } from "react";
+import ComboBadge from "../components/game/ComboBadge.jsx";
+import FeedbackBar from "../components/game/FeedbackBar.jsx";
+import StampBurst from "../components/game/StampBurst.jsx";
 import Button from "../components/ui/Button.jsx";
 import Lantern from "../components/ui/Lantern.jsx";
 import Nav from "../components/ui/Nav.jsx";
@@ -19,6 +22,10 @@ export default function Styleguide() {
   const [navKey, setNavKey] = useState("learn");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [stampPopOpen, setStampPopOpen] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackKey, setFeedbackKey] = useState(0);
+  const [stampBurstKey, setStampBurstKey] = useState(null);
+  const [combo, setCombo] = useState(0);
 
   const triggerStampPop = () => {
     setStampPopOpen(true);
@@ -62,6 +69,62 @@ export default function Styleguide() {
               <Stamp size={150} />
             </div>
           ) : null}
+        </section>
+
+        <section style={{ marginBottom: 40 }}>
+          <h2 style={{ marginBottom: 12, color: "var(--dim)", fontSize: 13, letterSpacing: 1 }}>GAMEPLAY (Prompt A)</h2>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
+            <Button
+              style={{ width: "auto", display: "inline-block", padding: "10px 18px" }}
+              onClick={() => {
+                setFeedback("correct");
+                setFeedbackKey((key) => key + 1);
+                setStampBurstKey((key) => (key ?? 0) + 1);
+                setCombo((count) => count + 1);
+              }}
+            >
+              ยิง feedback ถูก
+            </Button>
+            <Button
+              variant="danger"
+              style={{ width: "auto", display: "inline-block", padding: "10px 18px" }}
+              onClick={() => {
+                setFeedback("wrong");
+                setFeedbackKey((key) => key + 1);
+                setCombo(0);
+              }}
+            >
+              ยิง feedback ผิด
+            </Button>
+            <Button
+              variant="ghost"
+              style={{ width: "auto", display: "inline-block", padding: "10px 18px" }}
+              onClick={() => setFeedback(null)}
+            >
+              ปิด feedback
+            </Button>
+          </div>
+
+          <div style={{ position: "relative", minHeight: 90, background: "var(--night2)", borderRadius: 18, padding: 16, marginBottom: 16 }}>
+            <p style={{ color: "var(--dim)", fontSize: 13 }}>กล่องนี้จำลองพื้นที่ภารกิจ - คอมโบแสดงมุมขวาบนตรงนี้ (ต้อง x3 ขึ้นไปถึงจะเห็น, x5 เรืองแสง, x10 มีประกาย)</p>
+            <ComboBadge combo={combo} />
+          </div>
+
+          {feedback ? (
+            <FeedbackBar
+              key={feedbackKey}
+              variant={feedback}
+              answer={{ hanzi: "你好", pinyin: "nǐ hǎo", thai: "สวัสดี", audioId: "v_nihao" }}
+              tokens={feedback === "wrong" ? [
+                { hanzi: "你", thai: "คุณ" },
+                { hanzi: "好", thai: "ดี" },
+              ] : undefined}
+              onContinue={() => setFeedback(null)}
+              onReportError={() => window.alert("รายงานข้อผิดพลาดแล้ว (ตัวอย่าง)")}
+            />
+          ) : null}
+
+          <StampBurst trigger={stampBurstKey} />
         </section>
 
         <section style={{ marginBottom: 40 }}>

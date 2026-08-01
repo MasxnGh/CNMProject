@@ -17,7 +17,7 @@ import {
   PAY_TO_UNLOCK_COST,
   payToUnlockLesson,
 } from "../lib/checkpointProgression.js";
-import { play } from "../lib/audio.js";
+import { playWord } from "../lib/audio.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 import "../styles/lantern-screens.css";
 
@@ -165,7 +165,7 @@ export default function ChapterPath() {
             <h5>คำศัพท์ในบทนี้</h5>
             <div className="ln-chips">
               {vocabForChapter.map((entry) => (
-                <button key={entry.id} type="button" className="ln-chip" onClick={() => play(entry.id)}>
+                <button key={entry.id} type="button" className="ln-chip" onClick={() => playWord(entry.id)}>
                   <b>{entry.hanzi}</b>
                   <i>{entry.pinyin}</i>
                 </button>

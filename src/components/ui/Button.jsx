@@ -11,7 +11,7 @@ export default function Button({
   children,
   ...rest
 }) {
-  const variantClass = variant === "ghost" ? "ln-btn ghost" : "ln-btn";
+  const variantClass = variant === "ghost" ? "ln-btn ghost" : variant === "danger" ? "ln-btn danger" : "ln-btn";
 
   return (
     <button

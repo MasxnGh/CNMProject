@@ -1,0 +1,6 @@
+.unlock-modal-lanterns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}

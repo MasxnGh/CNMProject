@@ -22,6 +22,7 @@ const RoutePractice = lazy(() => import("./pages/RoutePractice.jsx"));
 const RouteProfile = lazy(() => import("./pages/RouteProfile.jsx"));
 const Styleguide = lazy(() => import("./pages/Styleguide.jsx"));
 const ChapterSelect = lazy(() => import("./pages/ChapterSelect.jsx"));
+const LessonPreview = lazy(() => import("./pages/LessonPreview.jsx"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -40,6 +41,7 @@ export default function AppRoutes() {
           <Route path="/practice" element={<RoutePractice />} />
           <Route path="/profile" element={<RouteProfile />} />
           <Route path="/styleguide" element={<Styleguide />} />
+          <Route path="/lesson-preview" element={<LessonPreview />} />
         </Routes>
       </AnimatePresence>
     </Suspense>
