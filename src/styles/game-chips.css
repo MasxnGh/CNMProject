@@ -1,0 +1,122 @@
+/* dujeen-quest-gameplay-prompts.md Prompt C - shared chip mechanic used by
+   ArrangeFromAudio/CompleteTranslation/TranslateSentence. Framer Motion's
+   layoutId (in ChipTray.jsx/ChipSlots.jsx) drives the actual flight; this
+   file is just the chip/slot look and the post-submit reveal states. */
+
+.chip-tray,
+.chip-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip-slots {
+  margin-bottom: 20px;
+  min-height: 56px;
+}
+
+.chip-tray {
+  padding: 14px;
+  border-radius: var(--r);
+  background: var(--night2);
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--night3);
+  color: var(--ln-paper);
+  font-family: "Noto Serif SC", serif;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #0A1024;
+  transition: transform 0.09s, box-shadow 0.09s;
+}
+
+.chip strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.chip small {
+  font-family: "Kanit", sans-serif;
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.chip:not(:disabled):active {
+  transform: translateY(5px);
+  box-shadow: none;
+}
+
+.chip[disabled] {
+  cursor: default;
+}
+
+.chip-slot-empty {
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 14px;
+  border: 2px dashed rgba(255, 158, 44, 0.28);
+  box-shadow: 0 0 10px rgba(255, 158, 44, 0.1);
+}
+
+.chip-slot-empty.is-next {
+  border-color: rgba(255, 158, 44, 0.7);
+  box-shadow: 0 0 18px 2px rgba(255, 158, 44, 0.35);
+  animation: chip-slot-next-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes chip-slot-next-pulse {
+  0%, 100% { box-shadow: 0 0 18px 2px rgba(255, 158, 44, 0.35); }
+  50% { box-shadow: 0 0 24px 5px rgba(255, 158, 44, 0.55); }
+}
+
+.chip-slot-filled.is-fixed {
+  background: var(--night2);
+  color: var(--dim);
+}
+
+.chip-slot-filled.is-correct {
+  animation: chip-reveal-correct 0.4s ease-out both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+@keyframes chip-reveal-correct {
+  0% { box-shadow: 0 5px 0 #0A1024; }
+  60% { box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
+  100% { box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
+}
+
+.chip-slot-filled.is-wrong {
+  animation: chip-reveal-wrong 0.4s ease-out both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+@keyframes chip-reveal-wrong {
+  0%, 100% { transform: translateX(0); box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--seal), 0 0 20px rgba(226, 59, 46, 0.5); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+@media (hover: hover) {
+  .chip:not(:disabled):hover {
+    filter: brightness(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-slot-empty.is-next,
+  .chip-slot-filled.is-correct,
+  .chip-slot-filled.is-wrong {
+    animation: none;
+  }
+}

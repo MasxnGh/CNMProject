@@ -56,6 +56,15 @@
   font-size: 16px;
 }
 
+/* Not in the prototype (which has no wrong-answer state) - added for
+   dujeen-quest-gameplay-prompts.md's Prompt A ("ปุ่ม 'ต่อไป' สีแดง --seal"),
+   mirroring .ln-btn's own thick-bottom-shadow press mechanic in --seal. */
+.ln-btn.danger {
+  background: var(--seal);
+  color: #FFE3DE;
+  box-shadow: 0 6px 0 var(--seal-dk), 0 12px 30px rgba(226, 59, 46, 0.34);
+}
+
 .ln-btn[disabled] {
   background: var(--night2);
   color: var(--dim);
@@ -71,6 +80,11 @@
 .ln-btn.ghost:active {
   transform: translateY(2px);
   box-shadow: inset 0 0 0 2px var(--night3);
+}
+
+.ln-btn.danger:not([disabled]):active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 var(--seal-dk), 0 4px 14px rgba(226, 59, 46, 0.28);
 }
 
 /* ================= lantern (Lantern.jsx) ================= */

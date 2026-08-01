@@ -1,0 +1,68 @@
+/* dujeen-quest-gameplay-prompts.md Prompt D - SpeakAloud.jsx. The ripple's
+   scale tracks --mic-level (0-1, set inline from a real AnalyserNode read),
+   not a canned animation. */
+.speak-aloud-mic-area {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 20px 0;
+}
+
+.speak-aloud-mic {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: var(--lantern);
+  color: #3A1D00;
+  box-shadow: 0 6px 0 var(--lantern-dk);
+  cursor: pointer;
+  touch-action: none;
+  transition: transform 0.09s, box-shadow 0.09s;
+}
+
+.speak-aloud-mic:active,
+.speak-aloud-mic.is-recording {
+  transform: translateY(6px);
+  box-shadow: none;
+}
+
+.speak-aloud-ripple {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 3px solid var(--lantern);
+  opacity: 0;
+  transform: scale(1);
+}
+
+.speak-aloud-mic.is-recording .speak-aloud-ripple {
+  opacity: 0.65;
+  transform: scale(calc(1 + var(--mic-level, 0) * 1.6));
+  transition: transform 0.08s linear, opacity 0.15s;
+}
+
+.speak-aloud-status {
+  color: var(--dim);
+  font-size: 14px;
+}
+
+.speak-aloud-feedback {
+  font-size: 15px;
+  text-align: center;
+}
+
+.speak-aloud-feedback strong {
+  font-family: "Noto Serif SC", serif;
+  color: var(--lantern);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speak-aloud-mic.is-recording .speak-aloud-ripple {
+    transition: none;
+  }
+}
