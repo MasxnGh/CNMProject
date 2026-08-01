@@ -5,7 +5,6 @@ import { badges } from "../data/badges";
 import { getLevelById } from "../data/levels";
 import { playWinSound } from "../utils/speech";
 import Confetti from "./Confetti";
-import InkDrop from "./InkDrop";
 import ProgressBar from "./ProgressBar";
 
 export default function ResultPage({ result, progress, onNext, onMap, onRetry, onVictory, onPracticeWeakNode }) {
@@ -46,7 +45,6 @@ export default function ResultPage({ result, progress, onNext, onMap, onRetry, o
             {passed ? "過" : "再"}
           </motion.div>
           <p className="v2-result-verdict">{passed ? "ผ่านด่านแล้ว" : "ยังไม่ผ่าน"}</p>
-          <InkDrop mood={passed ? "happy" : "sad"} text={passed ? "ดาวของคุณสว่างขึ้นแล้ว!" : "ลองใหม่อีกครั้ง เกือบถึงแล้ว!"} />
         </aside>
         <motion.main className="v2-result-panel" initial={{ y: 35, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 18 }}>
           <div className="v2-result-title">

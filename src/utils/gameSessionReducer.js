@@ -1,10 +1,11 @@
-const freshSession = (levelId, missionCount, phase) => ({
+const freshSession = (levelId, missionCount, phase, heartsEnabled) => ({
   levelId,
   missionCount,
   phase,
   resumePhase: null,
   index: 0,
   hearts: 3,
+  heartsEnabled,
   hints: 2,
   hintsUsed: 0,
   hintPenalty: 0,
@@ -16,8 +17,13 @@ const freshSession = (levelId, missionCount, phase) => ({
   combo: 0,
 });
 
-export const createGameSession = (level, { skipIntro = false } = {}) =>
-  freshSession(level.id, level.questions?.length ?? 0, skipIntro ? "playing" : "intro");
+/* heartsEnabled defaults true so every existing caller (classic, the
+   checkpoint/unlock-test) keeps today's "3 wrong ends the run" behavior
+   unchanged - only the lantern-district's regular lessons opt out, since
+   dujeen-quest-prototype.html's quiz screen has no fail-out at all outside
+   the combined skip-ahead test. */
+export const createGameSession = (level, { skipIntro = false, heartsEnabled = true } = {}) =>
+  freshSession(level.id, level.questions?.length ?? 0, skipIntro ? "playing" : "intro", heartsEnabled);
 
 export const gameSessionReducer = (state, action) => {
   switch (action.type) {
@@ -34,7 +40,7 @@ export const gameSessionReducer = (state, action) => {
       return {
         ...state,
         phase: "feedback",
-        hearts: Math.max(0, state.hearts - (isCorrect ? 0 : 1)),
+        hearts: state.heartsEnabled ? Math.max(0, state.hearts - (isCorrect ? 0 : 1)) : state.hearts,
         correct,
         score: Math.max(0, (correct * 20) - state.hintPenalty),
         wrongMissionIds,
@@ -52,7 +58,7 @@ export const gameSessionReducer = (state, action) => {
 
     case "CONTINUE":
       if (state.phase !== "feedback") return state;
-      if (state.hearts <= 0 || state.index >= state.missionCount - 1) {
+      if ((state.heartsEnabled && state.hearts <= 0) || state.index >= state.missionCount - 1) {
         return { ...state, phase: "finished", feedback: null };
       }
       return {
@@ -88,7 +94,7 @@ export const gameSessionReducer = (state, action) => {
       const levelId = action.level?.id ?? state.levelId;
       const missionCount = action.level?.questions?.length ?? state.missionCount;
       const phase = action.showIntro ? "intro" : "playing";
-      return freshSession(levelId, missionCount, phase);
+      return freshSession(levelId, missionCount, phase, state.heartsEnabled);
     }
 
     case "FINISH":

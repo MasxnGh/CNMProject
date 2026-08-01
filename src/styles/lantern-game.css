@@ -1,25 +1,138 @@
-/* GamePage/QuestionRenderer are the shared engine (untouched, per the "reskin
-   outer layout only" decision) - this file only restyles the wrapper shell
-   for the lantern-district Lesson screen. Scoped under .lantern-app so none
-   of it reaches /classic, which renders the exact same GamePage markup.
+/* GamePage/QuestionRenderer/the 16 mission-type components are the shared
+   engine (untouched - no mission-type component's JSX is edited here) -
+   this file only restyles the wrapper shell + shared chrome for the
+   lantern-district Lesson screen. Everything below is scoped under
+   .lantern-app, which only the lantern routes (RouteLesson/RouteUnlock/
+   RoutePractice) wrap their GamePage render in - /classic (App.jsx) never
+   renders inside a .lantern-app ancestor, so none of this reaches it. */
 
-   Mobile already stacks (.v2-game-layout's base rule is a single column,
-   console above arena) - nothing to add there. Desktop matches
-   dujeen-quest-prototype.html's quiz screen intent (360px sticky prompt
-   column, hanzi enlarged, the answer strip confined to the right column
-   since MissionVerdict already renders inside .v2-mission-arena). */
+/* ============ top bar (variant="lantern" only) ============ */
+.ln-quiz-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ln-quiz-close {
+  flex: none;
+}
+
+.ln-quiz-progress {
+  flex: 1;
+}
+
+.ln-quiz-progress .progress-track {
+  height: 12px;
+  border: 0;
+  border-radius: 99px;
+  background: var(--night2);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.ln-quiz-progress .progress-fill {
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--lantern), #FFD08A);
+  box-shadow: none;
+}
+
+/* Checkpoint-only "lives" - 3 small lanterns instead of hearts, matching
+   Lesson.jsx's .lesson-life-lantern from the new engine. */
+.ln-quiz-lives {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+
+.ln-quiz-life-lantern {
+  width: 18px;
+  height: 22px;
+  border-radius: 50% / 40%;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.ln-quiz-life-lantern.is-lit {
+  background: linear-gradient(180deg, #FFCE86, var(--lantern) 50%, #D0740F);
+  box-shadow: 0 0 10px 2px rgba(255, 158, 44, 0.5);
+}
+
+.ln-quiz-life-lantern.is-lost {
+  background: #1E2846;
+  opacity: 0.5;
+}
+
+/* ============ 2-column split: prompt sticky-left, options right ============
+   Achieved purely in CSS - no mission-type component's JSX is touched.
+   Most mission components already wrap themselves in
+   <div class="mission-shell"><div class="mission-prompt">...</div>{rest}</div>
+   (confirmed: ChoiceMission, ToneChoiceMission, MatchingMission,
+   ImageChoiceMission, ShoppingMission, DialogueMission, SentenceOrderMission,
+   AudioChoiceMission, TranslationBlankMission, TranslateSentenceMission,
+   PinyinDragMission all follow this). The few that don't have a separable
+   prompt (HanziTrace/FinalBoss/CultureQuiz/FillBlank/Pronunciation) are left
+   alone by the :has()-scoped rule below and keep filling full width. */
 @media (min-width: 1080px) {
+  /* index.css's unscoped .v2-game-layout rule reserves a first column for
+     classic's console aside (272px). The lantern variant has no aside -
+     .v2-mission-arena is the layout's only child - so without this override
+     it gets squeezed into that leftover 272px track instead of filling the
+     full width. */
   .lantern-app .v2-game-layout {
-    grid-template-columns: 360px minmax(0, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .lantern-app .v2-game-console {
+  .lantern-app .v2-mission-arena .mission-shell:has(.mission-prompt) {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .lantern-app .v2-mission-arena .mission-shell .mission-prompt {
+    grid-column: 1;
+    grid-row: 1 / -1;
     position: sticky;
     top: 32px;
+  }
+
+  .lantern-app .v2-mission-arena .mission-shell:has(.mission-prompt) > *:not(.mission-prompt) {
+    grid-column: 2;
   }
 
   .lantern-app .v2-mission-arena .mission-prompt strong {
     font-size: 60px;
   }
+}
+
+/* ============ tactile press feedback ============
+   .v2-button/.answer-button/.game-button previously had soft drop-shadows
+   with no :active rule at all - nothing pressed down. Thick-bottom-border
+   press style, matching dujeen-quest-prototype.html's .btn/.opt. */
+.lantern-app .v2-button,
+.lantern-app .answer-button,
+.lantern-app .game-button,
+.lantern-app .vowel-chip,
+.lantern-app .drop-zone {
+  box-shadow: 0 6px 0 var(--lantern-dk), 0 12px 30px rgba(255, 158, 44, 0.34);
+  transition: transform 0.09s, box-shadow 0.09s;
+}
+
+.lantern-app .v2-button:not([disabled]):active,
+.lantern-app .answer-button:not([disabled]):active,
+.lantern-app .game-button:not([disabled]):active,
+.lantern-app .vowel-chip:not([disabled]):active,
+.lantern-app .drop-zone:not([disabled]):active {
+  transform: translateY(6px);
+  box-shadow: none;
+}
+
+/* ============ Thai text wrapping ============
+   No word-break: break-all exists anywhere in the project (confirmed by
+   repo-wide search) - this is additive, ensuring Thai/mixed text always
+   wraps on real word boundaries instead of one syllable per line. */
+.lantern-app {
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-break: normal;
 }

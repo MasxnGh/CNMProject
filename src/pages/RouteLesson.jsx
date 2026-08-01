@@ -53,10 +53,11 @@ export default function RouteLesson() {
         onMap={() => navigate(mapPath)}
         soundOn={progress.soundEnabled}
         reducedMotion={progress.reducedMotion}
-        skipMissionIntro={progress.skipMissionIntro}
+        skipMissionIntro
+        variant="lantern"
+        heartsEnabled={false}
         onToggleSound={() => setProgress((current) => ({ ...current, soundEnabled: !current.soundEnabled }))}
         onToggleReducedMotion={() => setProgress((current) => ({ ...current, reducedMotion: !current.reducedMotion }))}
-        onToggleSkipIntro={(skipMissionIntro) => setProgress((current) => ({ ...current, skipMissionIntro }))}
       />
     </div>
   );

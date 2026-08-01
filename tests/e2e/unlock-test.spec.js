@@ -36,7 +36,7 @@ test("passing the unlock test opens both nodes in the lesson at once, with a bon
   await expect(page.locator(".ln-sheet")).toContainText("บทที่ 1");
   await page.getByRole("button", { name: "เริ่มทำแบบทดสอบ" }).click();
   await expect(page).toHaveURL(/\/unlock\/ch1_l1$/);
-  await expect(page.locator(".v2-mission-progress.checkpoint")).toBeVisible();
+  await expect(page.locator(".ln-quiz-lives")).toBeVisible();
 
   // 1. 2-1 pinyinDrag (auto-submits on the second tap, no separate submit button)
   await pickAndDropChip(page, "ǐ");
@@ -136,7 +136,7 @@ test("practice tab replays mistakes and clears the ones answered correctly", asy
   await seedProgress(page, { mistakes: ["1-1"] });
   await page.goto("/practice");
 
-  await expect(page.getByText("ทบทวน 1 ข้อที่เคยพลาด", { exact: false })).toBeVisible();
+  await expect(page.locator(".match-item").first()).toBeVisible();
   const pairs = [["水", "น้ำ"], ["茶", "ชา"], ["米饭", "ข้าวสวย"], ["面条", "บะหมี่"], ["饺子", "เกี๊ยว"]];
   for (const [hanzi, thai] of pairs) {
     await page.locator(".match-item").filter({ hasText: hanzi }).click();
