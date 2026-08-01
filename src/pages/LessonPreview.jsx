@@ -187,6 +187,7 @@ export default function LessonPreview() {
         <UnlockModal
           open={unlockModalOpen}
           lanterns={unlockLanterns}
+          questionCount={unlockPool.length}
           attemptAvailable
           coins={30}
           payCost={50}

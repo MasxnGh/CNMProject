@@ -89,8 +89,8 @@
 .exercise-prompt {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 10px;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
 .exercise-speaker {
@@ -128,7 +128,7 @@
 .exercise-instruction {
   color: var(--dim);
   font-size: 15px;
-  margin-bottom: 4px;
+  margin-bottom: 14px;
 }
 
 /* ---- Prompt C: sentence-based exercises (CompleteTranslation/TranslateSentence) ---- */
@@ -212,6 +212,7 @@
 
 .exercise-image-card.is-selected {
   outline-color: var(--lantern);
+  background: #2A2F1E;
 }
 
 .exercise-image-card img {
@@ -221,7 +222,7 @@
 }
 
 .exercise-card-emoji {
-  font-size: 56px;
+  font-size: 44px;
 }
 
 .exercise-card-hanzi {
@@ -282,6 +283,7 @@
 
 .exercise-option-row.is-selected {
   outline-color: var(--lantern);
+  background: #2A2F1E;
 }
 
 /* ---- PickAudio: big listen buttons + hanzi/pinyin options ---- */
@@ -320,10 +322,21 @@
   }
 }
 
+@media (min-width: 720px) {
+  .exercise-image-grid {
+    gap: 16px;
+  }
+
+  .exercise-card-emoji,
+  .exercise-card-hanzi {
+    font-size: 56px;
+  }
+}
+
 @media (min-width: 1080px) {
   .exercise {
     grid-template-columns: 360px minmax(0, 1fr);
-    gap: 40px;
+    gap: 48px;
     align-items: start;
   }
 
@@ -332,7 +345,20 @@
     top: 32px;
   }
 
+  .exercise-instruction {
+    font-size: 17px;
+  }
+
+  .exercise-pinyin {
+    font-size: 17px;
+  }
+
   .exercise-hanzi {
     font-size: 60px;
+  }
+
+  .exercise-card-emoji,
+  .exercise-card-hanzi {
+    font-size: 70px;
   }
 }

@@ -1,9 +1,11 @@
+import { Volume2 } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import ChipSlots from "../game/ChipSlots.jsx";
 import ChipTray from "../game/ChipTray.jsx";
 import useChipArrangement from "../game/useChipArrangement.js";
 import useChipReveal from "../game/useChipReveal.js";
 import Button from "../ui/Button.jsx";
+import { speakThai } from "../../lib/audio.js";
 
 /**
  * dujeen-quest-gameplay-prompts.md Prompt C - "เติมคำให้ประโยคสมบูรณ์".
@@ -40,8 +42,13 @@ export default function CompleteTranslation({ exercise, onAnswer }) {
   return (
     <div className="exercise">
       <div className="exercise-prompt-area">
-        <p className="exercise-thai-sentence">{sentence.th}</p>
         <p className="exercise-instruction">เติมคำให้ประโยคสมบูรณ์</p>
+        <div className="exercise-prompt">
+          <button type="button" className="exercise-speaker" onClick={() => speakThai(sentence.th)} aria-label="ฟังเสียงภาษาไทย">
+            <Volume2 size={26} />
+          </button>
+          <p className="exercise-thai-sentence">{sentence.th}</p>
+        </div>
       </div>
 
       <div className="exercise-options-area">

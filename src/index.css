@@ -48,6 +48,10 @@ html {
      classic route's dark red under the new ink-wash (v2) route; classic's
      own scenes paint their own full-bleed background over this either way. */
   background: #F3EEE1;
+  /* body already has this, but only html establishes the actual viewport
+     scrolling box - a page-transition transform mid-animation (or any other
+     transient overshoot) must never be able to open a horizontal scrollbar. */
+  overflow-x: hidden;
 }
 
 body {

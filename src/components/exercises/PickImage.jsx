@@ -29,6 +29,7 @@ export default function PickImage({ exercise, onAnswer }) {
   return (
     <div className="exercise">
       <div className="exercise-prompt-area">
+        <p className="exercise-instruction">เลือกภาพที่ตรงกับคำนี้</p>
         <div className="exercise-prompt">
           <button type="button" className="exercise-speaker" onClick={() => playWord(prompt.id)} aria-label="ฟังเสียงภาษาจีน">
             <Volume2 size={26} />
@@ -38,7 +39,6 @@ export default function PickImage({ exercise, onAnswer }) {
             <strong className="exercise-hanzi">{prompt.hanzi}</strong>
           </div>
         </div>
-        <p className="exercise-instruction">เลือกภาพที่ตรงกับคำนี้</p>
       </div>
 
       <div className="exercise-options-area">

@@ -35,7 +35,7 @@
   color: var(--ln-paper);
   font-family: "Noto Serif SC", serif;
   cursor: pointer;
-  box-shadow: 0 5px 0 #0A1024;
+  box-shadow: 0 5px 0 #101838;
   transition: transform 0.09s, box-shadow 0.09s;
 }
 
@@ -89,9 +89,9 @@
 }
 
 @keyframes chip-reveal-correct {
-  0% { box-shadow: 0 5px 0 #0A1024; }
-  60% { box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
-  100% { box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
+  0% { box-shadow: 0 5px 0 #101838; }
+  60% { box-shadow: 0 5px 0 #101838, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
+  100% { box-shadow: 0 5px 0 #101838, 0 0 0 3px var(--jade), 0 0 20px rgba(53, 214, 164, 0.5); }
 }
 
 .chip-slot-filled.is-wrong {
@@ -100,7 +100,7 @@
 }
 
 @keyframes chip-reveal-wrong {
-  0%, 100% { transform: translateX(0); box-shadow: 0 5px 0 #0A1024, 0 0 0 3px var(--seal), 0 0 20px rgba(226, 59, 46, 0.5); }
+  0%, 100% { transform: translateX(0); box-shadow: 0 5px 0 #101838, 0 0 0 3px var(--seal), 0 0 20px rgba(226, 59, 46, 0.5); }
   20% { transform: translateX(-6px); }
   40% { transform: translateX(5px); }
   60% { transform: translateX(-3px); }

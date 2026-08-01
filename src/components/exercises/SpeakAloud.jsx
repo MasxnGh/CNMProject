@@ -126,13 +126,13 @@ export default function SpeakAloud({ exercise, onAnswer, onSkip }) {
   return (
     <div className="exercise">
       <div className="exercise-prompt-area">
+        <p className="exercise-instruction">พูดตาม</p>
         <div className="exercise-prompt">
           <button type="button" className="exercise-speaker" onClick={() => playSentence(sentence.id)} aria-label="ฟังตัวอย่าง">
             <strong className="exercise-hanzi">{sentence.hanzi}</strong>
           </button>
         </div>
         <div className="exercise-pinyin">{sentence.pinyin}</div>
-        <p className="exercise-instruction">พูดตาม</p>
       </div>
 
       <div className="exercise-options-area">

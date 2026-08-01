@@ -31,12 +31,14 @@ export default function useChipArrangement(poolChips, slotCount, fixedSlots = {}
   };
 
   const remove = (index) => {
-    if (fixedSlots[index] || !placement[index]) return;
+    const chip = placement[index];
+    if (fixedSlots[index] || !chip) return;
     setPlacement((current) => {
       const next = [...current];
       next[index] = null;
       return next;
     });
+    playWord(chip.id);
     playSfx("tap");
   };
 

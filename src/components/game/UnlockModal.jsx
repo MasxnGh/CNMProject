@@ -11,21 +11,28 @@ import "../../styles/game-unlock-modal.css";
  * so it isn't coupled to either the old checkpointProgression.js model or
  * whatever eventually powers the new engine's content.
  *
- * lanterns: [{ icon, label }] - the (still unlit) nodes being offered
+ * lanterns: [{ icon, label }] - the (still unlit) nodes being offered.
+ * questionCount: how many questions the combined test draws - real lessons
+ * are rarely exactly 3 nodes/15 questions like the prototype's static demo
+ * text, so both the heading and the copy scale with lanterns.length/
+ * questionCount instead of hardcoding "three"/"15".
  */
-export default function UnlockModal({ open, lanterns, attemptAvailable, coins, payCost, onStartTest, onPayToUnlock, onClose }) {
+export default function UnlockModal({ open, lanterns, questionCount, attemptAvailable, coins, payCost, onStartTest, onPayToUnlock, onClose }) {
   const canPay = coins >= payCost;
   const coinsShort = Math.max(0, payCost - coins);
+  const count = lanterns?.length ?? 0;
 
   return (
     <Sheet open={open} onClose={onClose}>
-      <h3>จุดโคมสามดวงรวดเดียว</h3>
+      <h3>จุดโคม {count} ดวงรวดเดียว</h3>
       <div className="unlock-modal-lanterns">
         {lanterns?.map((lantern, index) => (
           <Lantern key={index} state="lock" icon={lantern.icon} label={lantern.label} />
         ))}
       </div>
-      <p>ทำแบบทดสอบรวม 15 ข้อจากทั้งสามด่านนี้ - ตอบให้ถูกจนจบ ผิดได้ไม่เกิน 2 ข้อ เพื่อจุดโคมทั้งสามดวงพร้อมกัน</p>
+      <p>
+        ทำแบบทดสอบรวม {questionCount} ข้อจากทั้ง {count} ด่านนี้ - ตอบให้ถูกจนจบ ผิดได้ไม่เกิน 2 ข้อ เพื่อจุดโคมทั้ง {count} ดวงพร้อมกัน
+      </p>
 
       {attemptAvailable ? (
         <Button onClick={onStartTest}>เริ่มทำแบบทดสอบ</Button>

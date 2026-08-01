@@ -29,6 +29,7 @@ export default function PickTranslation({ exercise, onAnswer }) {
   return (
     <div className="exercise">
       <div className="exercise-prompt-area">
+        <p className="exercise-instruction">ประโยคนี้แปลว่าอะไร</p>
         <div className="exercise-prompt">
           <button type="button" className="exercise-speaker" onClick={replay} aria-label="ฟังเสียงภาษาจีน">
             <Volume2 size={26} />
@@ -42,7 +43,6 @@ export default function PickTranslation({ exercise, onAnswer }) {
             ))}
           </div>
         </div>
-        <p className="exercise-instruction">ประโยคนี้แปลว่าอะไร</p>
       </div>
 
       <div className="exercise-options-area">
