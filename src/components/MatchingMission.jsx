@@ -197,9 +197,9 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
         <svg className="match-lines" width={lineCanvas.width} height={lineCanvas.height} viewBox={`0 0 ${Math.max(lineCanvas.width, 1)} ${Math.max(lineCanvas.height, 1)}`} aria-hidden="true">
           <defs>
             <linearGradient id={`matchLineGradient-${missionView.id}`} x1="0%" x2="100%" y1="0%" y2="0%">
-              <stop offset="0%" stopColor="#B8272B" />
-              <stop offset="42%" stopColor="#C08A34" />
-              <stop offset="100%" stopColor="#4F7A68" />
+              <stop offset="0%" stopColor="var(--v2-cinnabar)" />
+              <stop offset="42%" stopColor="var(--v2-gold)" />
+              <stop offset="100%" stopColor="var(--v2-jade)" />
             </linearGradient>
           </defs>
           {connectionLines.map((line) => {
@@ -210,11 +210,11 @@ export default function MatchingMission({ missionView, onSubmit, disabled, feedb
             const path = `M ${line.x1} ${line.y1} C ${line.x1 + curve} ${line.y1}, ${line.x2 - curve} ${line.y2}, ${line.x2} ${line.y2}`;
             return (
               <g key={line.id}>
-                <circle cx={line.x1} cy={line.y1} r="5" fill="#B8272B" />
-                <circle cx={line.x2} cy={line.y2} r="5" fill="#4F7A68" />
-                <motion.path className="match-line-glow" d={path} fill="none" stroke="#C08A34" strokeLinecap="round" strokeWidth="14" initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.2 }} transition={{ duration: reduceMotion ? 0 : 0.55, ease: "easeOut" }} />
+                <circle cx={line.x1} cy={line.y1} r="5" fill="var(--v2-cinnabar)" />
+                <circle cx={line.x2} cy={line.y2} r="5" fill="var(--v2-jade)" />
+                <motion.path className="match-line-glow" d={path} fill="none" stroke="var(--v2-gold)" strokeLinecap="round" strokeWidth="14" initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.2 }} transition={{ duration: reduceMotion ? 0 : 0.55, ease: "easeOut" }} />
                 <motion.path className="match-line-main" d={path} fill="none" stroke={`url(#matchLineGradient-${missionView.id})`} strokeLinecap="round" strokeWidth="6" initial={reduceMotion ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: reduceMotion ? 0 : 0.55, ease: "easeOut" }} />
-                {!reduceMotion ? <motion.path className="match-line-flow" d={path} fill="none" stroke="#FBF8F0" strokeLinecap="round" strokeWidth="2.5" strokeDasharray="7 17" initial={{ opacity: 0 }} animate={{ opacity: 0.9 }} transition={{ delay: 0.2 }} /> : null}
+                {!reduceMotion ? <motion.path className="match-line-flow" d={path} fill="none" stroke="var(--v2-paper)" strokeLinecap="round" strokeWidth="2.5" strokeDasharray="7 17" initial={{ opacity: 0 }} animate={{ opacity: 0.9 }} transition={{ delay: 0.2 }} /> : null}
               </g>
             );
           })}

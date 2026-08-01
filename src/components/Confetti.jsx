@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 
-const colors = ["#C08A34", "#B8272B", "#4F7A68", "#F3EEE1", "#8C1B1E"];
+const colors = ["var(--v2-gold)", "var(--v2-cinnabar)", "var(--v2-jade)", "var(--v2-paper)", "var(--v2-gold-deep)"];
 
 export default function Confetti({ count = 32 }) {
   const pieces = useMemo(

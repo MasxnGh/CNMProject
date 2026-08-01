@@ -1,3 +1,5 @@
+import "../../styles/route-skeleton.css";
+
 /** Shown while a lazy-loaded route chunk downloads, instead of a blank white flash. */
 export default function RouteSkeleton() {
   return (

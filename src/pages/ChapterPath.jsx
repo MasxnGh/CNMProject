@@ -1,10 +1,13 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LessonStartSheet from "../components/home/LessonStartSheet.jsx";
-import NodeRoute from "../components/home/NodeRoute.jsx";
-import UnlockOfferModal from "../components/home/UnlockOfferModal.jsx";
+import Button from "../components/ui/Button.jsx";
+import Lantern from "../components/ui/Lantern.jsx";
+import Nav from "../components/ui/Nav.jsx";
+import { buildNavItems } from "../components/ui/navItems.js";
+import Sheet from "../components/ui/Sheet.jsx";
+import Sky from "../components/ui/Sky.jsx";
 import units from "../content/units.json";
+import vocabList from "../content/vocab.json";
 import { getLevelById } from "../data/levels.js";
 import {
   canPayToUnlock,
@@ -14,46 +17,73 @@ import {
   PAY_TO_UNLOCK_COST,
   payToUnlockLesson,
 } from "../lib/checkpointProgression.js";
+import { play } from "../lib/audio.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
-import "../styles/route-map.css";
+import "../styles/lantern-screens.css";
 
-/** The path within a single chapter - what "/" used to render for every
-    chapter at once, before the chapter-select grid split it into its own
-    screen per the professor's 2-layer navigation ("เลือกบท -> เส้นทางในบท"). */
+/** dujeen-quest-prototype.html #path - the rope of lanterns within a single
+    chapter, locked to a 460px center column on desktop with the vocab/stamp
+    panels filling the freed-up side space (grid-template-areas "a rope b"),
+    same as the prototype. Replaces the old ink-wash NodeRoute/
+    LessonStartSheet/UnlockOfferModal combo; the unlock-test/pay-to-unlock
+    logic underneath is unchanged. */
 export default function ChapterPath() {
   const { chapterId } = useParams();
   const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
-  const reduceMotion = useReducedMotion();
   const [selectedNode, setSelectedNode] = useState(null);
   const [unlockOfferNodeId, setUnlockOfferNodeId] = useState(null);
 
   const chapter = units.find((unit) => unit.id === chapterId);
 
-  const lessonByNodeId = useMemo(() => {
+  const nodeEntries = useMemo(() => {
+    if (!chapter) return [];
+    return chapter.lessons.flatMap((lesson) =>
+      lesson.nodeIds.map((nodeId, indexInLesson) => ({ nodeId, indexInLesson })),
+    );
+  }, [chapter]);
+
+  const lessonIndexByNodeId = useMemo(() => {
     const map = new Map();
-    if (!chapter) return map;
-    chapter.lessons.forEach((lesson, lessonIndex) => {
-      lesson.nodeIds.forEach((nodeId) => map.set(nodeId, { unit: chapter, lesson, lessonIndex }));
+    chapter?.lessons.forEach((lesson, lessonIndex) => {
+      lesson.nodeIds.forEach((nodeId) => map.set(nodeId, lessonIndex));
     });
     return map;
   }, [chapter]);
 
+  const vocabForChapter = useMemo(() => {
+    if (!chapter) return [];
+    const lessonIds = new Set(chapter.lessons.map((lesson) => lesson.id));
+    return vocabList.filter((entry) => lessonIds.has(entry.lessonId));
+  }, [chapter]);
+
   if (!chapter) {
     return (
-      <div className="scene dq-scene v2-scene grid place-items-center">
-        <p>ไม่พบบทนี้</p>
-        <button type="button" className="rm-button primary" style={{ maxWidth: "16rem" }} onClick={() => navigate("/")}>
-          กลับหน้าเลือกบท
-        </button>
+      <div className="lantern-app">
+        <Sky />
+        <main className="ln-chapters" style={{ paddingLeft: "var(--rail)", display: "grid", placeItems: "center", minHeight: "100vh" }}>
+          <p>ไม่พบบทนี้</p>
+          <Button onClick={() => navigate("/chapters")}>กลับหน้าเลือกบท</Button>
+        </main>
       </div>
     );
   }
 
+  const nodeIds = nodeEntries.map((entry) => entry.nodeId);
+  const clearedCount = nodeIds.filter((nodeId) => progress.completed.includes(nodeId)).length;
+
   const nodeStatus = (nodeId) => {
-    if (progress.completed.includes(nodeId)) return "cleared";
-    if (progress.unlocked.includes(nodeId)) return "current";
-    return "locked";
+    if (progress.completed.includes(nodeId)) return "done";
+    if (progress.unlocked.includes(nodeId)) return "now";
+    return "lock";
+  };
+
+  const handleTapNode = (nodeId, status, eligibleLocked) => {
+    if (status === "lock") {
+      if (eligibleLocked) setUnlockOfferNodeId(nodeId);
+      return;
+    }
+    setSelectedNode(nodeId);
   };
 
   const handleStart = () => {
@@ -78,55 +108,122 @@ export default function ChapterPath() {
     setUnlockOfferNodeId(null);
   };
 
-  const selectedInfo = selectedNode != null ? lessonByNodeId.get(selectedNode) : null;
   const selectedLevel = selectedNode != null ? getLevelById(selectedNode) : null;
+  const selectedLessonIndex = selectedNode != null ? lessonIndexByNodeId.get(selectedNode) ?? 0 : 0;
   const unlockOfferInfo = unlockOfferNodeId != null ? getLessonForNode(unlockOfferNodeId) : null;
+  const unlockOfferAvailableToday = unlockOfferInfo ? isCheckpointAvailableToday(progress, unlockOfferInfo.lesson.id) : false;
+  const unlockOfferCanPay = canPayToUnlock(progress);
 
   return (
-    <motion.div
-      className="rm-page"
-      initial={reduceMotion ? false : { opacity: 0, x: 24 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -24 }}
-      transition={{ duration: reduceMotion ? 0.001 : 0.28, ease: "easeOut" }}
-    >
-      <main className="rm-scroll">
-        <NodeRoute
-          units={[chapter]}
-          nodeStatus={nodeStatus}
-          onSelectNode={setSelectedNode}
-          isEligibleLocked={(nodeId) => isCheckpointEligible(progress, nodeId)}
-          onSelectLockedNode={setUnlockOfferNodeId}
-          onBack={() => navigate("/")}
-        />
+    <div className="lantern-app">
+      <Sky />
+      <main className="ln-chapters" style={{ paddingLeft: "var(--rail)" }}>
+        <div className="ln-top">
+          <button type="button" className="ln-back" onClick={() => navigate("/chapters")} aria-label="กลับหน้าเลือกบท">
+            ‹
+          </button>
+          <div style={{ flex: 1 }}>
+            <div className="ln-h2">{chapter.zh}</div>
+            <div className="ln-h1">{chapter.title}</div>
+          </div>
+          <div className="ln-stat">
+            {clearedCount}/{nodeIds.length}
+          </div>
+        </div>
+
+        <div className="ln-pathGrid">
+          <div className="ln-rope">
+            {nodeEntries.map(({ nodeId, indexInLesson }, index) => {
+              const status = nodeStatus(nodeId);
+              const eligibleLocked = status === "lock" && isCheckpointEligible(progress, nodeId);
+              const interactive = status !== "lock" || eligibleLocked;
+              const level = getLevelById(nodeId);
+              const statusLabel =
+                status === "done"
+                  ? "ผ่านแล้ว"
+                  : status === "now"
+                    ? "ด่านปัจจุบัน"
+                    : eligibleLocked
+                      ? "ล็อค - ทำแบบทดสอบข้ามด่านได้"
+                      : "ล็อค";
+              return (
+                <div key={nodeId} className={`ln-node ${index % 2 ? "r" : "l"}`}>
+                  <Lantern
+                    state={status}
+                    icon={indexInLesson === 0 ? "学" : "练"}
+                    label={level?.title ?? `โหนด ${nodeId}`}
+                    disabled={!interactive}
+                    aria-label={`โหนด ${nodeId} - ${statusLabel}`}
+                    onClick={() => handleTapNode(nodeId, status, eligibleLocked)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="ln-panel ln-panel-vocab">
+            <h5>คำศัพท์ในบทนี้</h5>
+            <div className="ln-chips">
+              {vocabForChapter.map((entry) => (
+                <button key={entry.id} type="button" className="ln-chip" onClick={() => play(entry.id)}>
+                  <b>{entry.hanzi}</b>
+                  <i>{entry.pinyin}</i>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="ln-panel ln-panel-stamp">
+            <h5>ตราประทับที่สะสมได้</h5>
+            <div className="ln-stampRow">
+              {nodeIds.map((nodeId) => {
+                const done = progress.completed.includes(nodeId);
+                return (
+                  <div key={nodeId} className={`ln-sm ${done ? "" : "off"}`}>
+                    {done ? "过" : "?"}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </main>
 
-      <AnimatePresence>
-        {selectedNode != null && selectedInfo ? (
-          <LessonStartSheet
-            title={selectedLevel?.title ?? `โหนด ${selectedNode}`}
-            topic={selectedLevel?.topic ?? ""}
-            lessonLabel={`${chapter.title} · บทที่ ${selectedInfo.lessonIndex + 1}/${chapter.lessons.length}`}
-            onStart={handleStart}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : null}
-      </AnimatePresence>
+      <Nav items={buildNavItems(navigate)} activeKey="learn" />
 
-      <AnimatePresence>
-        {unlockOfferInfo ? (
-          <UnlockOfferModal
-            unit={unlockOfferInfo.unit}
-            lesson={unlockOfferInfo.lesson}
-            availableToday={isCheckpointAvailableToday(progress, unlockOfferInfo.lesson.id)}
-            canPay={canPayToUnlock(progress)}
-            payCost={PAY_TO_UNLOCK_COST}
-            onStartTest={handleStartTest}
-            onPay={handlePayToUnlock}
-            onClose={() => setUnlockOfferNodeId(null)}
-          />
-        ) : null}
-      </AnimatePresence>
-    </motion.div>
+      <Sheet open={selectedNode != null} onClose={() => setSelectedNode(null)}>
+        <small style={{ color: "var(--lantern)", fontWeight: 600 }}>
+          {chapter.title} · บทที่ {selectedLessonIndex + 1}/{chapter.lessons.length}
+        </small>
+        <h3>{selectedLevel?.title ?? (selectedNode != null ? `โหนด ${selectedNode}` : "")}</h3>
+        <p>{selectedLevel?.topic ?? ""}</p>
+        <Button onClick={handleStart}>เริ่ม</Button>
+        <Button variant="ghost" onClick={() => setSelectedNode(null)}>
+          ยังไม่พร้อม
+        </Button>
+      </Sheet>
+
+      <Sheet open={unlockOfferNodeId != null} onClose={() => setUnlockOfferNodeId(null)}>
+        <h3>ข้ามไป {unlockOfferInfo?.lesson.title ?? ""} เลยไหม?</h3>
+        <p>
+          ทำแบบทดสอบรวมความรู้ {unlockOfferInfo?.lesson.nodeIds.length ?? 0} ด่านของ {chapter.title} — ตอบให้ถูกจนจบ
+          ผิดได้ไม่เกิน 2 ข้อ เพื่อปลดล็อคทั้งหมดพร้อมกัน
+        </p>
+        {unlockOfferAvailableToday ? (
+          <Button onClick={handleStartTest}>เริ่มทำแบบทดสอบ</Button>
+        ) : (
+          <>
+            <p style={{ color: "var(--dim)" }}>ใช้สิทธิ์ทำแบบทดสอบวันนี้ไปแล้ว พรุ่งนี้ลองใหม่ได้</p>
+            <Button onClick={handlePayToUnlock} disabled={!unlockOfferCanPay}>
+              จ่าย {PAY_TO_UNLOCK_COST} เหรียญ ปลดล็อคทันที
+            </Button>
+            {!unlockOfferCanPay ? <p style={{ color: "var(--dim)" }}>เหรียญไม่พอ</p> : null}
+          </>
+        )}
+        <Button variant="ghost" onClick={() => setUnlockOfferNodeId(null)}>
+          ยังไม่พร้อม
+        </Button>
+      </Sheet>
+    </div>
   );
 }

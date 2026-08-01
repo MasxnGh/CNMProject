@@ -1,0 +1,25 @@
+/* GamePage/QuestionRenderer are the shared engine (untouched, per the "reskin
+   outer layout only" decision) - this file only restyles the wrapper shell
+   for the lantern-district Lesson screen. Scoped under .lantern-app so none
+   of it reaches /classic, which renders the exact same GamePage markup.
+
+   Mobile already stacks (.v2-game-layout's base rule is a single column,
+   console above arena) - nothing to add there. Desktop matches
+   dujeen-quest-prototype.html's quiz screen intent (360px sticky prompt
+   column, hanzi enlarged, the answer strip confined to the right column
+   since MissionVerdict already renders inside .v2-mission-arena). */
+@media (min-width: 1080px) {
+  .lantern-app .v2-game-layout {
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .lantern-app .v2-game-console {
+    position: sticky;
+    top: 32px;
+  }
+
+  .lantern-app .v2-mission-arena .mission-prompt strong {
+    font-size: 60px;
+  }
+}

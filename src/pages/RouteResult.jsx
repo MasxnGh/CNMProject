@@ -25,7 +25,7 @@ export default function RouteResult() {
   const retryPath = outcome.level.isCheckpoint ? `/unlock/${outcome.level.lessonId}` : `/lesson/${outcome.level.id}`;
   const anchorNodeId = outcome.level.isCheckpoint ? outcome.level.coveredNodeIds[0] : outcome.level.id;
   const chapterId = getChapterIdForNode(anchorNodeId);
-  const mapPath = chapterId ? `/chapter/${chapterId}` : "/";
+  const mapPath = chapterId ? `/chapter/${chapterId}` : "/chapters";
 
   return (
     <ResultPage
@@ -34,7 +34,7 @@ export default function RouteResult() {
       onMap={() => navigate(mapPath)}
       onRetry={() => navigate(retryPath)}
       onNext={() => navigate(nextNodeId != null ? `/lesson/${nextNodeId}` : mapPath)}
-      onVictory={() => navigate("/")}
+      onVictory={() => navigate("/chapters")}
       onPracticeWeakNode={() => outcome.worstNodeId != null && navigate(`/lesson/${outcome.worstNodeId}`)}
     />
   );

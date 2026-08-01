@@ -1,0 +1,56 @@
+/* Lifted verbatim from dujeen-quest-prototype.html - this is the source of
+   truth for the "lantern district" visual identity. Do not tweak these
+   values without checking the prototype first; if it looks wrong, the
+   prototype is right and something else is the bug. */
+:root {
+  --night: #0E1428;
+  --night2: #1A2340;
+  --night3: #25325A;
+  --lantern: #FF9E2C;
+  --lantern-dk: #B5610A;
+  --seal: #E23B2E;
+  --seal-dk: #96190F;
+  /* --jade/--paper are prefixed (unlike the rest of this block) because
+     index.css already defines bare --jade/--paper for /classic (its
+     pre-dq-refactor color system, still load-bearing there) and, being
+     loaded after this file, would silently win the cascade and leak
+     classic's colors into the lantern district otherwise. */
+  --ln-jade: #35D6A4;
+  --jade-dk: #127A59;
+  --ln-paper: #F4EAD6;
+  --dim: #7C88AE;
+  --r: 18px;
+  --rail: 0px;
+  --pad: 20px;
+}
+
+/* Tablet: 720 - 1079px */
+@media (min-width: 720px) {
+  :root {
+    --pad: 32px;
+  }
+}
+
+/* Desktop: >= 1080px */
+@media (min-width: 1080px) {
+  :root {
+    --rail: 104px;
+    --pad: 40px;
+  }
+}
+
+/* Prototype sets these on `body` directly, but /classic's own screens
+   inherit their font from `body { font-family: var(--dq-face-ui) }` in
+   index.css - overriding body globally here would silently change every
+   /classic screen's typeface too. Scoped to the lantern-district app shell
+   instead; every new screen under this redesign root gets it via
+   inheritance exactly like the prototype's <body>/#app did. */
+.lantern-app {
+  font-family: "Kanit", sans-serif;
+  font-weight: 300;
+  color: var(--ln-paper);
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: radial-gradient(120% 55% at 50% 0%, #1D2748 0%, var(--night) 62%);
+}

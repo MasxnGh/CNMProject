@@ -1,0 +1,59 @@
+/* Shown as the Suspense fallback for every lazy route (including /classic),
+   before routing has resolved which theme (classic or lantern) the visit
+   is headed to - kept theme-neutral on purpose rather than reaching for
+   --v2-*/--dq-* tokens. */
+.rm-page.rm-skeleton {
+  min-height: 100vh;
+  padding: 22px 20px;
+  background: #14161c;
+}
+
+.rm-skeleton-bar {
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1f222b 25%, #2a2e3a 37%, #1f222b 63%);
+  background-size: 400% 100%;
+  animation: rm-skeleton-shine 1.4s ease infinite;
+}
+
+.rm-skeleton-topbar {
+  height: 40px;
+  margin-bottom: 24px;
+}
+
+.rm-skeleton-title {
+  height: 28px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.rm-skeleton-line {
+  height: 14px;
+  width: 40%;
+  margin-bottom: 24px;
+}
+
+.rm-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 13px;
+}
+
+.rm-skeleton-tile {
+  height: 90px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, #1f222b 25%, #2a2e3a 37%, #1f222b 63%);
+  background-size: 400% 100%;
+  animation: rm-skeleton-shine 1.4s ease infinite;
+}
+
+@keyframes rm-skeleton-shine {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-skeleton-bar,
+  .rm-skeleton-tile {
+    animation: none;
+  }
+}

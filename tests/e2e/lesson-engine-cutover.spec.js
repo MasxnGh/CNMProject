@@ -55,11 +55,11 @@ test("completing node 1 through /lesson/1 unlocks node 6 and shows a real result
   await expect(page).toHaveURL(/\/lesson\/6$/);
 
   await page.goto("/chapter/ch6");
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(1);
+  await expect(page.locator(".ln-lamp.done")).toHaveCount(1);
   await expect(page.getByRole("button", { name: /โหนด 6 - ด่านปัจจุบัน/ })).toBeVisible();
 
-  await page.goto("/");
-  await expect(page.locator(".rm-chip.coins")).not.toHaveText("0");
+  await page.goto("/chapters");
+  await expect(page.locator(".ln-stat", { hasText: "🏮" }).locator("b")).not.toHaveText("0");
 });
 
 test("retrying a node re-mounts a fresh game session", async ({ page }) => {

@@ -33,7 +33,7 @@ test("passing the unlock test opens both nodes in the lesson at once, with a bon
   await page.goto("/chapter/ch1");
 
   await page.getByRole("button", { name: /โหนด 3 - ล็อค - ทำแบบทดสอบข้ามด่านได้/ }).click();
-  await expect(page.locator(".rm-sheet")).toContainText("บทที่ 1");
+  await expect(page.locator(".ln-sheet")).toContainText("บทที่ 1");
   await page.getByRole("button", { name: "เริ่มทำแบบทดสอบ" }).click();
   await expect(page).toHaveURL(/\/unlock\/ch1_l1$/);
   await expect(page.locator(".v2-mission-progress.checkpoint")).toBeVisible();
@@ -87,7 +87,7 @@ test("passing the unlock test opens both nodes in the lesson at once, with a bon
 
   await page.getByRole("button", { name: "กลับแผนที่" }).click();
   await expect(page).toHaveURL(/\/chapter\/ch1$/);
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(2);
+  await expect(page.locator(".ln-lamp.done")).toHaveCount(2);
   const coins = await page.evaluate(() => JSON.parse(localStorage.getItem("dujeen-quest-progress-v2")).coins);
   expect(coins).toBeGreaterThan(0);
 });
@@ -114,7 +114,7 @@ test("failing the unlock test (3 wrong) does not unlock anything and points at t
   await expect(page.getByText("ยังไม่ปลดล็อค", { exact: false })).toBeVisible();
 
   await page.getByRole("button", { name: "กลับแผนที่" }).click();
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(0);
+  await expect(page.locator(".ln-lamp.done")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /โหนด 3 - ล็อค/ })).toBeVisible();
 });
 
@@ -126,8 +126,8 @@ test("once today's free attempt is used, the offer switches to paying coins to u
   await expect(page.getByText("ใช้สิทธิ์ทำแบบทดสอบวันนี้ไปแล้ว", { exact: false })).toBeVisible();
 
   await page.getByRole("button", { name: /จ่าย 50 เหรียญ ปลดล็อคทันที/ }).click();
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(0);
-  await expect(page.locator(".rm-node.current")).toHaveCount(2);
+  await expect(page.locator(".ln-lamp.done")).toHaveCount(0);
+  await expect(page.locator(".ln-lamp.now")).toHaveCount(2);
 
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("dujeen-quest-progress-v2")).coins)).toBe(50);
 });
@@ -145,7 +145,7 @@ test("practice tab replays mistakes and clears the ones answered correctly", asy
   await submit(page);
   await next(page);
 
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/chapters");
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("dujeen-quest-progress-v2")).mistakes);
   expect(stored).toEqual([]);
 });
