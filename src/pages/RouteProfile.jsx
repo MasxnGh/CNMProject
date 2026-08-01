@@ -8,5 +8,5 @@ export default function RouteProfile() {
   const navigate = useNavigate();
   const { progress } = useProgress();
 
-  return <AchievementPage progress={toLegacyProgressView(progress)} onBack={() => navigate("/")} />;
+  return <AchievementPage progress={toLegacyProgressView(progress)} onBack={() => navigate("/chapters")} />;
 }

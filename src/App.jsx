@@ -175,7 +175,7 @@ export default function App() {
   };
 
   return (
-    <>
+    <div className="classic-app">
       <AnimatePresence mode="wait">
         {loading ? (
           <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
@@ -237,6 +237,6 @@ export default function App() {
       >
         ระบบจะล้างด่านที่ปลดล็อก ดาว XP เหรียญ Badge และคลังความรู้ในเครื่องนี้ แล้วกลับไปเริ่มที่ด่าน 1
       </Modal>
-    </>
+    </div>
   );
 }

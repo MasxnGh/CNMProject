@@ -1,21 +1,21 @@
 import { expect, test } from "@playwright/test";
 
 test("the chapter grid shows the first chapter available and the rest locked or draft", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/chapters");
 
   await expect(page.getByRole("button", { name: /แนะนำตัวเอง/ })).toBeEnabled();
   // ch4/ch5/ch8/ch10 are drafts ("เร็วๆ นี้"); every other later chapter is
   // simply locked until the player reaches it.
   await expect(page.getByText("เร็วๆ นี้").first()).toBeVisible();
-  await expect(page.getByText("ยังไม่ปลดล็อค").first()).toBeVisible();
+  await expect(page.getByText("จบบทก่อนหน้าเพื่อปลดล็อค").first()).toBeVisible();
 });
 
 test("a chapter's own path shows its first node unlocked and the rest locked", async ({ page }) => {
   await page.goto("/chapter/ch1");
 
-  await expect(page.locator(".rm-node")).toHaveCount(2);
-  await expect(page.locator(".rm-node.current")).toHaveCount(1);
-  await expect(page.locator(".rm-node.locked")).toHaveCount(1);
+  await expect(page.locator(".ln-lamp")).toHaveCount(2);
+  await expect(page.locator(".ln-lamp.now")).toHaveCount(1);
+  await expect(page.locator(".ln-lamp.lock")).toHaveCount(1);
   await expect(page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ })).toBeVisible();
 });
 
@@ -27,8 +27,8 @@ test("tapping the current node opens a start sheet and starting it navigates to 
   await page.goto("/chapter/ch1");
 
   await page.getByRole("button", { name: /โหนด 2 - ด่านปัจจุบัน/ }).click();
-  await expect(page.locator(".rm-sheet")).toBeVisible();
-  await expect(page.locator(".rm-sheet")).toContainText("ร้านชาโบราณ");
+  await expect(page.locator(".ln-sheet")).toBeVisible();
+  await expect(page.locator(".ln-sheet")).toContainText("ร้านชาโบราณ");
 
   await page.getByRole("button", { name: "เริ่ม" }).click();
   await expect(page).toHaveURL(/\/lesson\/2$/);
@@ -49,28 +49,29 @@ test("locked nodes stay inert except in the next testable lesson", async ({ page
 });
 
 test("the map shows no star counts anywhere - locked/current/cleared is the whole story", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.locator(".rm-scroll")).not.toContainText("ดาว");
-  await expect(page.locator(".rm-topbar")).not.toContainText("ดาว");
+  await page.goto("/chapters");
+  await expect(page.locator(".ln-chapters")).not.toContainText("ดาว");
+  await expect(page.locator(".ln-top")).not.toContainText("ดาว");
 
   await page.goto("/chapter/ch1");
-  await expect(page.locator(".rm-scroll")).not.toContainText("ดาว");
+  await expect(page.locator(".ln-chapters")).not.toContainText("ดาว");
   await expect(page.getByRole("button", { name: /ด่านปัจจุบัน|ผ่านแล้ว|ล็อค/ }).first()).toBeVisible();
 });
 
 test("daily reward can be claimed once, adds coins, and persists across reload", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/chapters");
+  const coins = page.locator(".ln-stat", { hasText: "🏮" }).locator("b");
 
-  await expect(page.locator(".rm-chip.coins")).toHaveText("0");
+  await expect(coins).toHaveText("0");
   await page.getByRole("button", { name: "เปิดกล่องรางวัลรายวัน" }).click();
-  await expect(page.locator(".rm-reward-modal")).toBeVisible();
+  await expect(page.locator(".ln-sheet")).toBeVisible();
 
   await page.getByRole("button", { name: "รับรางวัล" }).click();
-  await expect(page.locator(".rm-chip.coins")).toHaveText("10");
+  await expect(coins).toHaveText("10");
   await expect(page.getByRole("button", { name: "รับรางวัลวันนี้แล้ว" })).toBeDisabled();
 
   await page.reload();
-  await expect(page.locator(".rm-chip.coins")).toHaveText("10");
+  await expect(coins).toHaveText("10");
   await expect(page.getByRole("button", { name: "รับรางวัลวันนี้แล้ว" })).toBeDisabled();
 });
 

@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes.jsx";
 import { ProgressProvider } from "./lib/ProgressContext.jsx";
 import "./styles/responsive-tokens.css";
+import "./styles/theme.css";
+import "./styles/lantern-ui.css";
 import "./index.css";
 
 /* `/` is the HelloChinese-style route map (Phase 1). The old, fully working

@@ -2,10 +2,10 @@ import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import RouteSkeleton from "./components/home/RouteSkeleton.jsx";
-import RouteHome from "./pages/RouteHome.jsx";
+import StartScreen from "./pages/StartScreen.jsx";
 
-/* RouteHome (the map) stays in the main bundle since it's the first thing
-   almost every visit needs; everything that mounts the GamePage engine
+/* StartScreen stays in the main bundle since it's the first thing almost
+   every visit needs; everything that mounts the GamePage engine
    (lesson/unlock/result/practice) - plus the legacy /classic app, which
    pulls in the same engine a second way - loads as a separate chunk on
    first visit, showing a themed skeleton instead of a blank flash while it
@@ -20,6 +20,8 @@ const RouteUnlock = lazy(() => import("./pages/RouteUnlock.jsx"));
 const RouteResult = lazy(() => import("./pages/RouteResult.jsx"));
 const RoutePractice = lazy(() => import("./pages/RoutePractice.jsx"));
 const RouteProfile = lazy(() => import("./pages/RouteProfile.jsx"));
+const Styleguide = lazy(() => import("./pages/Styleguide.jsx"));
+const ChapterSelect = lazy(() => import("./pages/ChapterSelect.jsx"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -28,7 +30,8 @@ export default function AppRoutes() {
     <Suspense fallback={<RouteSkeleton />}>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<RouteHome />} />
+          <Route path="/" element={<StartScreen />} />
+          <Route path="/chapters" element={<ChapterSelect />} />
           <Route path="/classic" element={<App />} />
           <Route path="/chapter/:chapterId" element={<ChapterPath />} />
           <Route path="/lesson/:lessonId" element={<RouteLesson />} />
@@ -36,6 +39,7 @@ export default function AppRoutes() {
           <Route path="/result/:lessonId" element={<RouteResult />} />
           <Route path="/practice" element={<RoutePractice />} />
           <Route path="/profile" element={<RouteProfile />} />
+          <Route path="/styleguide" element={<Styleguide />} />
         </Routes>
       </AnimatePresence>
     </Suspense>

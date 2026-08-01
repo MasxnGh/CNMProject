@@ -89,11 +89,11 @@ test("chapter 4's first node plays all 10 full-depth missions and unlocks the ne
   // earned.
   await page.getByRole("button", { name: "กลับแผนที่" }).click();
   await expect(page).toHaveURL(/\/chapter\/ch4$/);
-  await expect(page.locator(".rm-node.cleared")).toHaveCount(1);
+  await expect(page.locator(".ln-lamp.done")).toHaveCount(1);
   await expect(page.getByRole("button", { name: /โหนด 17 - ด่านปัจจุบัน/ })).toBeVisible();
 });
 
 test("the chapter grid shows chapter 4 as a live chapter, not a draft", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/chapters");
   await expect(page.getByRole("button", { name: /ประเทศและภาษา/ })).not.toContainText("เร็วๆ นี้");
 });
