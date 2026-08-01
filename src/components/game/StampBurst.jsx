@@ -3,7 +3,7 @@ import Stamp from "../ui/Stamp.jsx";
 import { playSfx } from "../../lib/audio.js";
 import "../../styles/game-stamp-burst.css";
 
-const HOLD_MS = 300;
+const HOLD_MS = 320;
 const FADE_MS = 200;
 
 /**

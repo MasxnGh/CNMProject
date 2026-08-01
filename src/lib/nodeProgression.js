@@ -33,6 +33,31 @@ export const getNextNodeId = (nodeId) => {
   return flatNodeIds[index + 1];
 };
 
+/** Whether nodeId is the last node in its chapter's route - the trigger for
+    Result.jsx's "whole chapter lights up" flourish. */
+export const isLastNodeInChapter = (nodeId) => {
+  const unit = units.find((u) => u.lessons.some((lesson) => lesson.nodeIds.includes(nodeId)));
+  if (!unit) return false;
+  const unitNodeIds = unit.lessons.flatMap((lesson) => lesson.nodeIds);
+  return unitNodeIds[unitNodeIds.length - 1] === nodeId;
+};
+
+/** dujeen-quest-prototype.html's NODES fixture: 学 = learn, 练 = practice,
+    考 = review. Shared by ChapterPath's rope, UnlockModal's preview
+    lanterns, and Result.jsx's chapter-clear relay, so all three agree on
+    the same node's icon. */
+export const iconForLessonType = (type) => (type === "review" ? "考" : type === "practice" ? "练" : "学");
+
+/** [{icon, label}] for every node in nodeId's chapter, in route order - the
+    lantern row Result.jsx lights up one-by-one when a chapter is cleared. */
+export const getChapterLanterns = (nodeId) => {
+  const unit = units.find((u) => u.lessons.some((lesson) => lesson.nodeIds.includes(nodeId)));
+  if (!unit) return [];
+  return unit.lessons.flatMap((lesson) =>
+    lesson.nodeIds.map(() => ({ icon: iconForLessonType(lesson.type), label: lesson.title })),
+  );
+};
+
 export const isNodeUnlocked = (progress, nodeId) => (progress.unlocked ?? []).includes(nodeId);
 
 export const isNodeCompleted = (progress, nodeId) => (progress.completed ?? []).includes(nodeId);

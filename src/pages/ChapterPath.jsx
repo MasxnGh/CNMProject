@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import UnlockModal from "../components/game/UnlockModal.jsx";
 import Button from "../components/ui/Button.jsx";
 import Lantern from "../components/ui/Lantern.jsx";
 import Nav from "../components/ui/Nav.jsx";
@@ -10,7 +11,7 @@ import units from "../content/units.json";
 import vocabList from "../content/vocab.json";
 import { getLevelById } from "../data/levels.js";
 import {
-  canPayToUnlock,
+  buildCheckpointLevel,
   getLessonForNode,
   isCheckpointEligible,
   isCheckpointAvailableToday,
@@ -18,6 +19,7 @@ import {
   payToUnlockLesson,
 } from "../lib/checkpointProgression.js";
 import { playWord } from "../lib/audio.js";
+import { iconForLessonType } from "../lib/nodeProgression.js";
 import { useProgress } from "../lib/ProgressContext.jsx";
 import "../styles/lantern-screens.css";
 
@@ -38,9 +40,7 @@ export default function ChapterPath() {
 
   const nodeEntries = useMemo(() => {
     if (!chapter) return [];
-    return chapter.lessons.flatMap((lesson) =>
-      lesson.nodeIds.map((nodeId, indexInLesson) => ({ nodeId, indexInLesson })),
-    );
+    return chapter.lessons.flatMap((lesson) => lesson.nodeIds.map((nodeId) => ({ nodeId })));
   }, [chapter]);
 
   const lessonIndexByNodeId = useMemo(() => {
@@ -112,7 +112,10 @@ export default function ChapterPath() {
   const selectedLessonIndex = selectedNode != null ? lessonIndexByNodeId.get(selectedNode) ?? 0 : 0;
   const unlockOfferInfo = unlockOfferNodeId != null ? getLessonForNode(unlockOfferNodeId) : null;
   const unlockOfferAvailableToday = unlockOfferInfo ? isCheckpointAvailableToday(progress, unlockOfferInfo.lesson.id) : false;
-  const unlockOfferCanPay = canPayToUnlock(progress);
+  const unlockOfferLevel = unlockOfferInfo ? buildCheckpointLevel(unlockOfferInfo.lesson.id) : null;
+  const unlockOfferLanterns = unlockOfferInfo
+    ? unlockOfferInfo.lesson.nodeIds.map(() => ({ icon: iconForLessonType(unlockOfferInfo.lesson.type), label: unlockOfferInfo.lesson.title }))
+    : [];
 
   return (
     <div className="lantern-app">
@@ -133,11 +136,12 @@ export default function ChapterPath() {
 
         <div className="ln-pathGrid">
           <div className="ln-rope">
-            {nodeEntries.map(({ nodeId, indexInLesson }, index) => {
+            {nodeEntries.map(({ nodeId }, index) => {
               const status = nodeStatus(nodeId);
               const eligibleLocked = status === "lock" && isCheckpointEligible(progress, nodeId);
               const interactive = status !== "lock" || eligibleLocked;
               const level = getLevelById(nodeId);
+              const icon = iconForLessonType(chapter.lessons[lessonIndexByNodeId.get(nodeId) ?? 0]?.type);
               const statusLabel =
                 status === "done"
                   ? "ผ่านแล้ว"
@@ -150,7 +154,7 @@ export default function ChapterPath() {
                 <div key={nodeId} className={`ln-node ${index % 2 ? "r" : "l"}`}>
                   <Lantern
                     state={status}
-                    icon={indexInLesson === 0 ? "学" : "练"}
+                    icon={icon}
                     label={chapter.lessons[lessonIndexByNodeId.get(nodeId) ?? 0]?.title ?? level?.title ?? `โหนด ${nodeId}`}
                     disabled={!interactive}
                     aria-label={`โหนด ${nodeId} - ${statusLabel}`}
@@ -203,27 +207,17 @@ export default function ChapterPath() {
         </Button>
       </Sheet>
 
-      <Sheet open={unlockOfferNodeId != null} onClose={() => setUnlockOfferNodeId(null)}>
-        <h3>ข้ามไป {unlockOfferInfo?.lesson.title ?? ""} เลยไหม?</h3>
-        <p>
-          ทำแบบทดสอบรวมความรู้ {unlockOfferInfo?.lesson.nodeIds.length ?? 0} ด่านของ {chapter.title} — ตอบให้ถูกจนจบ
-          ผิดได้ไม่เกิน 2 ข้อ เพื่อปลดล็อคทั้งหมดพร้อมกัน
-        </p>
-        {unlockOfferAvailableToday ? (
-          <Button onClick={handleStartTest}>เริ่มทำแบบทดสอบ</Button>
-        ) : (
-          <>
-            <p style={{ color: "var(--dim)" }}>ใช้สิทธิ์ทำแบบทดสอบวันนี้ไปแล้ว พรุ่งนี้ลองใหม่ได้</p>
-            <Button onClick={handlePayToUnlock} disabled={!unlockOfferCanPay}>
-              จ่าย {PAY_TO_UNLOCK_COST} เหรียญ ปลดล็อคทันที
-            </Button>
-            {!unlockOfferCanPay ? <p style={{ color: "var(--dim)" }}>เหรียญไม่พอ</p> : null}
-          </>
-        )}
-        <Button variant="ghost" onClick={() => setUnlockOfferNodeId(null)}>
-          ยังไม่พร้อม
-        </Button>
-      </Sheet>
+      <UnlockModal
+        open={unlockOfferNodeId != null}
+        lanterns={unlockOfferLanterns}
+        questionCount={unlockOfferLevel?.questions.length ?? 0}
+        attemptAvailable={unlockOfferAvailableToday}
+        coins={progress.coins}
+        payCost={PAY_TO_UNLOCK_COST}
+        onStartTest={handleStartTest}
+        onPayToUnlock={handlePayToUnlock}
+        onClose={() => setUnlockOfferNodeId(null)}
+      />
     </div>
   );
 }

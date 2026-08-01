@@ -58,7 +58,7 @@
 }
 
 .game-feedback.is-wrong .game-feedback-head strong {
-  color: var(--seal);
+  color: #FF8878;
 }
 
 .game-feedback-tools {

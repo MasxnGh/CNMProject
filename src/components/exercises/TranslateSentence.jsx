@@ -47,13 +47,13 @@ export default function TranslateSentence({ exercise, onAnswer }) {
   return (
     <div className="exercise">
       <div className="exercise-prompt-area">
+        <p className="exercise-instruction">แปลประโยคนี้เป็นภาษาจีน</p>
         <div className="exercise-prompt">
           <button type="button" className="exercise-speaker" onClick={() => speakThai(sentence.th)} aria-label="ฟังเสียงภาษาไทย">
             <Volume2 size={26} />
           </button>
           <p className="exercise-thai-sentence">{sentence.th}</p>
         </div>
-        <p className="exercise-instruction">แปลประโยคนี้เป็นภาษาจีน</p>
         <button
           type="button"
           className="exercise-mode-toggle"
