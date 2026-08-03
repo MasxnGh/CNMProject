@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import chapters from "../content/chapters.json";
 import { buildPool } from "../lib/exercisePool.js";
@@ -6,12 +6,13 @@ import { useProgress } from "../lib/progress.js";
 import { recordWriteCompletion } from "../lib/writeProgress.js";
 import { playCorrect, playWrong, playCombo } from "../lib/sfx.js";
 import { hapticCorrect, hapticWrong } from "../lib/haptics.js";
+import { playOnEnter, playOnCheck, manualReplay } from "../lib/audioPolicy.js";
 import { isSelfReporting } from "../lib/exerciseKind.js";
 import { EXERCISE_COMPONENTS, CORRECTNESS } from "../components/exercises/QuestionRenderer.jsx";
 import { isSpeechRecognitionSupported } from "../components/exercises/support.js";
 import QuestionStage from "../components/exercises/QuestionStage.jsx";
 import CheckButton from "../components/exercises/CheckButton.jsx";
-import { resolveEntry, getEntryId, playEntry } from "../components/exercises/content.js";
+import { resolveEntry, getEntryId } from "../components/exercises/content.js";
 import "../components/exercises/exercises.css";
 import FeedbackBar from "../components/game/FeedbackBar.jsx";
 import ComboBadge from "../components/game/ComboBadge.jsx";
@@ -84,6 +85,11 @@ export default function UnlockTest() {
 
   const currentExercise = exercises[index];
 
+  useEffect(() => {
+    if (currentExercise) playOnEnter(currentExercise);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentExercise?.id]);
+
   if (!currentExercise) {
     const chapter = chapters.find((c) => c.id === chapterId);
     return (
@@ -131,6 +137,7 @@ export default function UnlockTest() {
   const applyOutcome = (isCorrect) => {
     setChecked(true);
     setResult(isCorrect);
+    playOnCheck(currentExercise);
 
     if (isCorrect) {
       correctCountRef.current += 1;
@@ -238,7 +245,8 @@ export default function UnlockTest() {
         correct={result}
         entry={targetEntry}
         onNext={handleNext}
-        onReplay={() => playEntry(getEntryId(currentExercise))}
+        onReplay={() => manualReplay(getEntryId(currentExercise))}
+        onReplaySlow={() => manualReplay(getEntryId(currentExercise), { slow: true })}
       />
 
       <Sheet

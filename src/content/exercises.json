@@ -90,7 +90,9 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l1",
     "targetSentenceId": "s_ni_hao",
-    "blankIndex": 1
+    "thTokens": ["สวัสดี"],
+    "blankIndex": 0,
+    "distractorTh": ["ขอบคุณ", "ลาก่อน"]
   },
   {
     "id": "ex_ch01_l1_09",
@@ -132,6 +134,18 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l1",
     "targetId": "v_xiexie"
+  },
+  {
+    "id": "ex_ch01_l1_14",
+    "type": "pick_chinese",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetSentenceId": "s_wo_jiao_xiaoming",
+    "distractors": [
+      { "hanzi": "你叫小明。", "pinyin": "Nǐ jiào Xiǎomíng." },
+      { "hanzi": "我叫你。", "pinyin": "Wǒ jiào nǐ." },
+      { "hanzi": "你叫什么名字？", "pinyin": "Nǐ jiào shénme míngzi?" }
+    ]
   },
   {
     "id": "ex_ch01_l2_01",
@@ -224,7 +238,9 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l2",
     "targetSentenceId": "s_ni_hao_ma",
-    "blankIndex": 2
+    "thTokens": ["คุณ", "สบายดี", "ไหม"],
+    "blankIndex": 1,
+    "distractorTh": ["ดี", "ดีใจ"]
   },
   {
     "id": "ex_ch01_l2_09",
@@ -336,7 +352,8 @@
     "type": "arrange_from_audio",
     "chapterId": "ch01",
     "lessonId": "ch01_l3",
-    "targetSentenceId": "s_wo_jiao_xiaoming"
+    "targetSentenceId": "s_wo_jiao_xiaoming",
+    "prefilledIndex": 2
   },
   {
     "id": "ex_ch01_l3_08",
@@ -351,7 +368,9 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l3",
     "targetSentenceId": "s_ni_jiao_shenme_mingzi",
-    "blankIndex": 3
+    "thTokens": ["คุณ", "ชื่อ", "อะไร"],
+    "blankIndex": 1,
+    "distractorTh": ["ปาก", "ภูเขา"]
   },
   {
     "id": "ex_ch01_l3_10",
@@ -393,6 +412,18 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l3",
     "targetId": "v_mingzi"
+  },
+  {
+    "id": "ex_ch01_l3_15",
+    "type": "pick_chinese",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetSentenceId": "s_ni_jiao_shenme_mingzi",
+    "distractors": [
+      { "hanzi": "我叫什么名字？", "pinyin": "Wǒ jiào shénme míngzi?" },
+      { "hanzi": "我叫小明。", "pinyin": "Wǒ jiào Xiǎomíng." },
+      { "hanzi": "你好吗？", "pinyin": "Nǐ hǎo ma?" }
+    ]
   },
   {
     "id": "ex_ch01_l4_01",
@@ -472,7 +503,9 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l4",
     "targetSentenceId": "s_hen_gaoxing_renshi_ni",
-    "blankIndex": 0
+    "thTokens": ["ยินดี", "ที่ได้", "รู้จัก"],
+    "blankIndex": 2,
+    "distractorTh": ["เป็น", "ชื่อว่า"]
   },
   {
     "id": "ex_ch01_l4_08",
@@ -599,7 +632,9 @@
     "chapterId": "ch01",
     "lessonId": "ch01_l5",
     "targetSentenceId": "s_wo_jiao_xiaoming",
-    "blankIndex": 2
+    "thTokens": ["ฉัน", "ชื่อ", "เสี่ยวหมิง"],
+    "blankIndex": 1,
+    "distractorTh": ["เป็น", "รู้จัก"]
   },
   {
     "id": "ex_ch01_l5_09",
@@ -705,6 +740,24 @@
       "v_yingyu",
       "v_shuo"
     ]
+  },
+  {
+    "id": "ex_ch04_l1_03",
+    "type": "complete_translation",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "targetSentenceId": "s_wo_shi2_taiguoren",
+    "thTokens": ["ฉัน", "เป็น", "คนไทย"],
+    "blankIndex": 1,
+    "distractorTh": ["รัก", "เห็น"]
+  },
+  {
+    "id": "ex_ch04_l1_04",
+    "type": "pick_translation",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "targetSentenceId": "s_wo_shi2_taiguoren",
+    "distractorTexts": ["ฉันเป็นคนจีน", "เป็นคนไทย"]
   },
   {
     "id": "ex_ch05_l1_01",

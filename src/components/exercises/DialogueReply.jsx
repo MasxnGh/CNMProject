@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { resolveEntry, playEntry } from "./content.js";
+import { resolveEntry } from "./content.js";
+import { manualReplay, playOnSelect } from "../../lib/audioPolicy.js";
 import ChoiceGrid from "./ChoiceGrid.jsx";
 import "../game/chat.css";
 
@@ -12,22 +12,9 @@ export default function DialogueReply({ exercise, selected, checked, onPick, che
   const chosenEntry = selected ? resolveEntry(selected) : null;
   const correctEntry = resolveEntry(correctId);
 
-  useEffect(() => {
-    playEntry(promptId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exercise.id]);
-
-  useEffect(() => {
-    if (!checked || !isCorrect) return undefined;
-    playEntry(promptId);
-    const timer = setTimeout(() => playEntry(selected), 1400);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checked, isCorrect]);
-
   const handlePick = (id) => {
     if (checked) return;
-    playEntry(id);
+    playOnSelect(exercise, id);
     onPick(id);
   };
 
@@ -49,10 +36,10 @@ export default function DialogueReply({ exercise, selected, checked, onPick, che
       <div>
         <div className="chatBubbleRow left">
           <div className="chatBubble prompt">
-            <button type="button" className="spk chatSpk" onClick={() => playEntry(promptId)}>
+            <button type="button" className="spk chatSpk" onClick={() => manualReplay(promptId)}>
               🔊
             </button>
-            <button type="button" className="spk chatSpk" onClick={() => playEntry(promptId, { slow: true })}>
+            <button type="button" className="spk chatSpk" onClick={() => manualReplay(promptId, { slow: true })}>
               🐢
             </button>
             <div>

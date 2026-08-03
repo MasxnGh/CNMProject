@@ -7,11 +7,12 @@ import { buildAdvanceQueue, buildDueQueue, pickExerciseForWord } from "../compon
 import { playCorrect, playWrong, playCombo } from "../lib/sfx.js";
 import { hapticCorrect, hapticWrong } from "../lib/haptics.js";
 import { getReplayCount, resetReplayCount } from "../lib/audio.js";
+import { playOnEnter, playOnCheck, manualReplay } from "../lib/audioPolicy.js";
 import { isSelfReporting } from "../lib/exerciseKind.js";
 import { CORRECTNESS } from "../components/exercises/QuestionRenderer.jsx";
 import QuestionStage from "../components/exercises/QuestionStage.jsx";
 import CheckButton from "../components/exercises/CheckButton.jsx";
-import { resolveEntry, getEntryId, playEntry, isSentenceId, sentenceById } from "../components/exercises/content.js";
+import { resolveEntry, getEntryId, isSentenceId, sentenceById } from "../components/exercises/content.js";
 import "../components/exercises/exercises.css";
 import FeedbackBar from "../components/game/FeedbackBar.jsx";
 import ComboBadge from "../components/game/ComboBadge.jsx";
@@ -82,11 +83,15 @@ export default function Review() {
   const uniqueWordIdsRef = useRef(new Set());
   const forgottenIdsRef = useRef(new Set());
 
+  const currentEntry = queue[index];
+
   useEffect(() => {
-    if (phase !== "session") return;
+    if (phase !== "session" || !currentEntry) return;
     questionStartRef.current = Date.now();
     resetReplayCount();
-  }, [phase, index]);
+    playOnEnter(currentEntry.exercise);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, currentEntry?.exercise?.id]);
 
   const startSession = (built) => {
     if (built.length === 0) return;
@@ -109,8 +114,6 @@ export default function Review() {
     setPhase("summary");
   };
 
-  const currentEntry = queue[index];
-
   const handlePick = (id) => {
     if (checked) return;
     setSelected(id);
@@ -121,6 +124,7 @@ export default function Review() {
     const { exercise, wordId } = currentEntry;
     setChecked(true);
     setResult(isCorrect);
+    playOnCheck(exercise);
 
     const exerciseEntryId = getEntryId(exercise);
     const srsIds = isSentenceId(exerciseEntryId) ? sentenceById.get(exerciseEntryId).tokens : [exerciseEntryId];
@@ -247,7 +251,8 @@ export default function Review() {
           correct={result}
           entry={targetEntry}
           onNext={handleNext}
-          onReplay={() => playEntry(getEntryId(currentEntry.exercise))}
+          onReplay={() => manualReplay(getEntryId(currentEntry.exercise))}
+          onReplaySlow={() => manualReplay(getEntryId(currentEntry.exercise), { slow: true })}
         />
 
         <Sheet
@@ -314,7 +319,7 @@ export default function Review() {
                 const due = progress.srs?.[id]?.due;
                 return (
                   <div key={id} className="forgottenRow">
-                    <button type="button" className="fxIcon" onClick={() => playEntry(id)} aria-label="ฟังเสียง">
+                    <button type="button" className="fxIcon" onClick={() => manualReplay(id)} aria-label="ฟังเสียง">
                       🔊
                     </button>
                     <div className="forgottenText">

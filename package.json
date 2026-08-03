@@ -14,6 +14,7 @@
     "prepare-hanzi-data": "node scripts/copy-hanzi-data.mjs",
     "test:write-character": "node scripts/test-write-character-result.mjs",
     "test:write-progress": "node scripts/test-write-progress.mjs",
+    "check:audio": "node scripts/check-audio.mjs",
     "test:e2e": "node scripts/run-e2e.mjs"
   },
   "dependencies": {
