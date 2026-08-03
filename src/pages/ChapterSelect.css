@@ -1,0 +1,157 @@
+.reviewBanner {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--jade-dk);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.reviewBannerTap {
+  flex: 1;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--done-label);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.reviewBannerClose {
+  flex: none;
+  width: 40px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--done-label);
+  opacity: .7;
+  font-size: 14px;
+}
+.reviewBannerClose:active {
+  opacity: 1;
+}
+
+.chapGrid {
+  display: grid;
+  gap: 13px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--night2);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 5px 0 var(--shadow-card);
+  transition: transform .12s;
+  text-decoration: none;
+  color: inherit;
+}
+.card:active {
+  transform: translateY(5px);
+  box-shadow: 0 0 0 var(--shadow-card);
+}
+.card.lock {
+  opacity: .45;
+  cursor: default;
+}
+.card.lock:active,
+.card.lock:hover {
+  transform: none;
+  box-shadow: 0 5px 0 var(--shadow-card);
+}
+.card.shake {
+  animation: cardShake .4s;
+}
+@keyframes cardShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.num {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-family: "Noto Serif SC", serif;
+  font-size: 26px;
+  background: var(--night3);
+  color: var(--lantern);
+}
+.card.done .num {
+  background: var(--jade-dk);
+  color: var(--done-label);
+}
+
+.card .txt {
+  flex: 1;
+  min-width: 0;
+}
+.card .zh {
+  font-family: "Noto Serif SC", serif;
+  font-size: 15px;
+  color: var(--lantern);
+  margin-bottom: 1px;
+}
+.card .th {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.bar {
+  height: 6px;
+  background: var(--shadow-card);
+  border-radius: 99px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--jade);
+  border-radius: 99px;
+}
+
+.card .cnt {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 5px;
+}
+
+.seal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-13deg);
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  color: var(--seal-badge-text);
+  background: var(--seal);
+  box-shadow: inset 0 0 0 2px var(--wrong-accent);
+}
+
+@media (min-width: 720px) {
+  .chapGrid { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+
+@media (min-width: 1080px) {
+  .chapGrid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { padding: 20px; }
+}

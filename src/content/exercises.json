@@ -1,0 +1,865 @@
+[
+  {
+    "id": "ex_ch01_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_nihao",
+    "choiceIds": [
+      "v_nihao",
+      "v_xiexie",
+      "v_zaijian",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_02",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_xiexie",
+    "choiceIds": [
+      "v_xiexie",
+      "v_zaijian",
+      "v_nihao",
+      "v_ni"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_03",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_zaijian",
+    "choiceIds": [
+      "v_zaijian",
+      "v_nihao",
+      "v_xiexie",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_04",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_ni",
+    "choiceIds": [
+      "v_ni",
+      "v_hao",
+      "v_nihao",
+      "v_xiexie"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_05",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_nihao",
+    "choiceIds": [
+      "v_nihao",
+      "v_xiexie",
+      "v_zaijian",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_06",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_zaijian",
+    "choiceIds": [
+      "v_zaijian",
+      "v_ni",
+      "v_hao",
+      "v_xiexie"
+    ]
+  },
+  {
+    "id": "ex_ch01_l1_07",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetSentenceId": "s_ni_hao"
+  },
+  {
+    "id": "ex_ch01_l1_08",
+    "type": "complete_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetSentenceId": "s_ni_hao",
+    "blankIndex": 1
+  },
+  {
+    "id": "ex_ch01_l1_09",
+    "type": "translate_sentence",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetSentenceId": "s_ni_hao"
+  },
+  {
+    "id": "ex_ch01_l1_10",
+    "type": "dialogue_reply",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "promptId": "v_nihao",
+    "choiceIds": [
+      "v_nihao",
+      "v_xiexie",
+      "v_zaijian"
+    ],
+    "correctId": "v_nihao"
+  },
+  {
+    "id": "ex_ch01_l1_11",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_nihao"
+  },
+  {
+    "id": "ex_ch01_l1_12",
+    "type": "write_character",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_ni"
+  },
+  {
+    "id": "ex_ch01_l1_13",
+    "type": "write_character",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "targetId": "v_xiexie"
+  },
+  {
+    "id": "ex_ch01_l2_01",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_kou",
+    "choiceIds": [
+      "v_kou",
+      "v_shan",
+      "v_ri",
+      "v_yue"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_02",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_shan",
+    "choiceIds": [
+      "v_shan",
+      "v_kou",
+      "v_yue",
+      "v_ri"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_03",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_ri",
+    "choiceIds": [
+      "v_ri",
+      "v_yue",
+      "v_kou",
+      "v_shan"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_04",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_yue",
+    "choiceIds": [
+      "v_yue",
+      "v_ri",
+      "v_shan",
+      "v_kou"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_05",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_ma2",
+    "choiceIds": [
+      "v_ma2",
+      "v_hao",
+      "v_ni",
+      "v_nihao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_06",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "v_zaijian",
+    "choiceIds": [
+      "v_zaijian",
+      "v_xiexie",
+      "v_nihao",
+      "v_ni"
+    ]
+  },
+  {
+    "id": "ex_ch01_l2_07",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetSentenceId": "s_ni_hao_ma"
+  },
+  {
+    "id": "ex_ch01_l2_08",
+    "type": "complete_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetSentenceId": "s_ni_hao_ma",
+    "blankIndex": 2
+  },
+  {
+    "id": "ex_ch01_l2_09",
+    "type": "translate_sentence",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetSentenceId": "s_ni_hao_ma"
+  },
+  {
+    "id": "ex_ch01_l2_10",
+    "type": "dialogue_reply",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "promptId": "v_nihao",
+    "choiceIds": [
+      "v_nihao",
+      "v_zaijian",
+      "v_xiexie"
+    ],
+    "correctId": "v_nihao"
+  },
+  {
+    "id": "ex_ch01_l2_11",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "targetId": "s_ni_hao_ma"
+  },
+  {
+    "id": "ex_ch01_l3_01",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_xiaoming",
+    "choiceIds": [
+      "v_xiaoming",
+      "v_mingzi",
+      "v_nihao",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_02",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_mingzi",
+    "choiceIds": [
+      "v_mingzi",
+      "v_xiaoming",
+      "v_nihao",
+      "v_hao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_03",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_shenme",
+    "choiceIds": [
+      "v_shenme",
+      "v_shi2",
+      "v_jiao",
+      "v_wo"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_04",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_wo",
+    "choiceIds": [
+      "v_wo",
+      "v_ni",
+      "v_hao",
+      "v_jiao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_05",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_jiao",
+    "choiceIds": [
+      "v_jiao",
+      "v_shi2",
+      "v_wo",
+      "v_xiaoming"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_06",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_shi2",
+    "choiceIds": [
+      "v_shi2",
+      "v_jiao",
+      "v_shenme",
+      "v_mingzi"
+    ]
+  },
+  {
+    "id": "ex_ch01_l3_07",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetSentenceId": "s_wo_jiao_xiaoming"
+  },
+  {
+    "id": "ex_ch01_l3_08",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetSentenceId": "s_ni_jiao_shenme_mingzi"
+  },
+  {
+    "id": "ex_ch01_l3_09",
+    "type": "complete_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetSentenceId": "s_ni_jiao_shenme_mingzi",
+    "blankIndex": 3
+  },
+  {
+    "id": "ex_ch01_l3_10",
+    "type": "translate_sentence",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetSentenceId": "s_wo_jiao_xiaoming"
+  },
+  {
+    "id": "ex_ch01_l3_11",
+    "type": "dialogue_reply",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "promptSentenceId": "s_ni_jiao_shenme_mingzi",
+    "choiceIds": [
+      "s_wo_jiao_xiaoming",
+      "s_ni_hao",
+      "s_ni_hao_ma"
+    ],
+    "correctId": "s_wo_jiao_xiaoming"
+  },
+  {
+    "id": "ex_ch01_l3_12",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "s_wo_jiao_xiaoming"
+  },
+  {
+    "id": "ex_ch01_l3_13",
+    "type": "write_character",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_wo"
+  },
+  {
+    "id": "ex_ch01_l3_14",
+    "type": "write_character",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "targetId": "v_mingzi"
+  },
+  {
+    "id": "ex_ch01_l4_01",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_gaoxing",
+    "choiceIds": [
+      "v_gaoxing",
+      "v_xiaoming",
+      "v_mingzi",
+      "v_nihao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l4_02",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_hen",
+    "choiceIds": [
+      "v_hen",
+      "v_gaoxing",
+      "v_renshi",
+      "v_shi2"
+    ]
+  },
+  {
+    "id": "ex_ch01_l4_03",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_renshi",
+    "choiceIds": [
+      "v_renshi",
+      "v_hen",
+      "v_gaoxing",
+      "v_jiao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l4_04",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_gaoxing",
+    "choiceIds": [
+      "v_gaoxing",
+      "v_hen",
+      "v_renshi",
+      "v_wo"
+    ]
+  },
+  {
+    "id": "ex_ch01_l4_05",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_renshi",
+    "choiceIds": [
+      "v_renshi",
+      "v_shi2",
+      "v_jiao",
+      "v_hen"
+    ]
+  },
+  {
+    "id": "ex_ch01_l4_06",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetSentenceId": "s_hen_gaoxing_renshi_ni"
+  },
+  {
+    "id": "ex_ch01_l4_07",
+    "type": "complete_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetSentenceId": "s_hen_gaoxing_renshi_ni",
+    "blankIndex": 0
+  },
+  {
+    "id": "ex_ch01_l4_08",
+    "type": "translate_sentence",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetSentenceId": "s_hen_gaoxing_renshi_ni"
+  },
+  {
+    "id": "ex_ch01_l4_09",
+    "type": "dialogue_reply",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "promptSentenceId": "s_wo_jiao_xiaoming",
+    "choiceIds": [
+      "s_hen_gaoxing_renshi_ni",
+      "s_ni_hao_ma",
+      "s_ni_hao"
+    ],
+    "correctId": "s_hen_gaoxing_renshi_ni"
+  },
+  {
+    "id": "ex_ch01_l4_10",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "v_gaoxing"
+  },
+  {
+    "id": "ex_ch01_l4_11",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "targetId": "s_hen_gaoxing_renshi_ni"
+  },
+  {
+    "id": "ex_ch01_l5_01",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_kou",
+    "choiceIds": [
+      "v_kou",
+      "v_yue",
+      "v_ri",
+      "v_shan"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_02",
+    "type": "pick_image",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_gaoxing",
+    "choiceIds": [
+      "v_gaoxing",
+      "v_xiaoming",
+      "v_mingzi",
+      "v_nihao"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_03",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_shi2",
+    "choiceIds": [
+      "v_shi2",
+      "v_jiao",
+      "v_hen",
+      "v_renshi"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_04",
+    "type": "pick_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_zaijian",
+    "choiceIds": [
+      "v_zaijian",
+      "v_xiexie",
+      "v_nihao",
+      "v_ma2"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_05",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_shenme",
+    "choiceIds": [
+      "v_shenme",
+      "v_mingzi",
+      "v_wo",
+      "v_ni"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_06",
+    "type": "pick_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "v_ri",
+    "choiceIds": [
+      "v_ri",
+      "v_yue",
+      "v_shan",
+      "v_kou"
+    ]
+  },
+  {
+    "id": "ex_ch01_l5_07",
+    "type": "arrange_from_audio",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetSentenceId": "s_ni_jiao_shenme_mingzi"
+  },
+  {
+    "id": "ex_ch01_l5_08",
+    "type": "complete_translation",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetSentenceId": "s_wo_jiao_xiaoming",
+    "blankIndex": 2
+  },
+  {
+    "id": "ex_ch01_l5_09",
+    "type": "translate_sentence",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetSentenceId": "s_hen_gaoxing_renshi_ni"
+  },
+  {
+    "id": "ex_ch01_l5_10",
+    "type": "dialogue_reply",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "promptSentenceId": "s_ni_hao_ma",
+    "choiceIds": [
+      "s_ni_hao",
+      "s_wo_jiao_xiaoming",
+      "s_hen_gaoxing_renshi_ni"
+    ],
+    "correctId": "s_ni_hao"
+  },
+  {
+    "id": "ex_ch01_l5_11",
+    "type": "speak_aloud",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l5",
+    "targetId": "s_ni_jiao_shenme_mingzi"
+  },
+  {
+    "id": "ex_ch02_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "targetId": "v_san",
+    "choiceIds": [
+      "v_san",
+      "v_yi",
+      "v_er",
+      "v_shi"
+    ]
+  },
+  {
+    "id": "ex_ch02_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "targetId": "v_shi",
+    "choiceIds": [
+      "v_shi",
+      "v_yi",
+      "v_er",
+      "v_san"
+    ]
+  },
+  {
+    "id": "ex_ch03_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "targetId": "v_baba",
+    "choiceIds": [
+      "v_baba",
+      "v_mama",
+      "v_gege",
+      "v_jiejie"
+    ]
+  },
+  {
+    "id": "ex_ch03_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "targetId": "v_jia",
+    "choiceIds": [
+      "v_jia",
+      "v_baba",
+      "v_mama",
+      "v_gege"
+    ]
+  },
+  {
+    "id": "ex_ch04_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "targetId": "v_zhongguo",
+    "choiceIds": [
+      "v_zhongguo",
+      "v_taiguo",
+      "v_zhongguoren",
+      "v_taiguoren"
+    ]
+  },
+  {
+    "id": "ex_ch04_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "targetId": "v_hanyu",
+    "choiceIds": [
+      "v_hanyu",
+      "v_taiyu",
+      "v_yingyu",
+      "v_shuo"
+    ]
+  },
+  {
+    "id": "ex_ch05_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l1",
+    "targetId": "v_laoshi",
+    "choiceIds": [
+      "v_laoshi",
+      "v_xuesheng",
+      "v_shu",
+      "v_bi"
+    ]
+  },
+  {
+    "id": "ex_ch05_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l1",
+    "targetId": "v_xuesheng",
+    "choiceIds": [
+      "v_xuesheng",
+      "v_laoshi",
+      "v_shu",
+      "v_bi"
+    ]
+  },
+  {
+    "id": "ex_ch06_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "targetId": "v_jiaozi",
+    "choiceIds": [
+      "v_jiaozi",
+      "v_mifan",
+      "v_miantiao",
+      "v_cha"
+    ]
+  },
+  {
+    "id": "ex_ch06_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "targetId": "v_haochi",
+    "choiceIds": [
+      "v_haochi",
+      "v_shui",
+      "v_cha",
+      "v_caidan"
+    ]
+  },
+  {
+    "id": "ex_ch07_l1_01",
+    "type": "pick_translation",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "targetId": "v_qian",
+    "choiceIds": [
+      "v_qian",
+      "v_duoshao",
+      "v_yao",
+      "v_zhege"
+    ]
+  },
+  {
+    "id": "ex_ch07_l1_02",
+    "type": "pick_image",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "targetId": "v_pingguo",
+    "choiceIds": [
+      "v_pingguo",
+      "v_xiangjiao",
+      "v_hongse",
+      "v_luse"
+    ]
+  },
+  {
+    "id": "ex_ch08_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l1",
+    "targetId": "v_jintian",
+    "choiceIds": [
+      "v_jintian",
+      "v_mingtian",
+      "v_chunjie",
+      "v_hongbao"
+    ]
+  },
+  {
+    "id": "ex_ch08_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l1",
+    "targetId": "v_hongbao",
+    "choiceIds": [
+      "v_hongbao",
+      "v_denglong",
+      "v_wulong",
+      "v_chunjie"
+    ]
+  },
+  {
+    "id": "ex_ch09_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "targetId": "v_feiji",
+    "choiceIds": [
+      "v_feiji",
+      "v_huoche",
+      "v_chezhan",
+      "v_piao"
+    ]
+  },
+  {
+    "id": "ex_ch09_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "targetId": "v_xuexiao",
+    "choiceIds": [
+      "v_xuexiao",
+      "v_qu",
+      "v_ta",
+      "v_beijing"
+    ]
+  },
+  {
+    "id": "ex_ch10_l1_01",
+    "type": "pick_image",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l1",
+    "targetId": "v_xiongmao",
+    "choiceIds": [
+      "v_xiongmao",
+      "v_gou",
+      "v_mao",
+      "v_niao"
+    ]
+  },
+  {
+    "id": "ex_ch10_l1_02",
+    "type": "pick_translation",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l1",
+    "targetId": "v_xihuan",
+    "choiceIds": [
+      "v_xihuan",
+      "v_zhongguocai",
+      "v_gou",
+      "v_mao"
+    ]
+  }
+]

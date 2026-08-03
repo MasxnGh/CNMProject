@@ -1,29 +1,30 @@
 import { useMemo } from "react";
+import "./Sky.css";
 
-/**
- * dujeen-quest-prototype.html .sky/.spark - drifting embers behind
- * everything. Randomized once per mount (not per render), matching the
- * prototype's one-time `for` loop that built 18 fixed-but-randomized spans.
- */
-export default function Sky({ count = 18 }) {
+const SPARK_COUNT = 18;
+
+export default function Sky() {
   const sparks = useMemo(
     () =>
-      Array.from({ length: count }, (_, index) => ({
-        id: index,
-        left: `${Math.random() * 100}%`,
-        duration: `${11 + Math.random() * 13}s`,
-        delay: `${-Math.random() * 20}s`,
+      Array.from({ length: SPARK_COUNT }, () => ({
+        left: Math.random() * 100,
+        duration: 11 + Math.random() * 13,
+        delay: -Math.random() * 20,
       })),
-    [count],
+    [],
   );
 
   return (
-    <div className="ln-sky" aria-hidden="true">
-      {sparks.map((spark) => (
+    <div className="sky" aria-hidden="true">
+      {sparks.map((spark, index) => (
         <div
-          key={spark.id}
-          className="ln-spark"
-          style={{ left: spark.left, animationDuration: spark.duration, animationDelay: spark.delay }}
+          key={index}
+          className="spark"
+          style={{
+            left: `${spark.left}%`,
+            animationDuration: `${spark.duration}s`,
+            animationDelay: `${spark.delay}s`,
+          }}
         />
       ))}
     </div>

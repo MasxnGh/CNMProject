@@ -1,222 +1,159 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import UnlockModal from "../components/game/UnlockModal.jsx";
-import Button from "../components/ui/Button.jsx";
-import Lantern from "../components/ui/Lantern.jsx";
-import Nav from "../components/ui/Nav.jsx";
-import { buildNavItems } from "../components/ui/navItems.js";
-import Sheet from "../components/ui/Sheet.jsx";
-import Sky from "../components/ui/Sky.jsx";
-import units from "../content/units.json";
-import vocabList from "../content/vocab.json";
-import { getLevelById } from "../data/levels.js";
-import {
-  buildCheckpointLevel,
-  getLessonForNode,
-  isCheckpointEligible,
-  isCheckpointAvailableToday,
-  PAY_TO_UNLOCK_COST,
-  payToUnlockLesson,
-} from "../lib/checkpointProgression.js";
+import chapters from "../content/chapters.json";
+import vocab from "../content/vocab.json";
+import { useProgress } from "../lib/progress.js";
 import { playWord } from "../lib/audio.js";
-import { iconForLessonType } from "../lib/nodeProgression.js";
-import { useProgress } from "../lib/ProgressContext.jsx";
-import "../styles/lantern-screens.css";
+import { spendCoins } from "../lib/progressActions.js";
+import Lantern from "../components/ui/Lantern.jsx";
+import Sheet from "../components/ui/Sheet.jsx";
+import Button from "../components/ui/Button.jsx";
+import UnlockModal, { PAY_COST } from "../components/game/UnlockModal.jsx";
+import "./ChapterPath.css";
 
-/** dujeen-quest-prototype.html #path - the rope of lanterns within a single
-    chapter, locked to a 460px center column on desktop with the vocab/stamp
-    panels filling the freed-up side space (grid-template-areas "a rope b"),
-    same as the prototype. Replaces the old ink-wash NodeRoute/
-    LessonStartSheet/UnlockOfferModal combo; the unlock-test/pay-to-unlock
-    logic underneath is unchanged. */
+const ICONS = { learn: "学", practice: "练", review: "考" };
+const UNLOCK_GROUP_SIZE = 3;
+
 export default function ChapterPath() {
   const { chapterId } = useParams();
-  const { progress, setProgress } = useProgress();
   const navigate = useNavigate();
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [unlockOfferNodeId, setUnlockOfferNodeId] = useState(null);
+  const [progress, setProgress] = useProgress();
+  const [replayLesson, setReplayLesson] = useState(null);
+  const [unlockOpen, setUnlockOpen] = useState(false);
 
-  const chapter = units.find((unit) => unit.id === chapterId);
-
-  const nodeEntries = useMemo(() => {
-    if (!chapter) return [];
-    return chapter.lessons.flatMap((lesson) => lesson.nodeIds.map((nodeId) => ({ nodeId })));
-  }, [chapter]);
-
-  const lessonIndexByNodeId = useMemo(() => {
-    const map = new Map();
-    chapter?.lessons.forEach((lesson, lessonIndex) => {
-      lesson.nodeIds.forEach((nodeId) => map.set(nodeId, lessonIndex));
-    });
-    return map;
-  }, [chapter]);
-
-  const vocabForChapter = useMemo(() => {
-    if (!chapter) return [];
-    const lessonIds = new Set(chapter.lessons.map((lesson) => lesson.id));
-    return vocabList.filter((entry) => lessonIds.has(entry.lessonId));
-  }, [chapter]);
+  const chapter = chapters.find((c) => c.id === chapterId);
 
   if (!chapter) {
     return (
-      <div className="lantern-app">
-        <Sky />
-        <main className="ln-chapters" style={{ paddingLeft: "var(--rail)", display: "grid", placeItems: "center", minHeight: "100vh" }}>
-          <p>ไม่พบบทนี้</p>
-          <Button onClick={() => navigate("/chapters")}>กลับหน้าเลือกบท</Button>
-        </main>
+      <div className="wrap">
+        <div className="emptyState">
+          <div className="emptyStateIcon">🏮</div>
+          <h1>ไม่พบบทนี้</h1>
+          <p>ลิงก์อาจพิมพ์ผิดหรือบทนี้ถูกย้ายไปแล้ว กลับไปเลือกบทใหม่ได้เลย</p>
+          <Button variant="primary" onClick={() => navigate("/chapters")}>
+            กลับแผนที่การเดินทาง
+          </Button>
+        </div>
       </div>
     );
   }
 
-  const nodeIds = nodeEntries.map((entry) => entry.nodeId);
-  const clearedCount = nodeIds.filter((nodeId) => progress.completed.includes(nodeId)).length;
+  const chapterVocab = vocab.filter((word) => word.chapterId === chapterId);
 
-  const nodeStatus = (nodeId) => {
-    if (progress.completed.includes(nodeId)) return "done";
-    if (progress.unlocked.includes(nodeId)) return "now";
+  let reachedNow = false;
+  const lessonStates = chapter.lessons.map((lesson) => {
+    if (progress.completedLessons.includes(lesson.id)) return "done";
+    if (!reachedNow) {
+      reachedNow = true;
+      return "now";
+    }
     return "lock";
-  };
+  });
+  const doneCount = lessonStates.filter((state) => state === "done").length;
+  const lockedLessons = chapter.lessons.filter((_, i) => lessonStates[i] === "lock").slice(0, UNLOCK_GROUP_SIZE);
 
-  const handleTapNode = (nodeId, status, eligibleLocked) => {
-    if (status === "lock") {
-      if (eligibleLocked) setUnlockOfferNodeId(nodeId);
+  const handleTap = (lesson, state) => {
+    if (state === "now") {
+      navigate(`/lesson/${lesson.id}`);
       return;
     }
-    setSelectedNode(nodeId);
+    if (state === "done") {
+      setReplayLesson(lesson);
+      return;
+    }
+    setUnlockOpen(true);
   };
 
-  const handleStart = () => {
-    if (selectedNode == null) return;
-    navigate(`/lesson/${selectedNode}`);
+  const startUnlockTest = () => {
+    setUnlockOpen(false);
+    navigate(`/unlock/${lockedLessons[0].id}`, {
+      state: { chapterId, lessonIds: lockedLessons.map((lesson) => lesson.id) },
+    });
   };
 
-  const handleStartTest = () => {
-    if (unlockOfferNodeId == null) return;
-    const info = getLessonForNode(unlockOfferNodeId);
-    if (!info) return;
-    setUnlockOfferNodeId(null);
-    navigate(`/unlock/${info.lesson.id}`);
+  const payForUnlockTest = () => {
+    setProgress((current) => spendCoins(current, PAY_COST));
+    startUnlockTest();
   };
-
-  const handlePayToUnlock = () => {
-    if (unlockOfferNodeId == null) return;
-    const info = getLessonForNode(unlockOfferNodeId);
-    if (!info) return;
-    const next = payToUnlockLesson(progress, info.lesson.id);
-    if (next) setProgress(next);
-    setUnlockOfferNodeId(null);
-  };
-
-  const selectedLevel = selectedNode != null ? getLevelById(selectedNode) : null;
-  const selectedLessonIndex = selectedNode != null ? lessonIndexByNodeId.get(selectedNode) ?? 0 : 0;
-  const unlockOfferInfo = unlockOfferNodeId != null ? getLessonForNode(unlockOfferNodeId) : null;
-  const unlockOfferAvailableToday = unlockOfferInfo ? isCheckpointAvailableToday(progress, unlockOfferInfo.lesson.id) : false;
-  const unlockOfferLevel = unlockOfferInfo ? buildCheckpointLevel(unlockOfferInfo.lesson.id) : null;
-  const unlockOfferLanterns = unlockOfferInfo
-    ? unlockOfferInfo.lesson.nodeIds.map(() => ({ icon: iconForLessonType(unlockOfferInfo.lesson.type), label: unlockOfferInfo.lesson.title }))
-    : [];
 
   return (
-    <div className="lantern-app">
-      <Sky />
-      <main className="ln-chapters" style={{ paddingLeft: "var(--rail)" }}>
-        <div className="ln-top">
-          <button type="button" className="ln-back" onClick={() => navigate("/chapters")} aria-label="กลับหน้าเลือกบท">
-            ‹
-          </button>
-          <div style={{ flex: 1 }}>
-            <div className="ln-h2">{chapter.zh}</div>
-            <div className="ln-h1">{chapter.title}</div>
-          </div>
-          <div className="ln-stat">
-            {clearedCount}/{nodeIds.length}
+    <div className="wrap">
+      <div className="top">
+        <button type="button" className="back" onClick={() => navigate("/chapters")}>
+          ‹
+        </button>
+        <div style={{ flex: 1 }}>
+          <div className="h2">{chapter.titleZh}</div>
+          <div className="h1">{chapter.titleTh}</div>
+        </div>
+        <div className="stat">
+          {doneCount}/{chapter.lessons.length}
+        </div>
+      </div>
+
+      <div className="pathGrid">
+        <div className="rope">
+          {chapter.lessons.map((lesson, index) => (
+            <div key={lesson.id} className={`node ${index % 2 === 0 ? "l" : "r"}`}>
+              <Lantern
+                state={lessonStates[index]}
+                icon={ICONS[lesson.type]}
+                label={lesson.title}
+                onClick={() => handleTap(lesson, lessonStates[index])}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="panel" id="pVocab">
+          <h5>คำศัพท์ในบทนี้</h5>
+          <div className="chips">
+            {chapterVocab.map((word) => (
+              <button key={word.id} type="button" className="chip" onClick={() => playWord(word.id)}>
+                <b>{word.hanzi}</b>
+                <i>{word.pinyin}</i>
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="ln-pathGrid">
-          <div className="ln-rope">
-            {nodeEntries.map(({ nodeId }, index) => {
-              const status = nodeStatus(nodeId);
-              const eligibleLocked = status === "lock" && isCheckpointEligible(progress, nodeId);
-              const interactive = status !== "lock" || eligibleLocked;
-              const level = getLevelById(nodeId);
-              const icon = iconForLessonType(chapter.lessons[lessonIndexByNodeId.get(nodeId) ?? 0]?.type);
-              const statusLabel =
-                status === "done"
-                  ? "ผ่านแล้ว"
-                  : status === "now"
-                    ? "ด่านปัจจุบัน"
-                    : eligibleLocked
-                      ? "ล็อค - ทำแบบทดสอบข้ามด่านได้"
-                      : "ล็อค";
+        <div className="panel" id="pStamp">
+          <h5>ตราประทับที่สะสมได้</h5>
+          <div className="stampRow">
+            {chapter.lessons.map((lesson) => {
+              const collected = progress.stamps.some((stamp) => stamp.lessonId === lesson.id);
               return (
-                <div key={nodeId} className={`ln-node ${index % 2 ? "r" : "l"}`}>
-                  <Lantern
-                    state={status}
-                    icon={icon}
-                    label={chapter.lessons[lessonIndexByNodeId.get(nodeId) ?? 0]?.title ?? level?.title ?? `โหนด ${nodeId}`}
-                    disabled={!interactive}
-                    aria-label={`โหนด ${nodeId} - ${statusLabel}`}
-                    onClick={() => handleTapNode(nodeId, status, eligibleLocked)}
-                  />
+                <div key={lesson.id} className={["sm", !collected && "off"].filter(Boolean).join(" ")}>
+                  {collected ? "过" : "?"}
                 </div>
               );
             })}
           </div>
-
-          <div className="ln-panel ln-panel-vocab">
-            <h5>คำศัพท์ในบทนี้</h5>
-            <div className="ln-chips">
-              {vocabForChapter.map((entry) => (
-                <button key={entry.id} type="button" className="ln-chip" onClick={() => playWord(entry.id)}>
-                  <b>{entry.hanzi}</b>
-                  <i>{entry.pinyin}</i>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="ln-panel ln-panel-stamp">
-            <h5>ตราประทับที่สะสมได้</h5>
-            <div className="ln-stampRow">
-              {nodeIds.map((nodeId) => {
-                const done = progress.completed.includes(nodeId);
-                return (
-                  <div key={nodeId} className={`ln-sm ${done ? "" : "off"}`}>
-                    {done ? "过" : "?"}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </div>
-      </main>
+      </div>
 
-      <Nav items={buildNavItems(navigate)} activeKey="learn" />
-
-      <Sheet open={selectedNode != null} onClose={() => setSelectedNode(null)}>
-        <small style={{ color: "var(--lantern)", fontWeight: 600 }}>
-          {chapter.title} · บทที่ {selectedLessonIndex + 1}/{chapter.lessons.length}
-        </small>
-        <h3>{chapter.lessons[selectedLessonIndex]?.title ?? selectedLevel?.title ?? (selectedNode != null ? `โหนด ${selectedNode}` : "")}</h3>
-        <p>{selectedLevel?.topic ?? ""}</p>
-        <Button onClick={handleStart}>เริ่ม</Button>
-        <Button variant="ghost" onClick={() => setSelectedNode(null)}>
+      <Sheet
+        open={!!replayLesson}
+        onClose={() => setReplayLesson(null)}
+        title="ด่านนี้ผ่านแล้ว"
+        description="เล่นซ้ำได้ แต่จะไม่ได้ตราประทับเพิ่ม"
+      >
+        <Button variant="primary" onClick={() => navigate(`/lesson/${replayLesson.id}`)}>
+          เล่นอีกครั้ง
+        </Button>
+        <Button variant="ghost" onClick={() => setReplayLesson(null)}>
           ยังไม่พร้อม
         </Button>
       </Sheet>
 
       <UnlockModal
-        open={unlockOfferNodeId != null}
-        lanterns={unlockOfferLanterns}
-        questionCount={unlockOfferLevel?.questions.length ?? 0}
-        attemptAvailable={unlockOfferAvailableToday}
-        coins={progress.coins}
-        payCost={PAY_TO_UNLOCK_COST}
-        onStartTest={handleStartTest}
-        onPayToUnlock={handlePayToUnlock}
-        onClose={() => setUnlockOfferNodeId(null)}
+        open={unlockOpen && lockedLessons.length > 0}
+        onClose={() => setUnlockOpen(false)}
+        chapterId={chapterId}
+        lessons={lockedLessons}
+        progress={progress}
+        onStart={startUnlockTest}
+        onPay={payForUnlockTest}
       />
     </div>
   );

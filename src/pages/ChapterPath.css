@@ -1,0 +1,82 @@
+.pathGrid {
+  display: grid;
+  gap: 20px;
+}
+
+.rope {
+  position: relative;
+  padding: 18px 0 24px;
+  grid-area: rope;
+}
+.rope::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 30px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(180deg, var(--night3) 0 9px, transparent 9px 17px);
+}
+
+.node {
+  position: relative;
+  display: flex;
+  margin-bottom: 26px;
+}
+.node.l { justify-content: flex-start; padding-left: 34px; }
+.node.r { justify-content: flex-end; padding-right: 34px; }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  background: var(--night3);
+  border-radius: 11px;
+  padding: 7px 11px;
+  min-width: 44px;
+  min-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  transition: transform .1s;
+}
+.chip:active {
+  transform: translateY(3px);
+}
+.chip b {
+  display: block;
+  font-family: "Noto Serif SC", serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.chip i {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+#pVocab { grid-area: a; }
+#pStamp { grid-area: b; }
+
+@media (min-width: 720px) {
+  .pathGrid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "rope rope" "a b";
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .pathGrid {
+    grid-template-columns: 1fr 460px 1fr;
+    grid-template-areas: "a rope b";
+    gap: 28px;
+    align-items: start;
+  }
+  .panel { position: sticky; top: 32px; }
+}

@@ -1,0 +1,124 @@
+.chipStage {
+  position: relative;
+}
+
+.chipSlotsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.chipSlot {
+  min-width: 56px;
+  min-height: 52px;
+  border-radius: 12px;
+  border: 2px dashed var(--night3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.chipSlot.filled {
+  border-style: solid;
+  border-color: transparent;
+}
+.chipSlot.next {
+  border-color: var(--lantern);
+  box-shadow: 0 0 12px 2px rgba(255, 158, 44, .45);
+}
+.chipSlot.good {
+  border-style: solid;
+  border-color: var(--jade);
+  box-shadow: inset 0 0 0 2px var(--jade);
+}
+.chipSlot.bad {
+  border-style: solid;
+  border-color: var(--seal);
+  box-shadow: inset 0 0 0 2px var(--seal);
+  animation: shakeX .3s;
+}
+
+.chipTrayRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 52px;
+}
+
+.wordChip {
+  background: var(--night2);
+  border-radius: 11px;
+  padding: 10px 14px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 700;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--shadow-card);
+  transition: transform .1s;
+}
+.wordChip:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: none;
+}
+.wordChip:disabled {
+  cursor: default;
+}
+
+.chipFixedToken {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  padding: 10px 4px;
+}
+
+.chipContext {
+  background: var(--night2);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.chipThaiPrompt {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.chipSwitchInput {
+  margin-top: 14px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--paper);
+  text-decoration: underline;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.chipTextInput {
+  width: 100%;
+  background: var(--night2);
+  border: 2px solid var(--night3);
+  border-radius: var(--r);
+  padding: 14px;
+  color: var(--paper);
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+.chipTextInput:focus {
+  outline: none;
+  border-color: var(--lantern);
+}

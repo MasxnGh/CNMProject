@@ -1,154 +1,267 @@
-import { KeyRound } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import StampBurst from "../components/game/StampBurst.jsx";
-import Button from "../components/ui/Button.jsx";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import chapters from "../content/chapters.json";
+import { useProgress } from "../lib/progress.js";
+import { completeLesson, completeUnlockTest, recordUnlockTestUsed } from "../lib/progressActions.js";
+import { playCoin, playUnlock } from "../lib/sfx.js";
+import Stamp from "../components/ui/Stamp.jsx";
 import Lantern from "../components/ui/Lantern.jsx";
-import PageTransition from "../components/ui/PageTransition.jsx";
-import Sky from "../components/ui/Sky.jsx";
-import { playSfx } from "../lib/audio.js";
-import "../styles/result.css";
+import Button from "../components/ui/Button.jsx";
+import "./Result.css";
 
-const COIN_TICKS = 24;
-const KEY_BREAK_MS = 500;
-const ROPE_FLOW_MS = 500;
+const LESSON_ICONS = { learn: "学", practice: "练", review: "考" };
 
-const formatElapsed = (ms) => {
-  const totalSeconds = Math.round(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return minutes > 0 ? `${minutes} นาที ${seconds} วินาที` : `${seconds} วินาที`;
-};
+function chapterForLesson(lessonId) {
+  return chapters.find((chapter) => chapter.lessons.some((lesson) => lesson.id === lessonId));
+}
 
-/**
- * dujeen-quest-gameplay-prompts.md Prompt B #3 (regular lesson) and Prompt
- * E #4 (unlock-test pass/fail) share this page via `isUnlockTest`/`failed`,
- * rather than a separate result screen for each. Presentational only: the
- * caller persists progress (this new engine isn't wired into a real
- * progress store yet - deferred since Prompt B's content-wiring gap).
- *
- * chapterLanterns: optional [{ icon, label }] for every node in the
- *   chapter, shown lighting up one by one when this was the last node -
- *   for isUnlockTest, preceded by a key-break + light-flows-along-the-rope
- *   flourish and an "unlock" sound per lantern instead of silent lighting.
- * failed/weakLessonLabel/onPracticeWeak: the unlock-test's fail branch -
- *   a distinct, encouraging layout, not a recolored pass screen.
- */
-export default function Result({
-  correctCount,
-  total,
-  comboMax,
-  elapsedMs,
-  coinsEarned,
-  chapterLanterns,
-  isUnlockTest = false,
-  failed = false,
-  weakLessonLabel,
-  onPracticeWeak,
-  onBackToMap,
-  onNextLesson,
-}) {
-  const [coinDisplay, setCoinDisplay] = useState(0);
+function findLesson(lessonId) {
+  for (const chapter of chapters) {
+    const lesson = chapter.lessons.find((l) => l.id === lessonId);
+    if (lesson) return lesson;
+  }
+  return null;
+}
+
+function findLessonTitle(lessonId) {
+  return findLesson(lessonId)?.title || "";
+}
+
+function formatElapsed(ms) {
+  const totalSeconds = Math.round((ms || 0) / 1000);
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function weakestLesson(wrongByLesson, lessonIds) {
+  let weakest = lessonIds[0];
+  let max = -1;
+  lessonIds.forEach((id) => {
+    const count = wrongByLesson[id] || 0;
+    if (count > max) {
+      max = count;
+      weakest = id;
+    }
+  });
+  return { lessonId: weakest, count: Math.max(max, 0) };
+}
+
+function useCoinCountUp(coinsGained) {
+  const [displayCoins, setDisplayCoins] = useState(0);
+
+  useEffect(() => {
+    if (!coinsGained) return undefined;
+    const totalTicks = Math.min(coinsGained, 15);
+    const perTick = coinsGained / totalTicks;
+    let tick = 0;
+    const interval = setInterval(() => {
+      tick += 1;
+      setDisplayCoins(Math.round(perTick * tick));
+      playCoin();
+      if (tick >= totalTicks) clearInterval(interval);
+    }, 60);
+    return () => clearInterval(interval);
+  }, [coinsGained]);
+
+  return displayCoins;
+}
+
+function CascadingLanterns({ lessons }) {
   const [litCount, setLitCount] = useState(0);
-  const isLastInChapter = Boolean(chapterLanterns?.length);
-  const stampTrigger = useMemo(() => Date.now(), []);
 
   useEffect(() => {
-    if (failed || coinsEarned <= 0) return undefined;
-    const step = Math.max(1, Math.ceil(coinsEarned / COIN_TICKS));
-    let current = 0;
-    const interval = window.setInterval(() => {
-      current = Math.min(coinsEarned, current + step);
-      setCoinDisplay(current);
-      playSfx("coin");
-      if (current >= coinsEarned) window.clearInterval(interval);
-    }, 45);
-    return () => window.clearInterval(interval);
-  }, [coinsEarned, failed]);
+    if (litCount >= lessons.length) return undefined;
+    const timer = setTimeout(() => {
+      playUnlock();
+      setLitCount((c) => c + 1);
+    }, 200 * (litCount + 1));
+    return () => clearTimeout(timer);
+  }, [litCount, lessons.length]);
+
+  return (
+    <div className="cascadeRow">
+      {lessons.map((lesson, i) => (
+        <Lantern
+          key={lesson.id}
+          state={i < litCount ? "done" : "lock"}
+          icon={LESSON_ICONS[lesson.type] || "学"}
+          label={lesson.title}
+        />
+      ))}
+    </div>
+  );
+}
+
+function KeyShatter() {
+  return (
+    <div className="keyShatter" aria-hidden="true">
+      <span className="keyMain">🔑</span>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className={`keyShard shard${i}`}>
+          🔑
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export default function Result() {
+  const { lessonId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [progress, setProgress] = useProgress();
+  const state = location.state;
+
+  const [settled, setSettled] = useState(false);
+  const [coinsGained, setCoinsGained] = useState(0);
+  const [chapterJustCompleted, setChapterJustCompleted] = useState(false);
 
   useEffect(() => {
-    if (failed || !isLastInChapter) return undefined;
-    const startDelay = isUnlockTest ? KEY_BREAK_MS + ROPE_FLOW_MS : 600;
-    const timers = chapterLanterns.map((_, index) =>
-      window.setTimeout(() => {
-        setLitCount((count) => Math.max(count, index + 1));
-        playSfx(isUnlockTest ? "unlock" : "stamp");
-      }, startDelay + index * 200),
-    );
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    if (!state || settled) return;
+    setSettled(true);
+
+    if (state.mode === "lesson") {
+      const next = completeLesson(progress, state.lessonId);
+      setCoinsGained(next.coins - progress.coins);
+      const chapter = chapterForLesson(state.lessonId);
+      setChapterJustCompleted(
+        !!chapter && next.completedChapters.includes(chapter.id) && !progress.completedChapters.includes(chapter.id),
+      );
+      setProgress(next);
+    } else if (state.mode === "unlock-pass") {
+      const withUsed = recordUnlockTestUsed(progress, state.chapterId);
+      const next = completeUnlockTest(withUsed, state.chapterId, state.lessonIds);
+      setCoinsGained(next.coins - progress.coins);
+      setProgress(next);
+    } else if (state.mode === "unlock-fail") {
+      setProgress(recordUnlockTestUsed(progress, state.chapterId));
+    }
+    // Runs once on mount only - progress/setProgress intentionally excluded.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLastInChapter, failed, isUnlockTest]);
+  }, [state, settled]);
 
-  if (failed) {
+  const displayCoins = useCoinCountUp(coinsGained);
+
+  if (!state) {
     return (
-      <PageTransition className="lantern-app">
-        <Sky />
-        <main className="result-shell">
-          <h1 className="result-title result-title-fail">ยังไม่ผ่านครั้งนี้</h1>
-          <p className="result-fail-message">
-            {weakLessonLabel
-              ? `ด่าน "${weakLessonLabel}" ยังตอบผิดหลายข้อ ลองเล่นด่านนั้นก่อนนะ`
-              : "ลองทบทวนคำศัพท์แล้วมาใหม่ได้เสมอนะ"}
-          </p>
-          <div className="result-actions">
-            <Button onClick={onBackToMap} variant="ghost">
-              กลับไปที่แผนที่
-            </Button>
-            {onPracticeWeak ? <Button onClick={onPracticeWeak}>ไปเล่นด่านที่อ่อน</Button> : null}
-          </div>
-        </main>
-      </PageTransition>
+      <div className="wrap">
+        <div className="emptyState">
+          <div className="emptyStateIcon">🏮</div>
+          <h1>ไม่พบผลลัพธ์ของด่านนี้</h1>
+          <p>หน้านี้ใช้ดูผลหลังเล่นจบด่านเท่านั้น กลับไปเลือกด่านแล้วเล่นใหม่ได้เลย</p>
+          <Button variant="primary" onClick={() => navigate("/chapters")}>
+            กลับแผนที่
+          </Button>
+        </div>
+      </div>
     );
   }
 
-  return (
-    <PageTransition className="lantern-app">
-      <Sky />
-      <main className="result-shell">
-        <StampBurst trigger={stampTrigger} />
+  if (state.mode === "unlock-fail") {
+    const chapter = chapters.find((c) => c.id === state.chapterId);
+    const { lessonId: weakId, count } = weakestLesson(state.wrongByLesson || {}, state.lessonIds);
+    const weakTitle = findLessonTitle(weakId);
 
-        {isUnlockTest ? (
-          <div className="result-key-break" aria-hidden="true">
-            <KeyRound size={32} />
-          </div>
-        ) : null}
-
-        <h1 className="result-title">{isUnlockTest ? "จุดโคมสามดวงสำเร็จ!" : "ภารกิจสำเร็จ"}</h1>
-
-        <div className="result-stats">
-          <div>
-            <strong>{correctCount}/{total}</strong>
-            <span>ตอบถูก</span>
-          </div>
-          <div>
-            <strong>x{comboMax}</strong>
-            <span>คอมโบสูงสุด</span>
-          </div>
-          <div>
-            <strong>{formatElapsed(elapsedMs)}</strong>
-            <span>เวลาที่ใช้</span>
-          </div>
+    return (
+      <div className="wrap">
+        <div className="resultHead">
+          <h1>ยังไม่ผ่านบททดสอบรวม</h1>
+          <p>ไม่เป็นไร ลองทวนจุดที่ยังไม่แม่นแล้วค่อยกลับมาใหม่</p>
         </div>
-
-        <div className="result-coins">
-          🏮 <strong>{coinDisplay}</strong>
+        <div className="weakBox">
+          {count > 0 ? `ด่าน${weakTitle}ยังตอบผิด ${count} ข้อ ลองเล่นด่านนั้นก่อน` : "ลองทวนคำศัพท์ในด่านที่ข้ามอีกครั้ง"}
         </div>
-
-        {isLastInChapter ? (
-          <div className="result-chapter-lanterns">
-            {isUnlockTest ? <div className="result-rope-flow" aria-hidden="true" /> : null}
-            {chapterLanterns.map((lantern, index) => (
-              <Lantern key={lantern.label} state={index < litCount ? "done" : "lock"} icon={lantern.icon} label={lantern.label} />
-            ))}
-          </div>
-        ) : null}
-
-        <div className="result-actions">
-          <Button onClick={onBackToMap} variant="ghost">
-            กลับไปที่แผนที่
+        <div className="resultActions">
+          <Button variant="primary" onClick={() => navigate(`/lesson/${weakId}`)}>
+            ไปด่านที่อ่อนที่สุด
           </Button>
-          {onNextLesson ? <Button onClick={onNextLesson}>เล่นด่านต่อไป</Button> : null}
+          <Button variant="ghost" onClick={() => navigate(chapter ? `/chapter/${chapter.id}` : "/chapters")}>
+            กลับแผนที่
+          </Button>
         </div>
-      </main>
-    </PageTransition>
+      </div>
+    );
+  }
+
+  if (state.mode === "unlock-pass") {
+    const chapter = chapters.find((c) => c.id === state.chapterId);
+    const lessons = state.lessonIds.map((id) => findLesson(id) || { id, title: "" });
+
+    return (
+      <div className="wrap">
+        <KeyShatter />
+        <div className="resultHead">
+          <h1>ปลดล็อคสำเร็จ!</h1>
+          <p>จุดโคมสามดวงรวดเดียว ข้ามไปต่อได้เลย</p>
+        </div>
+        <div className="flowRope" aria-hidden="true" />
+        <CascadingLanterns lessons={lessons} />
+        <div className="badgeCard">
+          <div className="seal">过</div>
+          <h3>ตราพิเศษ: จุดโคมสามดวง</h3>
+        </div>
+        {coinsGained > 0 && <div className="coinPop">🪙 +{displayCoins}</div>}
+        <div className="resultActions">
+          <Button variant="primary" onClick={() => navigate(chapter ? `/chapter/${chapter.id}` : "/chapters")}>
+            กลับแผนที่
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // mode === "lesson"
+  const chapter = chapterForLesson(state.lessonId);
+  const lessonIndex = chapter ? chapter.lessons.findIndex((l) => l.id === state.lessonId) : -1;
+  const nextLesson = chapter && lessonIndex >= 0 ? chapter.lessons[lessonIndex + 1] : null;
+
+  return (
+    <div className="wrap">
+      <Stamp show={settled} />
+      <div className="resultHead">
+        <h1>จบด่านแล้ว!</h1>
+        {chapter && <p>{chapter.titleTh}</p>}
+      </div>
+
+      {coinsGained > 0 && <div className="coinPop">🪙 +{displayCoins}</div>}
+
+      <div className="statRow">
+        <div className="statCell">
+          <b>
+            {state.correctCount}/{state.totalCount}
+          </b>
+          <span>ตอบถูก</span>
+        </div>
+        <div className="statCell">
+          <b>x{state.maxCombo}</b>
+          <span>คอมโบสูงสุด</span>
+        </div>
+        <div className="statCell">
+          <b>{formatElapsed(state.elapsedMs)}</b>
+          <span>เวลาที่ใช้</span>
+        </div>
+      </div>
+
+      {chapterJustCompleted && chapter && (
+        <>
+          <div className="resultHead">
+            <p>จบทั้งบทแล้ว!</p>
+          </div>
+          <CascadingLanterns lessons={chapter.lessons} />
+        </>
+      )}
+
+      <div className="resultActions">
+        {nextLesson && (
+          <Button variant="primary" onClick={() => navigate(`/lesson/${nextLesson.id}`)}>
+            เล่นด่านต่อไป
+          </Button>
+        )}
+        <Button variant="ghost" onClick={() => navigate(chapter ? `/chapter/${chapter.id}` : "/chapters")}>
+          กลับแผนที่
+        </Button>
+      </div>
+    </div>
   );
 }

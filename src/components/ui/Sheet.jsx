@@ -1,21 +1,17 @@
-/**
- * dujeen-quest-prototype.html .dim/.sheet - slides up from the bottom on
- * mobile, becomes a centered modal at tablet width and up (see
- * lantern-ui.css's @media(min-width:720px) override on .dim/.sheet).
- * Clicking the dim backdrop itself (not the sheet) closes it.
- */
-export default function Sheet({ open, onClose, children }) {
+import "./Sheet.css";
+
+export default function Sheet({ open, onClose, title, description, children }) {
   if (!open) return null;
 
+  const handleBackdropClick = (event) => {
+    if (event.target === event.currentTarget) onClose?.();
+  };
+
   return (
-    <div
-      className="ln-dim on"
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose?.();
-      }}
-    >
-      <div className="ln-sheet" role="dialog" aria-modal="true">
+    <div className="dim" onClick={handleBackdropClick}>
+      <div className="sheet">
+        {title && <h3>{title}</h3>}
+        {description && <p>{description}</p>}
         {children}
       </div>
     </div>

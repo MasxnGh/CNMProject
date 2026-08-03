@@ -1,0 +1,45 @@
+.dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 10, 22, .72);
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 430px;
+  background: var(--night2);
+  border-radius: 26px 26px 0 0;
+  padding: 24px 20px 30px;
+  animation: up .28s cubic-bezier(.2, .9, .3, 1);
+}
+
+@keyframes up {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+.sheet h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.sheet p {
+  font-size: 14px;
+  color: var(--dim);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.sheet .btn {
+  margin-bottom: 9px;
+}
+
+@media (min-width: 720px) {
+  .dim { align-items: center; }
+  .sheet { border-radius: 26px; max-width: 520px; margin-bottom: 40px; }
+}

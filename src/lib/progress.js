@@ -1,98 +1,102 @@
-const STORAGE_KEY = "dujeen-quest-progress-v2";
+import { createContext, createElement, useContext, useEffect, useState } from "react";
+import vocabData from "../content/vocab.json";
+import sentenceData from "../content/sentences.json";
+import { todayISO, addDays } from "./srs.js";
 
-/* A separate localStorage key from the legacy `dujeen-quest-progress` used
-   by the existing App/gameLogic/storage.js stack (still mounted at
-   /classic) - the two progress systems must not read or write each other's
-   data while both exist side by side during the phased rollout. */
-export const defaultProgress = {
-  version: 1,
-  completed: [],
-  unlocked: [2],
-  coins: 0,
-  xp: 0,
-  level: 1,
-  badges: [],
-  levelStars: {},
-  totalStars: 0,
-  streak: { count: 0, lastDate: null },
-  unlockTestUsed: {},
-  clearedCheckpoints: [],
-  mistakes: [],
-  dailyRewardClaimedDate: null,
-  soundEnabled: true,
-  reducedMotion: false,
-  skipMissionIntro: false,
-};
+const STORAGE_KEY = "dujeen_progress";
+const VERSION = 2;
 
-/** Local calendar date as "YYYY-MM-DD", not UTC - streaks/daily rewards run on the player's day. */
-export const todayKey = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-};
-
-const daysBetween = (fromKey, toKey) => {
-  const from = new Date(`${fromKey}T00:00:00`);
-  const to = new Date(`${toKey}T00:00:00`);
-  return Math.round((to - from) / 86400000);
-};
-
-/** Continues, resets, or starts the streak depending on how long it's been since the player last showed up. */
-export const touchStreak = (progress, today = todayKey()) => {
-  const lastDate = progress.streak?.lastDate ?? null;
-  if (lastDate === today) return progress;
-
-  const gap = lastDate ? daysBetween(lastDate, today) : null;
-  const count = gap === 1 ? (progress.streak?.count ?? 0) + 1 : 1;
-
-  return { ...progress, streak: { count, lastDate: today } };
-};
-
-export const dailyRewardCoins = (streakCount) => Math.min(10 + 5 * Math.max(0, streakCount - 1), 60);
-
-export const isDailyRewardClaimed = (progress, today = todayKey()) => progress.dailyRewardClaimedDate === today;
-
-/** Returns null if already claimed today, otherwise the updated progress plus the amount awarded. */
-export const claimDailyReward = (progress, today = todayKey()) => {
-  if (isDailyRewardClaimed(progress, today)) return null;
-  const amount = dailyRewardCoins(progress.streak?.count ?? 1);
+export function defaultProgress() {
   return {
-    progress: { ...progress, coins: progress.coins + amount, dailyRewardClaimedDate: today },
-    amount,
+    v: VERSION,
+    completedLessons: [],
+    completedChapters: [],
+    unlockedLessons: [],
+    coins: 0,
+    stamps: [],
+    streak: { count: 0, lastDate: "" },
+    unlockTestUsed: {},
+    mistakes: [],
+    srs: {},
+    // Last exercise type used per word during a review session, so the next
+    // review session can avoid repeating it. Keyed separately from srs
+    // because srs.review() rebuilds its entry from scratch each time and
+    // would otherwise drop this.
+    reviewLastType: {},
+    // Counters behind the write_character badges - see src/lib/writeProgress.js.
+    writeStats: { totalCompletions: 0, perfectStreak: 0, noGuideCompletions: 0 },
+    // Saved drawings (SVG paths, not scores) for the copybook page in
+    // Profile - capped at 60 entries, see recordWriteCompletion.
+    copybook: [],
   };
-};
+}
 
-const migrate = (raw) => {
-  if (!raw || typeof raw !== "object") return { ...defaultProgress };
-  // Only one shape exists so far (version 1) - unknown/future versions fall back
-  // to defaults merged with whatever fields still make sense, rather than
-  // discarding the save outright.
-  return {
-    ...defaultProgress,
-    ...raw,
-    version: 1,
-    streak: { ...defaultProgress.streak, ...raw.streak },
-    unlockTestUsed: raw.unlockTestUsed ?? {},
-    clearedCheckpoints: raw.clearedCheckpoints ?? [],
-  };
-};
+// v1 had no srs field at all. Backfill it from what we can already infer:
+// words the player got wrong start due today (they need it), words from
+// lessons they'd already finished cleanly start a few days out.
+function buildSrsFromV1(raw) {
+  const today = todayISO();
+  const mistakeIds = new Set(raw.mistakes || []);
+  const completedLessons = new Set(raw.completedLessons || []);
+  const srs = {};
 
-export const loadProgress = () => {
-  if (typeof window === "undefined") return { ...defaultProgress };
+  mistakeIds.forEach((id) => {
+    srs[id] = { ease: 2.3, interval: 0, due: today, reps: 0, lapses: 1, lastSeen: today };
+  });
+
+  [...vocabData, ...sentenceData]
+    .filter((entry) => completedLessons.has(entry.lessonId) && !mistakeIds.has(entry.id))
+    .forEach((entry) => {
+      srs[entry.id] = { ease: 2.5, interval: 3, due: addDays(today, 3), reps: 2, lapses: 0, lastSeen: today };
+    });
+
+  return srs;
+}
+
+// Any stored shape that isn't v1 or v2 gets folded onto a fresh default
+// object instead of crashing - this is the seam future version bumps hang
+// their actual field-by-field migration off of.
+function migrate(raw) {
+  if (!raw || typeof raw !== "object") return defaultProgress();
+  if (raw.v !== 1 && raw.v !== 2) return defaultProgress();
+
+  if (raw.v === 2) return { ...defaultProgress(), ...raw, srs: { ...raw.srs } };
+
+  // v === 1: keep every existing field (including mistakes, untouched, in
+  // case this needs to be rolled back) and layer srs on top.
+  return { ...defaultProgress(), ...raw, v: VERSION, srs: buildSrsFromV1(raw) };
+}
+
+function readInitial() {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { ...defaultProgress };
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultProgress();
     return migrate(JSON.parse(raw));
   } catch {
-    return { ...defaultProgress };
+    return defaultProgress();
   }
-};
+}
 
-export const saveProgress = (progress) => {
-  if (typeof window === "undefined") return progress;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  } catch {
-    // localStorage unavailable (private mode, quota) - state still works in-memory for the session
-  }
-  return progress;
-};
+const ProgressContext = createContext(null);
+
+// Plain .js (no JSX) so this stays out of the project's .jsx-only-for-markup
+// convention - createElement stands in for the <Provider> tag.
+export function ProgressProvider({ children }) {
+  const [progress, setProgress] = useState(readInitial);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    } catch {
+      // localStorage unavailable (private mode, quota) - progress just won't persist.
+    }
+  }, [progress]);
+
+  return createElement(ProgressContext.Provider, { value: [progress, setProgress] }, children);
+}
+
+export function useProgress() {
+  const ctx = useContext(ProgressContext);
+  if (!ctx) throw new Error("useProgress must be used within a ProgressProvider");
+  return ctx;
+}

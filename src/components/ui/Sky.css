@@ -1,0 +1,25 @@
+.sky {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lantern);
+  opacity: .5;
+  box-shadow: 0 0 12px 3px rgba(255, 158, 44, .55);
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  0% { transform: translateY(110vh) scale(.6); opacity: 0; }
+  12% { opacity: .6; }
+  88% { opacity: .5; }
+  100% { transform: translateY(-12vh) scale(1.1); opacity: 0; }
+}
