@@ -4,11 +4,28 @@
     "hanzi": "你好！",
     "pinyin": "Nǐ hǎo!",
     "th": "สวัสดี",
-    "lessonId": "ch1_l1",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
     "audio": "/audio/s_ni_hao.mp3",
+    "audioSlow": "/audio/s_ni_hao_slow.mp3",
     "tokens": [
       "v_ni",
       "v_hao"
+    ]
+  },
+  {
+    "id": "s_ni_hao_ma",
+    "hanzi": "你好吗？",
+    "pinyin": "Nǐ hǎo ma?",
+    "th": "คุณสบายดีไหม",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "audio": "/audio/s_ni_hao_ma.mp3",
+    "audioSlow": "/audio/s_ni_hao_ma_slow.mp3",
+    "tokens": [
+      "v_ni",
+      "v_hao",
+      "v_ma2"
     ]
   },
   {
@@ -16,8 +33,10 @@
     "hanzi": "我叫小明。",
     "pinyin": "Wǒ jiào Xiǎomíng.",
     "th": "ฉันชื่อเสี่ยวหมิง",
-    "lessonId": "ch1_l1",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
     "audio": "/audio/s_wo_jiao_xiaoming.mp3",
+    "audioSlow": "/audio/s_wo_jiao_xiaoming_slow.mp3",
     "tokens": [
       "v_wo",
       "v_jiao",
@@ -25,56 +44,35 @@
     ]
   },
   {
-    "id": "s_jintian_wo_he2_cha",
-    "hanzi": "今天我喝茶。",
-    "pinyin": "Jīntiān wǒ hē chá.",
-    "th": "วันนี้ฉันดื่มชา",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/s_jintian_wo_he2_cha.mp3",
+    "id": "s_ni_jiao_shenme_mingzi",
+    "hanzi": "你叫什么名字？",
+    "pinyin": "Nǐ jiào shénme míngzi?",
+    "th": "คุณชื่ออะไร",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/s_ni_jiao_shenme_mingzi.mp3",
+    "audioSlow": "/audio/s_ni_jiao_shenme_mingzi_slow.mp3",
     "tokens": [
-      "v_jintian",
-      "v_wo",
-      "v_he2",
-      "v_cha"
+      "v_ni",
+      "v_jiao",
+      "v_shenme",
+      "v_mingzi"
     ]
   },
   {
-    "id": "s_wo_shi2_xuesheng",
-    "hanzi": "我是学生。",
-    "pinyin": "Wǒ shì xuéshēng.",
-    "th": "ฉันเป็นนักเรียน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/s_wo_shi2_xuesheng.mp3",
+    "id": "s_hen_gaoxing_renshi_ni",
+    "hanzi": "很高兴认识你。",
+    "pinyin": "Hěn gāoxìng rènshi nǐ.",
+    "th": "ยินดีที่ได้รู้จัก",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "audio": "/audio/s_hen_gaoxing_renshi_ni.mp3",
+    "audioSlow": "/audio/s_hen_gaoxing_renshi_ni_slow.mp3",
     "tokens": [
-      "v_wo",
-      "v_shi2",
-      "v_xuesheng"
-    ]
-  },
-  {
-    "id": "s_ta_qu_xuexiao",
-    "hanzi": "他去学校。",
-    "pinyin": "Tā qù xuéxiào.",
-    "th": "เขาไปโรงเรียน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/s_ta_qu_xuexiao.mp3",
-    "tokens": [
-      "v_ta",
-      "v_qu",
-      "v_xuexiao"
-    ]
-  },
-  {
-    "id": "s_wo_xihuan_zhongguocai",
-    "hanzi": "我喜欢中国菜。",
-    "pinyin": "Wǒ xǐhuān Zhōngguó cài.",
-    "th": "ฉันชอบอาหารจีน",
-    "lessonId": "ch13_l1",
-    "audio": "/audio/s_wo_xihuan_zhongguocai.mp3",
-    "tokens": [
-      "v_wo",
-      "v_xihuan",
-      "v_zhongguocai"
+      "v_hen",
+      "v_gaoxing",
+      "v_renshi",
+      "v_ni"
     ]
   },
   {
@@ -82,8 +80,10 @@
     "hanzi": "我是泰国人。",
     "pinyin": "Wǒ shì Tàiguórén.",
     "th": "ฉันเป็นคนไทย",
-    "lessonId": "ch4_l1",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
     "audio": "/audio/s_wo_shi2_taiguoren.mp3",
+    "audioSlow": "/audio/s_wo_shi2_taiguoren_slow.mp3",
     "tokens": [
       "v_wo",
       "v_shi2",
@@ -95,8 +95,10 @@
     "hanzi": "我说汉语。",
     "pinyin": "Wǒ shuō Hànyǔ.",
     "th": "ฉันพูดภาษาจีน",
-    "lessonId": "ch4_l1",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
     "audio": "/audio/s_wo_shuo_hanyu.mp3",
+    "audioSlow": "/audio/s_wo_shuo_hanyu_slow.mp3",
     "tokens": [
       "v_wo",
       "v_shuo",
@@ -108,8 +110,10 @@
     "hanzi": "你会说英语吗？",
     "pinyin": "Nǐ huì shuō Yīngyǔ ma?",
     "th": "คุณพูดภาษาอังกฤษได้ไหม",
-    "lessonId": "ch4_l2",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l2",
     "audio": "/audio/s_ni_hui_shuo_yingyu_ma2.mp3",
+    "audioSlow": "/audio/s_ni_hui_shuo_yingyu_ma2_slow.mp3",
     "tokens": [
       "v_ni",
       "v_hui",
@@ -123,8 +127,10 @@
     "hanzi": "我是中国人。",
     "pinyin": "Wǒ shì Zhōngguórén.",
     "th": "ฉันเป็นคนจีน",
-    "lessonId": "ch4_l3",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l3",
     "audio": "/audio/s_wo_shi2_zhongguoren.mp3",
+    "audioSlow": "/audio/s_wo_shi2_zhongguoren_slow.mp3",
     "tokens": [
       "v_wo",
       "v_shi2",
@@ -136,13 +142,138 @@
     "hanzi": "我会说英语。",
     "pinyin": "Wǒ huì shuō Yīngyǔ.",
     "th": "ฉันพูดภาษาอังกฤษได้",
-    "lessonId": "ch4_l4",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l4",
     "audio": "/audio/s_wo_hui_shuo_yingyu.mp3",
+    "audioSlow": "/audio/s_wo_hui_shuo_yingyu_slow.mp3",
     "tokens": [
       "v_wo",
       "v_hui",
       "v_shuo",
       "v_yingyu"
+    ]
+  },
+  {
+    "id": "s_wo_shi2_xuesheng",
+    "hanzi": "我是学生。",
+    "pinyin": "Wǒ shì xuéshēng.",
+    "th": "ฉันเป็นนักเรียน",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l1",
+    "audio": "/audio/s_wo_shi2_xuesheng.mp3",
+    "audioSlow": "/audio/s_wo_shi2_xuesheng_slow.mp3",
+    "tokens": [
+      "v_wo",
+      "v_shi2",
+      "v_xuesheng"
+    ]
+  },
+  {
+    "id": "s_zhe_shi_wo_de_shu",
+    "hanzi": "这是我的书。",
+    "pinyin": "Zhè shì wǒ de shū.",
+    "th": "นี่คือหนังสือของฉัน",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/s_zhe_shi_wo_de_shu.mp3",
+    "audioSlow": "/audio/s_zhe_shi_wo_de_shu_slow.mp3",
+    "tokens": [
+      "v_zhe",
+      "v_shi2",
+      "v_wo",
+      "v_de",
+      "v_shu"
+    ]
+  },
+  {
+    "id": "s_jintian_wo_he2_cha",
+    "hanzi": "今天我喝茶。",
+    "pinyin": "Jīntiān wǒ hē chá.",
+    "th": "วันนี้ฉันดื่มชา",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l1",
+    "audio": "/audio/s_jintian_wo_he2_cha.mp3",
+    "audioSlow": "/audio/s_jintian_wo_he2_cha_slow.mp3",
+    "tokens": [
+      "v_jintian",
+      "v_wo",
+      "v_he2",
+      "v_cha"
+    ]
+  },
+  {
+    "id": "s_ta_qu_xuexiao",
+    "hanzi": "他去学校。",
+    "pinyin": "Tā qù xuéxiào.",
+    "th": "เขาไปโรงเรียน",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/s_ta_qu_xuexiao.mp3",
+    "audioSlow": "/audio/s_ta_qu_xuexiao_slow.mp3",
+    "tokens": [
+      "v_ta",
+      "v_qu",
+      "v_xuexiao"
+    ]
+  },
+  {
+    "id": "s_wo_yao_qu_beijing",
+    "hanzi": "我要去北京。",
+    "pinyin": "Wǒ yào qù Běijīng.",
+    "th": "ฉันต้องการไปปักกิ่ง",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/s_wo_yao_qu_beijing.mp3",
+    "audioSlow": "/audio/s_wo_yao_qu_beijing_slow.mp3",
+    "tokens": [
+      "v_wo",
+      "v_yao",
+      "v_qu",
+      "v_beijing"
+    ]
+  },
+  {
+    "id": "s_wo_xihuan_zhongguocai",
+    "hanzi": "我喜欢中国菜。",
+    "pinyin": "Wǒ xǐhuān Zhōngguó cài.",
+    "th": "ฉันชอบอาหารจีน",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l1",
+    "audio": "/audio/s_wo_xihuan_zhongguocai.mp3",
+    "audioSlow": "/audio/s_wo_xihuan_zhongguocai_slow.mp3",
+    "tokens": [
+      "v_wo",
+      "v_xihuan",
+      "v_zhongguocai"
+    ]
+  },
+  {
+    "id": "s_duoshao_qian",
+    "hanzi": "多少钱？",
+    "pinyin": "Duōshǎo qián?",
+    "th": "ราคาเท่าไหร่",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/s_duoshao_qian.mp3",
+    "audioSlow": "/audio/s_duoshao_qian_slow.mp3",
+    "tokens": [
+      "v_duoshao",
+      "v_qian"
+    ]
+  },
+  {
+    "id": "s_wo_yao_zhege",
+    "hanzi": "我要这个。",
+    "pinyin": "Wǒ yào zhège.",
+    "th": "ฉันเอาอันนี้",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/s_wo_yao_zhege.mp3",
+    "audioSlow": "/audio/s_wo_yao_zhege_slow.mp3",
+    "tokens": [
+      "v_wo",
+      "v_yao",
+      "v_zhege"
     ]
   }
 ]

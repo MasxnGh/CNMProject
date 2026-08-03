@@ -1,63 +1,101 @@
-import { Volume2 } from "lucide-react";
-import { useEffect, useMemo } from "react";
-import ChipSlots from "../game/ChipSlots.jsx";
+import { useEffect, useMemo, useRef } from "react";
+import { sentenceById, vocabById, pickDecoyWords, playEntry } from "./content.js";
+import { useChipArrangement } from "../game/useChipArrangement.js";
+import { useChipFlip } from "../game/useChipFlip.js";
 import ChipTray from "../game/ChipTray.jsx";
-import useChipArrangement from "../game/useChipArrangement.js";
-import useChipReveal from "../game/useChipReveal.js";
-import Button from "../ui/Button.jsx";
-import { speakThai } from "../../lib/audio.js";
+import "../game/chips.css";
 
-/**
- * dujeen-quest-gameplay-prompts.md Prompt C - "เติมคำให้ประโยคสมบูรณ์".
- * exercise: { sentence, tokens: vocabEntry[] (full sequence),
- *   blankIndices: number[] (which positions the player fills),
- *   poolChips: vocabEntry[] (the blanked tokens + distractors) }
- */
-export default function CompleteTranslation({ exercise, onAnswer }) {
-  const { sentence, tokens, blankIndices, poolChips } = exercise;
-  const correctIds = tokens.map((token) => token.id);
-  const fixedSlots = useMemo(() => {
-    const map = {};
-    tokens.forEach((token, index) => {
-      if (!blankIndices.includes(index)) map[index] = token;
-    });
-    return map;
+export default function CompleteTranslation({ exercise, selected, checked, onPick, checkButton }) {
+  const sentence = sentenceById.get(exercise.targetSentenceId);
+  const correctId = sentence.tokens[exercise.blankIndex];
+
+  const decoyIds = useMemo(
+    () => pickDecoyWords([correctId], 3, exercise.chapterId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens]);
+    [exercise.id],
+  );
 
-  const { placement, trayChips, place, remove, removeLast, isFull, nextEmptyIndex } = useChipArrangement(poolChips, tokens.length, fixedSlots);
-  const { revealState, locked, submit } = useChipReveal({ placement, correctIds, sentenceAudioId: sentence.id, onAnswer });
+  const arrangement = useChipArrangement([correctId], decoyIds, 1);
+  const containerRef = useRef(null);
+  const { capture } = useChipFlip(containerRef);
 
   useEffect(() => {
-    const onKeyDown = (event) => {
-      if (event.key === "Backspace" && !locked) {
-        event.preventDefault();
-        removeLast();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [locked, removeLast]);
+    onPick(arrangement.isComplete ? arrangement.slots : null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arrangement.slots.join(",")]);
+
+  const isCorrect = checked && selected?.[0] === correctId;
+  const slotStatus = checked ? (isCorrect ? "good" : "bad") : null;
+
+  const handleTrayClick = (chipId) => {
+    if (checked) return;
+    capture(chipId);
+    arrangement.placeChip(chipId);
+    playEntry(chipId);
+  };
+
+  const handleSlotClick = () => {
+    if (checked) return;
+    const chipId = arrangement.slots[0];
+    if (!chipId) return;
+    capture(chipId);
+    arrangement.returnChip(0);
+    playEntry(chipId);
+  };
+
+  const placedChip = arrangement.slots[0] ? vocabById.get(arrangement.slots[0]) : null;
+  const slotClassName = ["chipSlot", placedChip && "filled", !placedChip && "next", slotStatus]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className="exercise">
-      <div className="exercise-prompt-area">
-        <p className="exercise-instruction">เติมคำให้ประโยคสมบูรณ์</p>
-        <div className="exercise-prompt">
-          <button type="button" className="exercise-speaker" onClick={() => speakThai(sentence.th)} aria-label="ฟังเสียงภาษาไทย">
-            <Volume2 size={26} />
+    <>
+      <div className="quizL">
+        <div className="ask">เติมคำที่หายไปให้ประโยคสมบูรณ์</div>
+        <div className="word">
+          <button type="button" className="spk" onClick={() => playEntry(sentence.id)}>
+            🔊
           </button>
-          <p className="exercise-thai-sentence">{sentence.th}</p>
         </div>
       </div>
-
-      <div className="exercise-options-area">
-        <ChipSlots placement={placement} fixedSlots={fixedSlots} nextEmptyIndex={nextEmptyIndex} onRemove={remove} disabled={locked} revealState={revealState} />
-        <ChipTray chips={trayChips} onPick={place} disabled={locked} />
-        <Button onClick={submit} disabled={!isFull || locked}>
-          ตรวจคำตอบ
-        </Button>
+      <div>
+        <div className="chipContext">{sentence.th}</div>
+        <div className="chipStage" ref={containerRef}>
+          <div className="chipSlotsRow">
+            {sentence.tokens.map((tokenId, i) => {
+              if (i !== exercise.blankIndex) {
+                return (
+                  <span key={`${tokenId}-${i}`} className="chipFixedToken">
+                    {vocabById.get(tokenId)?.hanzi}
+                  </span>
+                );
+              }
+              return (
+                <div key="blank" className={slotClassName}>
+                  {placedChip && (
+                    <button
+                      type="button"
+                      className="wordChip"
+                      data-chip-id={placedChip.id}
+                      onClick={handleSlotClick}
+                      disabled={checked}
+                    >
+                      {placedChip.hanzi}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <ChipTray tray={arrangement.tray} chipRegistry={vocabById} onChipClick={handleTrayClick} disabled={checked} />
+        </div>
+        {checked && !isCorrect && (
+          <div className="chipContext">
+            เฉลย: <b>{vocabById.get(correctId)?.hanzi}</b> <i>({vocabById.get(correctId)?.pinyin})</i>
+          </div>
+        )}
+        {checkButton}
       </div>
-    </div>
+    </>
   );
 }

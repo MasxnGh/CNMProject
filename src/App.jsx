@@ -1,242 +1,45 @@
-import { AnimatePresence } from "framer-motion";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import GamePage from "./components/GamePage";
-import HomePage from "./components/HomePage";
-import LoadingScreen from "./components/LoadingScreen";
-import MapPage from "./components/MapPage";
-import Modal from "./components/Modal";
-import ResultPage from "./components/ResultPage";
-import SoundToggle from "./components/SoundToggle";
-import StageSelectPage from "./components/StageSelectPage";
-import { getLevelById } from "./data/levels";
-import { buildCheckpointLevel, completeCheckpoint } from "./utils/checkpoint";
-import { completeLevel, getCurrentLevelId, isLevelUnlocked } from "./utils/gameLogic";
-import { setAudioEnabled } from "./utils/speech";
-import { defaultProgress, loadProgress, resetProgress, saveProgress } from "./utils/storage";
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import LoadingLantern from "./components/ui/LoadingLantern.jsx";
+import StartScreen from "./pages/StartScreen.jsx";
+import ChapterSelect from "./pages/ChapterSelect.jsx";
+import ChapterPath from "./pages/ChapterPath.jsx";
+import Result from "./pages/Result.jsx";
+import Profile from "./pages/Profile.jsx";
 
-const SOUND_KEY = "dujeen-quest-sound";
-const loadAchievementPage = () => import("./components/AchievementPage");
-const loadKnowledgeLibrary = () => import("./components/KnowledgeLibrary");
-const loadVictoryPage = () => import("./components/VictoryPage");
-const AchievementPage = lazy(loadAchievementPage);
-const KnowledgeLibrary = lazy(loadKnowledgeLibrary);
-const VictoryPage = lazy(loadVictoryPage);
+// The exercise-playing pages pull in every question-type component,
+// FeedbackBar, ComboBadge, Framer Motion, hanzi-writer, etc. - split that
+// weight into its own chunk so picking a chapter never has to download it.
+const Lesson = lazy(() => import("./pages/Lesson.jsx"));
+const UnlockTest = lazy(() => import("./pages/UnlockTest.jsx"));
+const Review = lazy(() => import("./pages/Review.jsx"));
+const FreeWrite = lazy(() => import("./pages/FreeWrite.jsx"));
+const Styleguide = lazy(() => import("./pages/Styleguide.jsx"));
 
-function SceneFallback() {
-  return <div className="scene dq-scene v2-scene grid place-items-center" aria-live="polite">กำลังเปิดหน้าผจญภัย...</div>;
+function LazyPage({ Component }) {
+  return (
+    <Suspense fallback={<LoadingLantern />}>
+      <Component />
+    </Suspense>
+  );
 }
 
 export default function App() {
-  const initialProgress = useMemo(() => loadProgress(), []);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState("home");
-  const [progress, setProgress] = useState(initialProgress);
-  const [setId, setSetId] = useState(1);
-  const [activeLevelId, setActiveLevelId] = useState(initialProgress.lastPlayedLevel ?? 1);
-  const [result, setResult] = useState(null);
-  const [checkpoint, setCheckpoint] = useState(null);
-  const [resetOpen, setResetOpen] = useState(false);
-  const [soundOn, setSoundOn] = useState(() => {
-    if (typeof window === "undefined") return true;
-    const legacySound = window.localStorage.getItem(SOUND_KEY);
-    if (legacySound) return legacySound !== "off";
-    return initialProgress.soundEnabled ?? true;
-  });
-
-  const activeLevel = useMemo(() => getLevelById(activeLevelId) ?? getLevelById(1), [activeLevelId]);
-
-  const updateProgress = useCallback((nextProgress) => {
-    const saved = saveProgress(nextProgress);
-    setProgress(saved);
-    return saved;
-  }, []);
-
-  useEffect(() => {
-    setAudioEnabled(soundOn);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(SOUND_KEY, soundOn ? "on" : "off");
-    }
-  }, [soundOn]);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    document.documentElement.dataset.reducedMotion = progress.reducedMotion ? "true" : "false";
-  }, [progress.reducedMotion]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    }
-  }, [page]);
-
-  const goHome = () => setPage("home");
-
-  const startAdventure = () => {
-    const current = getLevelById(getCurrentLevelId(progress));
-    setSetId(current?.setId ?? 1);
-    setPage("stages");
-  };
-
-  const openSet = (nextSetId) => {
-    setSetId(nextSetId);
-    setPage("map");
-  };
-
-  /* The checkpoint plays through the normal mission engine: it is a synthesised
-     level, so nothing about GamePage has to know it exists. */
-  const playCheckpoint = (targetSetId) => {
-    const built = buildCheckpointLevel(progress, targetSetId);
-    if (!built) return;
-    setCheckpoint(built);
-    setPage("game");
-  };
-
-  const playLevel = (levelId) => {
-    if (!isLevelUnlocked(progress, levelId)) return;
-    setCheckpoint(null);
-    setActiveLevelId(levelId);
-    updateProgress({ ...progress, lastPlayedLevel: levelId });
-    setPage("game");
-  };
-
-  const finishLevel = (level, correctCount, meta = {}) => {
-    if (level.isCheckpoint) {
-      const outcome = completeCheckpoint(progress, level, {
-        correct: correctCount,
-        hintsUsed: meta.hintsUsed ?? 0,
-        score: meta.score ?? 0,
-      });
-      const savedProgress = updateProgress(outcome.progress);
-      setResult({ ...outcome, progress: savedProgress });
-      setPage("result");
-      return;
-    }
-
-    const outcome = completeLevel(progress, level, {
-      correct: correctCount,
-      hintsUsed: meta.hintsUsed ?? 0,
-      score: meta.score ?? 0,
-      missionMetrics: meta.missionMetrics ?? {},
-    });
-    const saved = updateProgress(outcome.progress);
-    setResult({
-      ...outcome,
-      level,
-      correct: correctCount,
-      total: level.questions.length,
-      progress: saved,
-    });
-    setPage("result");
-  };
-
-  const nextLevel = () => {
-    const next = getLevelById(activeLevelId + 1);
-    if (!next) {
-      setPage("victory");
-      return;
-    }
-    setSetId(next.setId);
-    playLevel(next.id);
-  };
-
-  const retryLevel = () => {
-    setPage("game");
-  };
-
-  const leaveResult = () => {
-    setCheckpoint(null);
-    setPage("map");
-  };
-
-  const confirmReset = () => {
-    resetProgress();
-    setProgress(defaultProgress);
-    setSetId(1);
-    setActiveLevelId(1);
-    setResult(null);
-    setResetOpen(false);
-    setPage("home");
-  };
-
-  const toggleSound = () => {
-    setSoundOn((current) => {
-      const next = !current;
-      setProgress((currentProgress) => saveProgress({ ...currentProgress, soundEnabled: next }));
-      return next;
-    });
-  };
-
-  const toggleReducedMotion = () => {
-    setProgress((current) => saveProgress({ ...current, reducedMotion: !current.reducedMotion }));
-  };
-
-  const setSkipMissionIntro = (skipMissionIntro) => {
-    setProgress((current) => saveProgress({ ...current, skipMissionIntro }));
-  };
-
   return (
-    <div className="classic-app">
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
-        ) : page === "home" ? (
-          <HomePage
-            key="home"
-            progress={progress}
-            onStart={startAdventure}
-            onLibrary={() => setPage("library")}
-            onBadges={() => setPage("badges")}
-            onReset={() => setResetOpen(true)}
-          />
-        ) : page === "stages" ? (
-          <StageSelectPage key="stages" progress={progress} onOpenSet={openSet} onHome={goHome} onPlayCheckpoint={playCheckpoint} />
-        ) : page === "map" ? (
-          <MapPage key={`map-${setId}`} setId={setId} progress={progress} onBack={() => setPage("stages")} onPlayLevel={playLevel} onPlayCheckpoint={playCheckpoint} />
-        ) : page === "game" ? (
-          <GamePage
-            key={`game-${checkpoint ? checkpoint.id : activeLevelId}`}
-            level={checkpoint ?? activeLevel}
-            progress={progress}
-            onFinish={finishLevel}
-            onMap={() => setPage("map")}
-            soundOn={soundOn}
-            reducedMotion={progress.reducedMotion}
-            skipMissionIntro={progress.skipMissionIntro}
-            onToggleSound={toggleSound}
-            onToggleReducedMotion={toggleReducedMotion}
-            onToggleSkipIntro={setSkipMissionIntro}
-          />
-        ) : page === "result" && result ? (
-          <ResultPage
-            key={`result-${result.level.id}-${result.correct}-${result.stars}`}
-            result={result}
-            progress={progress}
-            onNext={result.level.isCheckpoint ? leaveResult : nextLevel}
-            onMap={leaveResult}
-            onRetry={retryLevel}
-            onVictory={() => setPage("victory")}
-          />
-        ) : page === "library" ? (
-          <Suspense fallback={<SceneFallback />}><KnowledgeLibrary key="library" progress={progress} onBack={goHome} /></Suspense>
-        ) : page === "badges" ? (
-          <Suspense fallback={<SceneFallback />}><AchievementPage key="badges" progress={progress} onBack={goHome} /></Suspense>
-        ) : (
-          <Suspense fallback={<SceneFallback />}><VictoryPage key="victory" progress={progress} onHome={goHome} onReset={() => setResetOpen(true)} /></Suspense>
-        )}
-      </AnimatePresence>
-      {/* The game page has its own sound control in the mission console; the floating
-          toggle would otherwise overlap answer buttons and matching cards. */}
-      {!loading && page !== "game" ? <SoundToggle enabled={soundOn} onToggle={toggleSound} /> : null}
-      <Modal
-        open={resetOpen}
-        title="ต้องการเริ่มผจญภัยใหม่หรือไม่?"
-        confirmText="ยืนยัน"
-        cancelText="ยกเลิก"
-        onCancel={() => setResetOpen(false)}
-        onConfirm={confirmReset}
-      >
-        ระบบจะล้างด่านที่ปลดล็อก ดาว XP เหรียญ Badge และคลังความรู้ในเครื่องนี้ แล้วกลับไปเริ่มที่ด่าน 1
-      </Modal>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<StartScreen />} />
+        <Route path="/chapters" element={<ChapterSelect />} />
+        <Route path="/chapter/:chapterId" element={<ChapterPath />} />
+        <Route path="/lesson/:lessonId" element={<LazyPage Component={Lesson} />} />
+        <Route path="/unlock/:lessonId" element={<LazyPage Component={UnlockTest} />} />
+        <Route path="/review" element={<LazyPage Component={Review} />} />
+        <Route path="/write" element={<LazyPage Component={FreeWrite} />} />
+        <Route path="/result/:lessonId" element={<Result />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/styleguide" element={<LazyPage Component={Styleguide} />} />
+      </Route>
+    </Routes>
   );
 }

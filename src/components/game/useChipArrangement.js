@@ -1,55 +1,67 @@
 import { useMemo, useState } from "react";
-import { playSfx, playWord } from "../../lib/audio.js";
+
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 /**
- * dujeen-quest-gameplay-prompts.md Prompt C - shared placement state behind
- * ChipTray/ChipSlots for all 3 word-order exercise types.
- *
- * poolChips: [{ id, hanzi, pinyin }] - every chip available to place,
- *   already shuffled by the caller (tray order stays fixed regardless of
- *   placement, so a removed chip flies back to the same spot it came from)
- * fixedSlots: optional { [index]: chip } for CompleteTranslation's
- *   already-there words - these slots are never empty and never editable
+ * Drives a tray-of-chips -> row-of-slots arrangement. `slotCount` chips must
+ * be placed to complete it; `chipIds` (correct + decoys) start shuffled in
+ * the tray. Chips that return to the tray reappear at their original
+ * shuffled position rather than jumping to the end.
  */
-export default function useChipArrangement(poolChips, slotCount, fixedSlots = {}) {
-  const [placement, setPlacement] = useState(() => Array.from({ length: slotCount }, (_, index) => fixedSlots[index] ?? null));
+export function useChipArrangement(correctIds, decoyIds, slotCount) {
+  const dedupeKey = `${correctIds.join(",")}|${(decoyIds || []).join(",")}`;
+  const chipIds = useMemo(
+    () => shuffle([...correctIds, ...(decoyIds || [])]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dedupeKey],
+  );
 
-  const placedIds = useMemo(() => new Set(placement.filter(Boolean).map((chip) => chip.id)), [placement]);
-  const trayChips = poolChips.filter((chip) => !placedIds.has(chip.id));
-  const nextEmptyIndex = placement.findIndex((chip, index) => !chip && !fixedSlots[index]);
-  const isFull = nextEmptyIndex === -1;
+  const [slots, setSlots] = useState(() => Array(slotCount).fill(null));
 
-  const place = (chip) => {
-    if (nextEmptyIndex === -1) return;
-    setPlacement((current) => {
-      const next = [...current];
-      next[nextEmptyIndex] = chip;
+  const placedSet = new Set(slots.filter(Boolean));
+  const tray = chipIds.filter((id) => !placedSet.has(id));
+  const nextSlotIndex = slots.findIndex((s) => s === null);
+  const isComplete = nextSlotIndex === -1;
+
+  const placeChip = (chipId) => {
+    if (nextSlotIndex === -1 || placedSet.has(chipId)) return;
+    setSlots((prev) => {
+      const idx = prev.findIndex((s) => s === null);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = chipId;
       return next;
     });
-    playWord(chip.id);
-    playSfx("tap");
   };
 
-  const remove = (index) => {
-    const chip = placement[index];
-    if (fixedSlots[index] || !chip) return;
-    setPlacement((current) => {
-      const next = [...current];
-      next[index] = null;
+  const returnChip = (slotIndex) => {
+    setSlots((prev) => {
+      if (!prev[slotIndex]) return prev;
+      const next = [...prev];
+      next[slotIndex] = null;
       return next;
     });
-    playWord(chip.id);
-    playSfx("tap");
   };
 
   const removeLast = () => {
-    for (let index = placement.length - 1; index >= 0; index -= 1) {
-      if (placement[index] && !fixedSlots[index]) {
-        remove(index);
-        return;
+    setSlots((prev) => {
+      for (let i = prev.length - 1; i >= 0; i -= 1) {
+        if (prev[i]) {
+          const next = [...prev];
+          next[i] = null;
+          return next;
+        }
       }
-    }
+      return prev;
+    });
   };
 
-  return { placement, trayChips, place, remove, removeLast, isFull, nextEmptyIndex };
+  return { chipIds, slots, tray, nextSlotIndex, isComplete, placeChip, returnChip, removeLast };
 }

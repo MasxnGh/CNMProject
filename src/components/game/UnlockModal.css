@@ -1,0 +1,13 @@
+.unlockLamps {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.unlockNote {
+  font-size: 13px;
+  color: var(--dim);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}

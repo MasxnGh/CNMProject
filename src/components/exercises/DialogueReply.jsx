@@ -1,109 +1,110 @@
-import { Turtle, Volume2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import Button from "../ui/Button.jsx";
-import { playSentence } from "../../lib/audio.js";
-import "../../styles/game-dialogue.css";
+import { useEffect } from "react";
+import { resolveEntry, playEntry } from "./content.js";
+import ChoiceGrid from "./ChoiceGrid.jsx";
+import "../game/chat.css";
 
-/**
- * dujeen-quest-gameplay-prompts.md Prompt D - "เลือกคำตอบให้ถูกบริบท",
- * shown as a chat screen.
- * exercise: { question: sentenceEntry, options: [{ id, hanzi, pinyin, th, correct, reason? }] }
- */
-export default function DialogueReply({ exercise, onAnswer }) {
-  const { question, options } = exercise;
-  const [selected, setSelected] = useState(null);
-  const [locked, setLocked] = useState(false);
-  const [revealed, setRevealed] = useState(false);
-  const [outcome, setOutcome] = useState(null);
-  const chosenOption = options.find((option) => option.id === selected);
+export default function DialogueReply({ exercise, selected, checked, onPick, checkButton }) {
+  const promptId = exercise.promptId || exercise.promptSentenceId;
+  const prompt = resolveEntry(promptId);
+  const choices = exercise.choiceIds.map(resolveEntry);
+  const correctId = exercise.correctId;
+  const isCorrect = checked && selected === correctId;
+  const chosenEntry = selected ? resolveEntry(selected) : null;
+  const correctEntry = resolveEntry(correctId);
 
   useEffect(() => {
-    playSentence(question.id);
+    playEntry(promptId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [exercise.id]);
 
-  const pick = (option) => {
-    if (locked) return;
-    setSelected(option.id);
-    playSentence(option.id);
+  useEffect(() => {
+    if (!checked || !isCorrect) return undefined;
+    playEntry(promptId);
+    const timer = setTimeout(() => playEntry(selected), 1400);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checked, isCorrect]);
+
+  const handlePick = (id) => {
+    if (checked) return;
+    playEntry(id);
+    onPick(id);
   };
 
-  const submit = () => {
-    if (!selected || locked) return;
-    setLocked(true);
-    const isCorrect = chosenOption.correct;
-    setOutcome(isCorrect ? "correct" : "wrong");
-    setRevealed(true);
-
-    if (isCorrect) {
-      window.setTimeout(() => {
-        playSentence(question.id);
-        window.setTimeout(() => playSentence(chosenOption.id), 1000);
-      }, 400);
-      window.setTimeout(() => onAnswer(true), 2200);
-    } else {
-      window.setTimeout(() => onAnswer(false), 900);
-    }
-  };
+  const playerClass = [
+    "chatBubble",
+    "player",
+    chosenEntry && "filled",
+    checked && isCorrect && "correct",
+    checked && !isCorrect && "shake",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className="exercise">
-      <div className="exercise-prompt-area">
-        <div className="dialogue-bubble dialogue-bubble-left">
-          <div className="dialogue-bubble-controls">
-            <button type="button" onClick={() => playSentence(question.id)} aria-label="ฟังเสียงปกติ">
-              <Volume2 size={18} />
+    <>
+      <div className="quizL">
+        <div className="ask">เลือกคำตอบที่เหมาะสม</div>
+      </div>
+      <div>
+        <div className="chatBubbleRow left">
+          <div className="chatBubble prompt">
+            <button type="button" className="spk chatSpk" onClick={() => playEntry(promptId)}>
+              🔊
             </button>
-            <button type="button" onClick={() => playSentence(question.id, { slow: true })} aria-label="ฟังเสียงช้า">
-              <Turtle size={18} />
+            <button type="button" className="spk chatSpk" onClick={() => playEntry(promptId, { slow: true })}>
+              🐢
             </button>
-          </div>
-          <div>
-            <div className="dialogue-pinyin">{question.pinyin}</div>
-            <strong className="dialogue-hanzi">{question.hanzi}</strong>
-          </div>
-        </div>
-
-        <div className={`dialogue-bubble dialogue-bubble-right ${revealed ? "is-filled" : ""} ${outcome === "wrong" ? "is-wrong" : ""}`}>
-          {revealed && chosenOption ? (
             <div>
-              <div className="dialogue-pinyin">{chosenOption.pinyin}</div>
-              <strong className="dialogue-hanzi">{chosenOption.hanzi}</strong>
+              <div className="py">{prompt.pinyin}</div>
+              <div className="hz chatHz">{prompt.hanzi}</div>
             </div>
-          ) : null}
-        </div>
-
-        {outcome === "wrong" ? (
-          <div className="dialogue-reason">
-            <p>
-              คำตอบที่ถูกคือ <strong>{options.find((option) => option.correct).hanzi}</strong>
-            </p>
-            {chosenOption.reason ? <p>{chosenOption.reason}</p> : null}
           </div>
-        ) : null}
-      </div>
-
-      <div className="exercise-options-area">
-        <div className="exercise-option-list">
-          {options.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              className={`exercise-option-row exercise-option-hanzi ${selected === option.id ? "is-selected" : ""}`}
-              onClick={() => pick(option)}
-              disabled={locked}
-              aria-pressed={selected === option.id}
-            >
-              <strong>{option.hanzi}</strong>
-              <small>{option.pinyin} · {option.th}</small>
-            </button>
-          ))}
         </div>
 
-        <Button onClick={submit} disabled={!selected || locked}>
-          ตรวจคำตอบ
-        </Button>
+        <div className="chatBubbleRow right">
+          <div className={playerClass}>
+            {chosenEntry ? (
+              <div>
+                <div className="py">{chosenEntry.pinyin}</div>
+                <div className="hz chatHz">{chosenEntry.hanzi}</div>
+              </div>
+            ) : (
+              <span>เลือกคำตอบด้านล่าง</span>
+            )}
+          </div>
+        </div>
+
+        <ChoiceGrid
+          choices={choices}
+          selected={selected}
+          correctId={correctId}
+          checked={checked}
+          onPick={handlePick}
+          optClassName="optDialogue"
+          renderChoice={(entry) => (
+            <>
+              <div className="hz optDialogueHz">{entry.hanzi}</div>
+              <div className="py">{entry.pinyin}</div>
+              <div className="optDialogueTh">{entry.th}</div>
+            </>
+          )}
+        />
+
+        {checked && !isCorrect && (
+          <div className="chipContext">
+            คำตอบที่ถูกต้องคือ <b>{correctEntry.hanzi}</b> ({correctEntry.pinyin}) — {correctEntry.th}
+            {chosenEntry && (
+              <>
+                <br />
+                &ldquo;{chosenEntry.hanzi}&rdquo; ({chosenEntry.th}) ยังไม่ใช่คำตอบของประโยคนี้
+              </>
+            )}
+          </div>
+        )}
+
+        {checkButton}
       </div>
-    </div>
+    </>
   );
 }

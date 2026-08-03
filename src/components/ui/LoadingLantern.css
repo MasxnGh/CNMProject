@@ -1,0 +1,23 @@
+.loadingLantern {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.loadingLantern .glow {
+  font-size: 48px;
+  display: inline-block;
+  animation: loadingSpin 2.2s linear infinite;
+}
+
+@keyframes loadingSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loadingLantern p {
+  color: var(--dim);
+  font-size: 14px;
+}

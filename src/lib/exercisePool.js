@@ -1,35 +1,96 @@
-import { getLevelById } from "../data/levels.js";
+import exercisesData from "../content/exercises.json";
+
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+// Reorders greedily so no type repeats more than twice in a row. Falls back
+// to allowing a repeat only when every remaining item is the blocked type.
+function enforceTypeSpread(items) {
+  const remaining = [...items];
+  const result = [];
+
+  while (remaining.length > 0) {
+    const lastTwo = result.slice(-2);
+    const blockedType = lastTwo.length === 2 && lastTwo[0].type === lastTwo[1].type ? lastTwo[0].type : null;
+
+    let pickIndex = remaining.findIndex((item) => item.type !== blockedType);
+    if (pickIndex === -1) pickIndex = 0;
+
+    result.push(remaining.splice(pickIndex, 1)[0]);
+  }
+
+  return result;
+}
+
+// write_character is the slowest exercise to answer (drawing takes real
+// time), so it gets a stricter rule than enforceTypeSpread's generic
+// "no more than 2 in a row": never even 2 in a row. Swaps the second of any
+// adjacent pair forward to the next slot that isn't already that type.
+function enforceNoAdjacentType(items, type) {
+  const result = [...items];
+  for (let i = 1; i < result.length; i += 1) {
+    if (result[i].type !== type || result[i - 1].type !== type) continue;
+    const swapIndex = result.findIndex((item, j) => j > i && item.type !== type);
+    if (swapIndex !== -1) {
+      [result[i], result[swapIndex]] = [result[swapIndex], result[i]];
+    }
+  }
+  return result;
+}
+
+// Keeps at most `max` items of `type` (already-shuffled order, so this is
+// effectively a random pick of which ones survive), dropping the rest.
+function capType(items, type, max) {
+  let count = 0;
+  return items.filter((item) => {
+    if (item.type !== type) return true;
+    count += 1;
+    return count <= max;
+  });
+}
 
 /**
- * Samples a question pool across several nodes, interleaved so the test
- * moves between nodes instead of marching through one, and spread across
- * mission types within each node before repeating. Shared by the unlock-test
- * (Phase 4) - normal single-node lessons don't need sampling since they
- * already play every question in their own node directly.
+ * Builds an exercise queue drawn evenly across `lessonIds` (round-robin, so
+ * no single lesson clusters at the front) with no exercise type repeating
+ * more than twice consecutively. A normal single-lesson quiz is just the
+ * lessonIds=[oneId] case of the same algorithm - `count` can be omitted to
+ * use everything available.
+ *
+ * @param {string[]} lessonIds
+ * @param {number|null} [count]
+ * @param {{allowedTypes?: Set<string>}} [options]
  */
-const spreadByType = (questions, perNode) => {
-  const byType = new Map();
-  questions.forEach((question) => {
-    if (!byType.has(question.type)) byType.set(question.type, []);
-    byType.get(question.type).push(question);
-  });
-  // one of each type first, so a node contributes variety before repeats
-  const spread = [...byType.values()].flatMap((group) => group.slice(0, 1));
-  const rest = questions.filter((question) => !spread.includes(question));
-  return [...spread, ...rest].slice(0, perNode);
-};
+export function buildPool(lessonIds, count, { allowedTypes } = {}) {
+  const candidates = exercisesData.filter(
+    (exercise) => lessonIds.includes(exercise.lessonId) && (!allowedTypes || allowedTypes.has(exercise.type)),
+  );
 
-export const buildQuestionPool = (nodeIds, { perNode = 5, max = 15 } = {}) => {
-  const perNodeQuestions = nodeIds.map((nodeId) => {
-    const level = getLevelById(nodeId);
-    return level ? spreadByType(level.questions, perNode) : [];
+  const byLesson = new Map(lessonIds.map((id) => [id, []]));
+  candidates.forEach((exercise) => {
+    byLesson.get(exercise.lessonId)?.push(exercise);
   });
+  byLesson.forEach((list, id) => byLesson.set(id, capType(shuffle(list), "write_character", 2)));
 
-  const questions = [];
-  for (let round = 0; round < perNode; round += 1) {
-    perNodeQuestions.forEach((group) => {
-      if (group[round]) questions.push(group[round]);
-    });
+  const roundRobin = [];
+  let hasMore = true;
+  while (hasMore) {
+    hasMore = false;
+    for (const id of lessonIds) {
+      const list = byLesson.get(id);
+      if (list && list.length > 0) {
+        roundRobin.push(list.shift());
+        hasMore = true;
+      }
+    }
   }
-  return questions.slice(0, max);
-};
+
+  const balanced = enforceNoAdjacentType(enforceTypeSpread(roundRobin), "write_character");
+  const total = count == null ? balanced.length : Math.min(count, balanced.length);
+  return balanced.slice(0, total);
+}

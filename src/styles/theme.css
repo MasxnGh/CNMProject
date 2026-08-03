@@ -1,7 +1,5 @@
-/* Lifted verbatim from dujeen-quest-prototype.html - this is the source of
-   truth for the "lantern district" visual identity. Do not tweak these
-   values without checking the prototype first; if it looks wrong, the
-   prototype is right and something else is the bug. */
+/* Design tokens and global base — values copied verbatim from design/prototype.html */
+
 :root {
   --night: #0E1428;
   --night2: #1A2340;
@@ -10,47 +8,110 @@
   --lantern-dk: #B5610A;
   --seal: #E23B2E;
   --seal-dk: #96190F;
-  /* --jade/--paper are prefixed (unlike the rest of this block) because
-     index.css already defines bare --jade/--paper for /classic (its
-     pre-dq-refactor color system, still load-bearing there) and, being
-     loaded after this file, would silently win the cascade and leak
-     classic's colors into the lantern district otherwise. */
-  --ln-jade: #35D6A4;
+  --jade: #35D6A4;
   --jade-dk: #127A59;
-  --ln-paper: #F4EAD6;
+  --paper: #F4EAD6;
   --dim: #7C88AE;
+  /* Deep gold — distinct from --lantern's orange, used only for the unlock
+     -test progress bar so it reads as a different, higher-stakes mode. */
+  --gold: #C9A227;
+  --gold-dk: #8F6F14;
+
+  /* One-off shades from design/prototype.html — gradient stops and state
+     colors that aren't part of the 11-color named palette above, but still
+     must not be hardcoded anywhere outside this file. */
+  --shadow-card: #101838;
+  --shadow-disabled: #121A32;
+  --btn-ink: #3A1D00;
+  --lock-glass: #1E2846;
+  --lock-trim: #4A2A24;
+  --lock-icon: #46557E;
+  --done-glass-start: #7BF0CB;
+  --done-glass-end: #189B72;
+  --done-icon: #0A4234;
+  --done-label: #9DE9CE;
+  --now-glass-start: #FFCE86;
+  --now-glass-end: #D0740F;
+  --now-icon: #66330A;
+  --seal-text: #FFE3DE;
+  --seal-badge-text: #FFD9D2;
+  --wrong-accent: #FF8878;
+  --rail-bg: #0A1024;
+  --progress-highlight: #FFD08A;
+  --gold-highlight: #E8CE7A;
+  --opt-sel-bg: #2A2F1E;
+  --opt-good-bg: #12332A;
+  --opt-bad-bg: #33161A;
+  --hero-lantern-start: #FFC470;
+  --hero-lantern-end: #D9741A;
+  --hero-trim: #8E2B1E;
+  --hero-glyph: #7A1F13;
+  --stamp-off-bg: #141C36;
+  --stamp-off-text: #2E3A5E;
+
   --r: 18px;
   --rail: 0px;
   --pad: 20px;
 }
 
-/* Tablet: 720 - 1079px */
 @media (min-width: 720px) {
-  :root {
-    --pad: 32px;
-  }
+  :root { --pad: 32px; }
 }
 
-/* Desktop: >= 1080px */
 @media (min-width: 1080px) {
-  :root {
-    --rail: 104px;
-    --pad: 40px;
-  }
+  :root { --rail: 104px; --pad: 40px; }
 }
 
-/* Prototype sets these on `body` directly, but /classic's own screens
-   inherit their font from `body { font-family: var(--dq-face-ui) }` in
-   index.css - overriding body globally here would silently change every
-   /classic screen's typeface too. Scoped to the lantern-district app shell
-   instead; every new screen under this redesign root gets it via
-   inheritance exactly like the prototype's <body>/#app did. */
-.lantern-app {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
   font-family: "Kanit", sans-serif;
   font-weight: 300;
-  color: var(--ln-paper);
+  background: var(--night);
+  color: var(--paper);
+  min-height: 100vh;
+  /* Thai text must break at word boundaries, never mid-word. */
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+#app {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
   background: radial-gradient(120% 55% at 50% 0%, #1D2748 0%, var(--night) 62%);
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  padding-left: var(--rail);
+}
+
+/* Shared hover states — grouped here (not in each component's own CSS file)
+   so import order can't accidentally put a component's :active rule before
+   its :hover rule; theme.css is always the first stylesheet loaded. Held
+   presses must sink, never lift, so :active always overrides :hover. */
+@media (hover: hover) {
+  .btn:not([disabled]):hover { filter: brightness(1.08); }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 9px 0 var(--shadow-card); }
+  .lamp:hover .glass { filter: brightness(1.18); }
+  .opt:hover { border-color: var(--night3); }
+  .rail a:hover, .rail button:hover { color: var(--paper); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

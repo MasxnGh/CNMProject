@@ -1,51 +1,46 @@
-import Button from "../ui/Button.jsx";
-import Lantern from "../ui/Lantern.jsx";
 import Sheet from "../ui/Sheet.jsx";
-import "../../styles/game-unlock-modal.css";
+import Lantern from "../ui/Lantern.jsx";
+import Button from "../ui/Button.jsx";
+import { todayLocal } from "../../lib/progressActions.js";
+import "./UnlockModal.css";
 
-/**
- * dujeen-quest-gameplay-prompts.md Prompt E #1 - tapping an unlit-but-
- * eligible lantern on the chapter path opens this. Presentational only
- * (like Result.jsx): the caller supplies already-computed progress state
- * rather than this component reaching into any particular progress store,
- * so it isn't coupled to either the old checkpointProgression.js model or
- * whatever eventually powers the new engine's content.
- *
- * lanterns: [{ icon, label }] - the (still unlit) nodes being offered.
- * questionCount: how many questions the combined test draws - real lessons
- * are rarely exactly 3 nodes/15 questions like the prototype's static demo
- * text, so both the heading and the copy scale with lanterns.length/
- * questionCount instead of hardcoding "three"/"15".
- */
-export default function UnlockModal({ open, lanterns, questionCount, attemptAvailable, coins, payCost, onStartTest, onPayToUnlock, onClose }) {
-  const canPay = coins >= payCost;
-  const coinsShort = Math.max(0, payCost - coins);
-  const count = lanterns?.length ?? 0;
+const DAILY_LIMIT = 1;
+export const PAY_COST = 50;
+
+export default function UnlockModal({ open, onClose, chapterId, lessons, progress, onStart, onPay }) {
+  const usedToday = progress.unlockTestUsed[chapterId] === todayLocal();
+  const attemptsLeft = usedToday ? 0 : DAILY_LIMIT;
+  const canPay = progress.coins >= PAY_COST;
+  const coinsShort = PAY_COST - progress.coins;
 
   return (
-    <Sheet open={open} onClose={onClose}>
-      <h3>จุดโคม {count} ดวงรวดเดียว</h3>
-      <div className="unlock-modal-lanterns">
-        {lanterns?.map((lantern, index) => (
-          <Lantern key={index} state="lock" icon={lantern.icon} label={lantern.label} />
+    <Sheet
+      open={open}
+      onClose={onClose}
+      title="จุดโคมสามดวงรวดเดียว"
+      description={`ตอบ 15 ข้อจาก ${lessons.length} ด่านที่ข้าม ผิดได้ไม่เกิน 2 ข้อ ผ่านแล้วปลดล็อคทั้งหมดพร้อมกัน`}
+    >
+      <div className="unlockLamps">
+        {lessons.map((lesson) => (
+          <Lantern key={lesson.id} state="lock" icon="学" label={lesson.title} />
         ))}
       </div>
-      <p>
-        ทำแบบทดสอบรวม {questionCount} ข้อจากทั้ง {count} ด่านนี้ - ตอบให้ถูกจนจบ ผิดได้ไม่เกิน 2 ข้อ เพื่อจุดโคมทั้ง {count} ดวงพร้อมกัน
-      </p>
 
-      {attemptAvailable ? (
-        <Button onClick={onStartTest}>เริ่มทำแบบทดสอบ</Button>
+      {attemptsLeft > 0 ? (
+        <>
+          <p className="unlockNote">วันนี้ทำได้อีก {attemptsLeft} ครั้ง</p>
+          <Button variant="primary" onClick={onStart}>
+            ทำบททดสอบรวม
+          </Button>
+        </>
       ) : (
         <>
-          <p style={{ color: "var(--dim)" }}>ใช้สิทธิ์ทำแบบทดสอบวันนี้ไปแล้ว พรุ่งนี้ลองใหม่ได้</p>
-          <Button onClick={onPayToUnlock} disabled={!canPay}>
-            จ่าย {payCost} เหรียญ ปลดล็อคทันที
+          <p className="unlockNote">วันนี้ทำครบแล้ว จ่าย {PAY_COST} เหรียญเพื่อทำอีกครั้งได้</p>
+          <Button variant="primary" disabled={!canPay} onClick={onPay}>
+            {canPay ? `จ่าย ${PAY_COST} เหรียญ` : `ขาดอีก ${coinsShort} เหรียญ`}
           </Button>
-          {!canPay ? <p style={{ color: "var(--dim)" }}>เหรียญไม่พอ ขาดอีก {coinsShort} เหรียญ</p> : null}
         </>
       )}
-
       <Button variant="ghost" onClick={onClose}>
         ยังไม่พร้อม
       </Button>

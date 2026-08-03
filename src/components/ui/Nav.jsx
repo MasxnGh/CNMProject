@@ -1,24 +1,30 @@
-/**
- * dujeen-quest-prototype.html .rail - a full-width bottom bar on mobile and
- * tablet, becomes a 104px-wide left rail at desktop width (>=1080px, see
- * lantern-ui.css). Driven entirely by the --rail CSS variable; callers that
- * render <main> alongside this should pad-left: var(--rail) so content
- * clears the rail once it moves to the side.
- */
-export default function Nav({ items, activeKey }) {
+import { NavLink } from "react-router-dom";
+import { useProgress } from "../../lib/progress.js";
+import { getDueCount } from "../../lib/srs.js";
+import "./Nav.css";
+
+const ITEMS = [
+  { to: "/chapters", icon: "🏮", label: "เรียน" },
+  { to: "/review", icon: "🎯", label: "ทวน" },
+  { to: "/profile", icon: "🧧", label: "ฉัน" },
+];
+
+export default function Nav() {
+  const [progress] = useProgress();
+  const dueCount = getDueCount(progress);
+
   return (
-    <nav className="ln-rail">
-      {items.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          className={item.key === activeKey ? "on" : ""}
-          onClick={item.onClick}
-          disabled={item.disabled}
-        >
-          <span>{item.icon}</span>
+    <nav className="rail">
+      {ITEMS.map((item) => (
+        <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? "on" : "")}>
+          <span className="railIcon">
+            {item.icon}
+            {item.to === "/review" && dueCount > 0 && (
+              <i className={["navDot", dueCount > 30 && "danger"].filter(Boolean).join(" ")} />
+            )}
+          </span>
           {item.label}
-        </button>
+        </NavLink>
       ))}
     </nav>
   );

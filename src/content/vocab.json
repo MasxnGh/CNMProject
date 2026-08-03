@@ -1,1185 +1,1352 @@
 [
   {
-    "id": "v_shui",
-    "hanzi": "水",
-    "pinyin": "shuǐ",
-    "th": "น้ำ",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_shui.mp3",
-    "audioSlow": null,
+    "id": "v_ni",
+    "hanzi": "你",
+    "pinyin": "nǐ",
+    "th": "คุณ",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "audio": "/audio/v_ni.mp3",
+    "audioSlow": "/audio/v_ni_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
   },
   {
-    "id": "v_cha",
-    "hanzi": "茶",
-    "pinyin": "chá",
-    "th": "ชา",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_cha.mp3",
-    "audioSlow": null,
+    "id": "v_hao",
+    "hanzi": "好",
+    "pinyin": "hǎo",
+    "th": "ดี",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
+    "audio": "/audio/v_hao.mp3",
+    "audioSlow": "/audio/v_hao_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_mifan",
-    "hanzi": "米饭",
-    "pinyin": "mǐfàn",
-    "th": "ข้าวสวย",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_mifan.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_miantiao",
-    "hanzi": "面条",
-    "pinyin": "miàntiáo",
-    "th": "บะหมี่",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_miantiao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_jiaozi",
-    "hanzi": "饺子",
-    "pinyin": "jiǎozi",
-    "th": "เกี๊ยว",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_jiaozi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "👍"
+    },
+    "writable": true
   },
   {
     "id": "v_nihao",
     "hanzi": "你好",
     "pinyin": "nǐ hǎo",
     "th": "สวัสดี",
-    "lessonId": "ch1_l1",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
     "audio": "/audio/v_nihao.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_nihao_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "👋"
+    },
+    "writable": true
   },
   {
     "id": "v_xiexie",
     "hanzi": "谢谢",
     "pinyin": "xièxie",
     "th": "ขอบคุณ",
-    "lessonId": "ch1_l1",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
     "audio": "/audio/v_xiexie.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_xiexie_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🙏"
+    },
+    "writable": true
   },
   {
     "id": "v_zaijian",
     "hanzi": "再见",
     "pinyin": "zàijiàn",
     "th": "ลาก่อน",
-    "lessonId": "ch1_l1",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l1",
     "audio": "/audio/v_zaijian.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_laoshi",
-    "hanzi": "老师",
-    "pinyin": "lǎoshī",
-    "th": "ครู",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_laoshi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_xuesheng",
-    "hanzi": "学生",
-    "pinyin": "xuéshēng",
-    "th": "นักเรียน",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_xuesheng.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_nihao2",
-    "hanzi": "你好！",
-    "pinyin": "Nǐ hǎo!",
-    "th": "สวัสดี",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_nihao2.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_nijiaoshenmemingzi",
-    "hanzi": "你叫什么名字？",
-    "pinyin": "Nǐ jiào shénme míngzi?",
-    "th": "คุณชื่ออะไร",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_nijiaoshenmemingzi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_wojiaoxiaoming",
-    "hanzi": "我叫小明。",
-    "pinyin": "Wǒ jiào Xiǎomíng.",
-    "th": "ฉันชื่อเสี่ยวหมิง",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_wojiaoxiaoming.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_hengaoxingrenshini",
-    "hanzi": "很高兴认识你。",
-    "pinyin": "Hěn gāoxìng rènshi nǐ.",
-    "th": "ยินดีที่ได้รู้จัก",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_hengaoxingrenshini.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zaijian2",
-    "hanzi": "再见！",
-    "pinyin": "Zàijiàn!",
-    "th": "ลาก่อน",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_zaijian2.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_yi",
-    "hanzi": "一",
-    "pinyin": "yī",
-    "th": "หนึ่ง",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_yi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_er",
-    "hanzi": "二",
-    "pinyin": "èr",
-    "th": "สอง",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_er.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_san",
-    "hanzi": "三",
-    "pinyin": "sān",
-    "th": "สาม",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_san.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shi",
-    "hanzi": "十",
-    "pinyin": "shí",
-    "th": "สิบ",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_shi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_jintian",
-    "hanzi": "今天",
-    "pinyin": "jīntiān",
-    "th": "วันนี้",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_jintian.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_mingtian",
-    "hanzi": "明天",
-    "pinyin": "míngtiān",
-    "th": "พรุ่งนี้",
-    "lessonId": "ch2_l1",
-    "audio": "/audio/v_mingtian.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_huoche",
-    "hanzi": "火车",
-    "pinyin": "huǒchē",
-    "th": "รถไฟ",
-    "lessonId": "ch9_l1",
-    "audio": "/audio/v_huoche.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_feiji",
-    "hanzi": "飞机",
-    "pinyin": "fēijī",
-    "th": "เครื่องบิน",
-    "lessonId": "ch9_l1",
-    "audio": "/audio/v_feiji.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_chezhan",
-    "hanzi": "车站",
-    "pinyin": "chēzhàn",
-    "th": "สถานี",
-    "lessonId": "ch9_l1",
-    "audio": "/audio/v_chezhan.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_piao",
-    "hanzi": "票",
-    "pinyin": "piào",
-    "th": "ตั๋ว",
-    "lessonId": "ch9_l1",
-    "audio": "/audio/v_piao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_woyaoqubeijing",
-    "hanzi": "我要去北京。",
-    "pinyin": "Wǒ yào qù Běijīng.",
-    "th": "ฉันต้องการไปปักกิ่ง",
-    "lessonId": "ch9_l1",
-    "audio": "/audio/v_woyaoqubeijing.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_caidan",
-    "hanzi": "菜单",
-    "pinyin": "càidān",
-    "th": "เมนู",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_caidan.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_haochi",
-    "hanzi": "好吃",
-    "pinyin": "hǎochī",
-    "th": "อร่อย",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_haochi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_duoshaoqian",
-    "hanzi": "多少钱？",
-    "pinyin": "Duōshǎo qián?",
-    "th": "ราคาเท่าไหร่",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_duoshaoqian.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_woyaozhege",
-    "hanzi": "我要这个。",
-    "pinyin": "Wǒ yào zhège.",
-    "th": "ฉันเอาอันนี้",
-    "lessonId": "ch6_l1",
-    "audio": "/audio/v_woyaozhege.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_chunjie",
-    "hanzi": "春节",
-    "pinyin": "Chūnjié",
-    "th": "ตรุษจีน",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_chunjie.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_hongbao",
-    "hanzi": "红包",
-    "pinyin": "hóngbāo",
-    "th": "อั่งเปา",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_hongbao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_denglong",
-    "hanzi": "灯笼",
-    "pinyin": "dēnglóng",
-    "th": "โคมไฟ",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_denglong.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_wulong",
-    "hanzi": "舞龙",
-    "pinyin": "wǔlóng",
-    "th": "เชิดมังกร",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_wulong.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_xinniankuaile",
-    "hanzi": "新年快乐",
-    "pinyin": "xīnnián kuàilè",
-    "th": "สวัสดีปีใหม่",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_xinniankuaile.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shu",
-    "hanzi": "书",
-    "pinyin": "shū",
-    "th": "หนังสือ",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_shu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_bi",
-    "hanzi": "笔",
-    "pinyin": "bǐ",
-    "th": "ปากกา",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_bi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zhuozi",
-    "hanzi": "桌子",
-    "pinyin": "zhuōzi",
-    "th": "โต๊ะ",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_zhuozi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_yizi",
-    "hanzi": "椅子",
-    "pinyin": "yǐzi",
-    "th": "เก้าอี้",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_yizi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_jiaoshi",
-    "hanzi": "教室",
-    "pinyin": "jiàoshì",
-    "th": "ห้องเรียน",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_jiaoshi.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_xiongmao",
-    "hanzi": "熊猫",
-    "pinyin": "xióngmāo",
-    "th": "แพนด้า",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_xiongmao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_gou",
-    "hanzi": "狗",
-    "pinyin": "gǒu",
-    "th": "สุนัข",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_gou.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_mao",
-    "hanzi": "猫",
-    "pinyin": "māo",
-    "th": "แมว",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_mao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_niao",
-    "hanzi": "鸟",
-    "pinyin": "niǎo",
-    "th": "นก",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_niao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_yu",
-    "hanzi": "鱼",
-    "pinyin": "yú",
-    "th": "ปลา",
-    "lessonId": "ch11_l1",
-    "audio": "/audio/v_yu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_baba",
-    "hanzi": "爸爸",
-    "pinyin": "bàba",
-    "th": "พ่อ",
-    "lessonId": "ch3_l1",
-    "audio": "/audio/v_baba.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_mama",
-    "hanzi": "妈妈",
-    "pinyin": "māma",
-    "th": "แม่",
-    "lessonId": "ch3_l1",
-    "audio": "/audio/v_mama.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_gege",
-    "hanzi": "哥哥",
-    "pinyin": "gēge",
-    "th": "พี่ชาย",
-    "lessonId": "ch3_l1",
-    "audio": "/audio/v_gege.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_jiejie",
-    "hanzi": "姐姐",
-    "pinyin": "jiějie",
-    "th": "พี่สาว",
-    "lessonId": "ch3_l1",
-    "audio": "/audio/v_jiejie.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_jia",
-    "hanzi": "家",
-    "pinyin": "jiā",
-    "th": "บ้าน / ครอบครัว",
-    "lessonId": "ch3_l1",
-    "audio": "/audio/v_jia.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_pingguo",
-    "hanzi": "苹果",
-    "pinyin": "píngguǒ",
-    "th": "แอปเปิล",
-    "lessonId": "ch7_l1",
-    "audio": "/audio/v_pingguo.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_xiangjiao",
-    "hanzi": "香蕉",
-    "pinyin": "xiāngjiāo",
-    "th": "กล้วย",
-    "lessonId": "ch7_l1",
-    "audio": "/audio/v_xiangjiao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_hongse",
-    "hanzi": "红色",
-    "pinyin": "hóngsè",
-    "th": "สีแดง",
-    "lessonId": "ch7_l1",
-    "audio": "/audio/v_hongse.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_huangse",
-    "hanzi": "黄色",
-    "pinyin": "huángsè",
-    "th": "สีเหลือง",
-    "lessonId": "ch7_l1",
-    "audio": "/audio/v_huangse.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_luse",
-    "hanzi": "绿色",
-    "pinyin": "lǜsè",
-    "th": "สีเขียว",
-    "lessonId": "ch7_l1",
-    "audio": "/audio/v_luse.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_ren",
-    "hanzi": "人",
-    "pinyin": "rén",
-    "th": "คน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_ren.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_kou",
-    "hanzi": "口",
-    "pinyin": "kǒu",
-    "th": "ปาก",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_kou.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shan",
-    "hanzi": "山",
-    "pinyin": "shān",
-    "th": "ภูเขา",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_shan.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_ri",
-    "hanzi": "日",
-    "pinyin": "rì",
-    "th": "พระอาทิตย์",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_ri.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_yue",
-    "hanzi": "月",
-    "pinyin": "yuè",
-    "th": "ดวงจันทร์",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_yue.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_woshixuesheng",
-    "hanzi": "我是学生。",
-    "pinyin": "Wǒ shì xuéshēng.",
-    "th": "ฉันเป็นนักเรียน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_woshixuesheng.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_woxihuanzhongguocai",
-    "hanzi": "我喜欢中国菜。",
-    "pinyin": "Wǒ xǐhuān Zhōngguó cài.",
-    "th": "ฉันชอบอาหารจีน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_woxihuanzhongguocai.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_taquxuexiao",
-    "hanzi": "他去学校。",
-    "pinyin": "Tā qù xuéxiào.",
-    "th": "เขาไปโรงเรียน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_taquxuexiao.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zheshiwodeshu",
-    "hanzi": "这是我的书。",
-    "pinyin": "Zhè shì wǒ de shū.",
-    "th": "นี่คือหนังสือของฉัน",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_zheshiwodeshu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_nihaoma",
-    "hanzi": "你好吗？",
-    "pinyin": "Nǐ hǎo ma?",
-    "th": "คุณสบายดีไหม",
-    "lessonId": "ch12_l1",
-    "audio": "/audio/v_nihaoma.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_ma",
-    "hanzi": "马",
-    "pinyin": "mǎ",
-    "th": "ม้า",
-    "lessonId": "ch13_l1",
-    "audio": "/audio/v_ma.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zhong",
-    "hanzi": "中",
-    "pinyin": "zhōng",
-    "th": "กลาง / จีน",
-    "lessonId": "ch13_l1",
-    "audio": "/audio/v_zhong.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_taiguo",
-    "hanzi": "泰国",
-    "pinyin": "Tàiguó",
-    "th": "ประเทศไทย",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_taiguo.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zhongguo",
-    "hanzi": "中国",
-    "pinyin": "Zhōngguó",
-    "th": "ประเทศจีน",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_zhongguo.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_taiguoren",
-    "hanzi": "泰国人",
-    "pinyin": "Tàiguórén",
-    "th": "คนไทย",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_taiguoren.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_zhongguoren",
-    "hanzi": "中国人",
-    "pinyin": "Zhōngguórén",
-    "th": "คนจีน",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_zhongguoren.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_hanyu",
-    "hanzi": "汉语",
-    "pinyin": "Hànyǔ",
-    "th": "ภาษาจีน",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_hanyu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_taiyu",
-    "hanzi": "泰语",
-    "pinyin": "Tàiyǔ",
-    "th": "ภาษาไทย",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_taiyu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_yingyu",
-    "hanzi": "英语",
-    "pinyin": "Yīngyǔ",
-    "th": "ภาษาอังกฤษ",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_yingyu.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shuo",
-    "hanzi": "说",
-    "pinyin": "shuō",
-    "th": "พูด",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_shuo.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_hui",
-    "hanzi": "会",
-    "pinyin": "huì",
-    "th": "สามารถ (ทำได้)",
-    "lessonId": "ch4_l1",
-    "audio": "/audio/v_hui.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_shi2",
-    "hanzi": "是",
-    "pinyin": "shì",
-    "th": "เป็น / คือ",
-    "lessonId": "ch4_l2",
-    "audio": "/audio/v_shi2.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
-  },
-  {
-    "id": "v_na",
-    "hanzi": "哪",
-    "pinyin": "nǎ",
-    "th": "ไหน",
-    "lessonId": "ch4_l2",
-    "audio": "/audio/v_na.mp3",
-    "audioSlow": null,
-    "visual": {
-      "type": null,
-      "value": null
-    }
+    "audioSlow": "/audio/v_zaijian_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🖐️"
+    },
+    "writable": true
   },
   {
     "id": "v_ma2",
     "hanzi": "吗",
     "pinyin": "ma",
     "th": "คำลงท้ายประโยคคำถาม",
-    "lessonId": "ch4_l2",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
     "audio": "/audio/v_ma2.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_ma2_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
+  },
+  {
+    "id": "v_kou",
+    "hanzi": "口",
+    "pinyin": "kǒu",
+    "th": "ปาก",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "audio": "/audio/v_kou.mp3",
+    "audioSlow": "/audio/v_kou_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "👄"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shan",
+    "hanzi": "山",
+    "pinyin": "shān",
+    "th": "ภูเขา",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "audio": "/audio/v_shan.mp3",
+    "audioSlow": "/audio/v_shan_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "⛰️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_ri",
+    "hanzi": "日",
+    "pinyin": "rì",
+    "th": "พระอาทิตย์ / วัน",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "audio": "/audio/v_ri.mp3",
+    "audioSlow": "/audio/v_ri_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "☀️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yue",
+    "hanzi": "月",
+    "pinyin": "yuè",
+    "th": "ดวงจันทร์ / เดือน",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l2",
+    "audio": "/audio/v_yue.mp3",
+    "audioSlow": "/audio/v_yue_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🌙"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_wo",
+    "hanzi": "我",
+    "pinyin": "wǒ",
+    "th": "ฉัน",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_wo.mp3",
+    "audioSlow": "/audio/v_wo_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jiao",
+    "hanzi": "叫",
+    "pinyin": "jiào",
+    "th": "ชื่อว่า",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_jiao.mp3",
+    "audioSlow": "/audio/v_jiao_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_xiaoming",
+    "hanzi": "小明",
+    "pinyin": "Xiǎomíng",
+    "th": "เสี่ยวหมิง (ชื่อคน)",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_xiaoming.mp3",
+    "audioSlow": "/audio/v_xiaoming_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🧑"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shi2",
+    "hanzi": "是",
+    "pinyin": "shì",
+    "th": "เป็น / คือ",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_shi2.mp3",
+    "audioSlow": "/audio/v_shi2_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_mingzi",
+    "hanzi": "名字",
+    "pinyin": "míngzi",
+    "th": "ชื่อ",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_mingzi.mp3",
+    "audioSlow": "/audio/v_mingzi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🏷️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shenme",
+    "hanzi": "什么",
+    "pinyin": "shénme",
+    "th": "อะไร",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l3",
+    "audio": "/audio/v_shenme.mp3",
+    "audioSlow": "/audio/v_shenme_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_hen",
+    "hanzi": "很",
+    "pinyin": "hěn",
+    "th": "มาก",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "audio": "/audio/v_hen.mp3",
+    "audioSlow": "/audio/v_hen_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_gaoxing",
+    "hanzi": "高兴",
+    "pinyin": "gāoxìng",
+    "th": "ดีใจ",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "audio": "/audio/v_gaoxing.mp3",
+    "audioSlow": "/audio/v_gaoxing_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "😄"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_renshi",
+    "hanzi": "认识",
+    "pinyin": "rènshi",
+    "th": "รู้จัก",
+    "chapterId": "ch01",
+    "lessonId": "ch01_l4",
+    "audio": "/audio/v_renshi.mp3",
+    "audioSlow": "/audio/v_renshi_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yi",
+    "hanzi": "一",
+    "pinyin": "yī",
+    "th": "หนึ่ง",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "audio": "/audio/v_yi.mp3",
+    "audioSlow": "/audio/v_yi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "1️⃣"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_er",
+    "hanzi": "二",
+    "pinyin": "èr",
+    "th": "สอง",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "audio": "/audio/v_er.mp3",
+    "audioSlow": "/audio/v_er_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "2️⃣"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_san",
+    "hanzi": "三",
+    "pinyin": "sān",
+    "th": "สาม",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "audio": "/audio/v_san.mp3",
+    "audioSlow": "/audio/v_san_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "3️⃣"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shi",
+    "hanzi": "十",
+    "pinyin": "shí",
+    "th": "สิบ",
+    "chapterId": "ch02",
+    "lessonId": "ch02_l1",
+    "audio": "/audio/v_shi.mp3",
+    "audioSlow": "/audio/v_shi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🔟"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_baba",
+    "hanzi": "爸爸",
+    "pinyin": "bàba",
+    "th": "พ่อ",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "audio": "/audio/v_baba.mp3",
+    "audioSlow": "/audio/v_baba_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "👨"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_mama",
+    "hanzi": "妈妈",
+    "pinyin": "māma",
+    "th": "แม่",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "audio": "/audio/v_mama.mp3",
+    "audioSlow": "/audio/v_mama_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "👩"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_gege",
+    "hanzi": "哥哥",
+    "pinyin": "gēge",
+    "th": "พี่ชาย",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "audio": "/audio/v_gege.mp3",
+    "audioSlow": "/audio/v_gege_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🧑"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jiejie",
+    "hanzi": "姐姐",
+    "pinyin": "jiějie",
+    "th": "พี่สาว",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "audio": "/audio/v_jiejie.mp3",
+    "audioSlow": "/audio/v_jiejie_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "👧"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jia",
+    "hanzi": "家",
+    "pinyin": "jiā",
+    "th": "บ้าน / ครอบครัว",
+    "chapterId": "ch03",
+    "lessonId": "ch03_l1",
+    "audio": "/audio/v_jia.mp3",
+    "audioSlow": "/audio/v_jia_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🏠"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_taiguo",
+    "hanzi": "泰国",
+    "pinyin": "Tàiguó",
+    "th": "ประเทศไทย",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_taiguo.mp3",
+    "audioSlow": "/audio/v_taiguo_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🇹🇭"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_zhongguo",
+    "hanzi": "中国",
+    "pinyin": "Zhōngguó",
+    "th": "ประเทศจีน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_zhongguo.mp3",
+    "audioSlow": "/audio/v_zhongguo_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🇨🇳"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_taiguoren",
+    "hanzi": "泰国人",
+    "pinyin": "Tàiguórén",
+    "th": "คนไทย",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_taiguoren.mp3",
+    "audioSlow": "/audio/v_taiguoren_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🇹🇭"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_zhongguoren",
+    "hanzi": "中国人",
+    "pinyin": "Zhōngguórén",
+    "th": "คนจีน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_zhongguoren.mp3",
+    "audioSlow": "/audio/v_zhongguoren_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🇨🇳"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_hanyu",
+    "hanzi": "汉语",
+    "pinyin": "Hànyǔ",
+    "th": "ภาษาจีน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_hanyu.mp3",
+    "audioSlow": "/audio/v_hanyu_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🗣️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_taiyu",
+    "hanzi": "泰语",
+    "pinyin": "Tàiyǔ",
+    "th": "ภาษาไทย",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_taiyu.mp3",
+    "audioSlow": "/audio/v_taiyu_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🗣️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yingyu",
+    "hanzi": "英语",
+    "pinyin": "Yīngyǔ",
+    "th": "ภาษาอังกฤษ",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_yingyu.mp3",
+    "audioSlow": "/audio/v_yingyu_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🗣️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shuo",
+    "hanzi": "说",
+    "pinyin": "shuō",
+    "th": "พูด",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_shuo.mp3",
+    "audioSlow": "/audio/v_shuo_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🗣️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_hui",
+    "hanzi": "会",
+    "pinyin": "huì",
+    "th": "สามารถ (ทำได้)",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_hui.mp3",
+    "audioSlow": "/audio/v_hui_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_ren",
+    "hanzi": "人",
+    "pinyin": "rén",
+    "th": "คน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_ren.mp3",
+    "audioSlow": "/audio/v_ren_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🧍"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_zhong",
+    "hanzi": "中",
+    "pinyin": "zhōng",
+    "th": "กลาง / จีน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l1",
+    "audio": "/audio/v_zhong.mp3",
+    "audioSlow": "/audio/v_zhong_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_na",
+    "hanzi": "哪",
+    "pinyin": "nǎ",
+    "th": "ไหน",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l2",
+    "audio": "/audio/v_na.mp3",
+    "audioSlow": "/audio/v_na_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
   },
   {
     "id": "v_he",
     "hanzi": "和",
     "pinyin": "hé",
     "th": "กับ / และ",
-    "lessonId": "ch4_l2",
+    "chapterId": "ch04",
+    "lessonId": "ch04_l2",
     "audio": "/audio/v_he.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_he_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
   },
   {
-    "id": "v_ni",
-    "hanzi": "你",
-    "pinyin": "nǐ",
-    "th": "",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_ni.mp3",
-    "audioSlow": null,
+    "id": "v_laoshi",
+    "hanzi": "老师",
+    "pinyin": "lǎoshī",
+    "th": "ครู",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l1",
+    "audio": "/audio/v_laoshi.mp3",
+    "audioSlow": "/audio/v_laoshi_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🧑‍🏫"
+    },
+    "writable": true
   },
   {
-    "id": "v_hao",
-    "hanzi": "好",
-    "pinyin": "hǎo",
-    "th": "",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_hao.mp3",
-    "audioSlow": null,
+    "id": "v_xuesheng",
+    "hanzi": "学生",
+    "pinyin": "xuéshēng",
+    "th": "นักเรียน",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l1",
+    "audio": "/audio/v_xuesheng.mp3",
+    "audioSlow": "/audio/v_xuesheng_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🧑‍🎓"
+    },
+    "writable": true
   },
   {
-    "id": "v_wo",
-    "hanzi": "我",
-    "pinyin": "wǒ",
-    "th": "",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_wo.mp3",
-    "audioSlow": null,
+    "id": "v_shu",
+    "hanzi": "书",
+    "pinyin": "shū",
+    "th": "หนังสือ",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_shu.mp3",
+    "audioSlow": "/audio/v_shu_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "📖"
+    },
+    "writable": true
   },
   {
-    "id": "v_jiao",
-    "hanzi": "叫",
-    "pinyin": "jiào",
-    "th": "",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_jiao.mp3",
-    "audioSlow": null,
+    "id": "v_bi",
+    "hanzi": "笔",
+    "pinyin": "bǐ",
+    "th": "ปากกา",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_bi.mp3",
+    "audioSlow": "/audio/v_bi_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🖊️"
+    },
+    "writable": true
   },
   {
-    "id": "v_xiaoming",
-    "hanzi": "小明",
-    "pinyin": "Xiǎomíng",
-    "th": "",
-    "lessonId": "ch1_l1",
-    "audio": "/audio/v_xiaoming.mp3",
-    "audioSlow": null,
+    "id": "v_zhuozi",
+    "hanzi": "桌子",
+    "pinyin": "zhuōzi",
+    "th": "โต๊ะ",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_zhuozi.mp3",
+    "audioSlow": "/audio/v_zhuozi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🗄️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yizi",
+    "hanzi": "椅子",
+    "pinyin": "yǐzi",
+    "th": "เก้าอี้",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_yizi.mp3",
+    "audioSlow": "/audio/v_yizi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🪑"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jiaoshi",
+    "hanzi": "教室",
+    "pinyin": "jiàoshì",
+    "th": "ห้องเรียน",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_jiaoshi.mp3",
+    "audioSlow": "/audio/v_jiaoshi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🏫"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_zhe",
+    "hanzi": "这",
+    "pinyin": "zhè",
+    "th": "นี่",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_zhe.mp3",
+    "audioSlow": "/audio/v_zhe_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
+  },
+  {
+    "id": "v_de",
+    "hanzi": "的",
+    "pinyin": "de",
+    "th": "คำเชื่อมแสดงความเป็นเจ้าของ",
+    "chapterId": "ch05",
+    "lessonId": "ch05_l2",
+    "audio": "/audio/v_de.mp3",
+    "audioSlow": "/audio/v_de_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_shui",
+    "hanzi": "水",
+    "pinyin": "shuǐ",
+    "th": "น้ำ",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_shui.mp3",
+    "audioSlow": "/audio/v_shui_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "💧"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_cha",
+    "hanzi": "茶",
+    "pinyin": "chá",
+    "th": "ชา",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_cha.mp3",
+    "audioSlow": "/audio/v_cha_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🍵"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_mifan",
+    "hanzi": "米饭",
+    "pinyin": "mǐfàn",
+    "th": "ข้าวสวย",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_mifan.mp3",
+    "audioSlow": "/audio/v_mifan_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🍚"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_miantiao",
+    "hanzi": "面条",
+    "pinyin": "miàntiáo",
+    "th": "บะหมี่",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_miantiao.mp3",
+    "audioSlow": "/audio/v_miantiao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🍜"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jiaozi",
+    "hanzi": "饺子",
+    "pinyin": "jiǎozi",
+    "th": "เกี๊ยว",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_jiaozi.mp3",
+    "audioSlow": "/audio/v_jiaozi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🥟"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_caidan",
+    "hanzi": "菜单",
+    "pinyin": "càidān",
+    "th": "เมนู",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_caidan.mp3",
+    "audioSlow": "/audio/v_caidan_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "📋"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_haochi",
+    "hanzi": "好吃",
+    "pinyin": "hǎochī",
+    "th": "อร่อย",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
+    "audio": "/audio/v_haochi.mp3",
+    "audioSlow": "/audio/v_haochi_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "😋"
+    },
+    "writable": true
   },
   {
     "id": "v_he2",
     "hanzi": "喝",
     "pinyin": "hē",
-    "th": "",
-    "lessonId": "ch2_l1",
+    "th": "ดื่ม",
+    "chapterId": "ch06",
+    "lessonId": "ch06_l1",
     "audio": "/audio/v_he2.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_he2_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🥤"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_duoshao",
+    "hanzi": "多少",
+    "pinyin": "duōshǎo",
+    "th": "เท่าไหร่",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/v_duoshao.mp3",
+    "audioSlow": "/audio/v_duoshao_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
+  },
+  {
+    "id": "v_qian",
+    "hanzi": "钱",
+    "pinyin": "qián",
+    "th": "เงิน",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/v_qian.mp3",
+    "audioSlow": "/audio/v_qian_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "💰"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yao",
+    "hanzi": "要",
+    "pinyin": "yào",
+    "th": "ต้องการ / เอา",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/v_yao.mp3",
+    "audioSlow": "/audio/v_yao_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_zhege",
+    "hanzi": "这个",
+    "pinyin": "zhège",
+    "th": "อันนี้",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l1",
+    "audio": "/audio/v_zhege.mp3",
+    "audioSlow": "/audio/v_zhege_slow.mp3",
+    "visual": {
+      "type": null,
+      "value": null
+    },
+    "writable": true
+  },
+  {
+    "id": "v_pingguo",
+    "hanzi": "苹果",
+    "pinyin": "píngguǒ",
+    "th": "แอปเปิล",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l2",
+    "audio": "/audio/v_pingguo.mp3",
+    "audioSlow": "/audio/v_pingguo_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🍎"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_xiangjiao",
+    "hanzi": "香蕉",
+    "pinyin": "xiāngjiāo",
+    "th": "กล้วย",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l2",
+    "audio": "/audio/v_xiangjiao.mp3",
+    "audioSlow": "/audio/v_xiangjiao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🍌"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_hongse",
+    "hanzi": "红色",
+    "pinyin": "hóngsè",
+    "th": "สีแดง",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l2",
+    "audio": "/audio/v_hongse.mp3",
+    "audioSlow": "/audio/v_hongse_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🔴"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_huangse",
+    "hanzi": "黄色",
+    "pinyin": "huángsè",
+    "th": "สีเหลือง",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l2",
+    "audio": "/audio/v_huangse.mp3",
+    "audioSlow": "/audio/v_huangse_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🟡"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_luse",
+    "hanzi": "绿色",
+    "pinyin": "lǜsè",
+    "th": "สีเขียว",
+    "chapterId": "ch07",
+    "lessonId": "ch07_l2",
+    "audio": "/audio/v_luse.mp3",
+    "audioSlow": "/audio/v_luse_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🟢"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_jintian",
+    "hanzi": "今天",
+    "pinyin": "jīntiān",
+    "th": "วันนี้",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l1",
+    "audio": "/audio/v_jintian.mp3",
+    "audioSlow": "/audio/v_jintian_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "📅"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_mingtian",
+    "hanzi": "明天",
+    "pinyin": "míngtiān",
+    "th": "พรุ่งนี้",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l1",
+    "audio": "/audio/v_mingtian.mp3",
+    "audioSlow": "/audio/v_mingtian_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "📆"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_chunjie",
+    "hanzi": "春节",
+    "pinyin": "Chūnjié",
+    "th": "ตรุษจีน",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l2",
+    "audio": "/audio/v_chunjie.mp3",
+    "audioSlow": "/audio/v_chunjie_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🎊"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_hongbao",
+    "hanzi": "红包",
+    "pinyin": "hóngbāo",
+    "th": "อั่งเปา",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l2",
+    "audio": "/audio/v_hongbao.mp3",
+    "audioSlow": "/audio/v_hongbao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🧧"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_denglong",
+    "hanzi": "灯笼",
+    "pinyin": "dēnglóng",
+    "th": "โคมไฟ",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l2",
+    "audio": "/audio/v_denglong.mp3",
+    "audioSlow": "/audio/v_denglong_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🏮"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_wulong",
+    "hanzi": "舞龙",
+    "pinyin": "wǔlóng",
+    "th": "เชิดมังกร",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l2",
+    "audio": "/audio/v_wulong.mp3",
+    "audioSlow": "/audio/v_wulong_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐉"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_xinniankuaile",
+    "hanzi": "新年快乐",
+    "pinyin": "xīnnián kuàilè",
+    "th": "สวัสดีปีใหม่",
+    "chapterId": "ch08",
+    "lessonId": "ch08_l2",
+    "audio": "/audio/v_xinniankuaile.mp3",
+    "audioSlow": "/audio/v_xinniankuaile_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🎉"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_huoche",
+    "hanzi": "火车",
+    "pinyin": "huǒchē",
+    "th": "รถไฟ",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/v_huoche.mp3",
+    "audioSlow": "/audio/v_huoche_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🚆"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_feiji",
+    "hanzi": "飞机",
+    "pinyin": "fēijī",
+    "th": "เครื่องบิน",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/v_feiji.mp3",
+    "audioSlow": "/audio/v_feiji_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "✈️"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_chezhan",
+    "hanzi": "车站",
+    "pinyin": "chēzhàn",
+    "th": "สถานี",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/v_chezhan.mp3",
+    "audioSlow": "/audio/v_chezhan_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🚉"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_piao",
+    "hanzi": "票",
+    "pinyin": "piào",
+    "th": "ตั๋ว",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/v_piao.mp3",
+    "audioSlow": "/audio/v_piao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🎫"
+    },
+    "writable": true
   },
   {
     "id": "v_ta",
     "hanzi": "他",
     "pinyin": "tā",
-    "th": "",
-    "lessonId": "ch12_l1",
+    "th": "เขา",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
     "audio": "/audio/v_ta.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_ta_slow.mp3",
     "visual": {
       "type": null,
       "value": null
-    }
+    },
+    "writable": true
   },
   {
     "id": "v_qu",
     "hanzi": "去",
     "pinyin": "qù",
-    "th": "",
-    "lessonId": "ch12_l1",
+    "th": "ไป",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
     "audio": "/audio/v_qu.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_qu_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🚶"
+    },
+    "writable": true
   },
   {
     "id": "v_xuexiao",
     "hanzi": "学校",
     "pinyin": "xuéxiào",
-    "th": "",
-    "lessonId": "ch12_l1",
+    "th": "โรงเรียน",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
     "audio": "/audio/v_xuexiao.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_xuexiao_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🏫"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_beijing",
+    "hanzi": "北京",
+    "pinyin": "Běijīng",
+    "th": "ปักกิ่ง",
+    "chapterId": "ch09",
+    "lessonId": "ch09_l1",
+    "audio": "/audio/v_beijing.mp3",
+    "audioSlow": "/audio/v_beijing_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🏙️"
+    },
+    "writable": true
   },
   {
     "id": "v_xihuan",
     "hanzi": "喜欢",
     "pinyin": "xǐhuān",
-    "th": "",
-    "lessonId": "ch13_l1",
+    "th": "ชอบ",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l1",
     "audio": "/audio/v_xihuan.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_xihuan_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "❤️"
+    },
+    "writable": true
   },
   {
     "id": "v_zhongguocai",
     "hanzi": "中国菜",
     "pinyin": "Zhōngguó cài",
-    "th": "",
-    "lessonId": "ch13_l1",
+    "th": "อาหารจีน",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l1",
     "audio": "/audio/v_zhongguocai.mp3",
-    "audioSlow": null,
+    "audioSlow": "/audio/v_zhongguocai_slow.mp3",
     "visual": {
-      "type": null,
-      "value": null
-    }
+      "type": "emoji",
+      "value": "🥡"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_xiongmao",
+    "hanzi": "熊猫",
+    "pinyin": "xióngmāo",
+    "th": "แพนด้า",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_xiongmao.mp3",
+    "audioSlow": "/audio/v_xiongmao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐼"
+    },
+    "writable": false
+  },
+  {
+    "id": "v_gou",
+    "hanzi": "狗",
+    "pinyin": "gǒu",
+    "th": "สุนัข",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_gou.mp3",
+    "audioSlow": "/audio/v_gou_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐶"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_mao",
+    "hanzi": "猫",
+    "pinyin": "māo",
+    "th": "แมว",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_mao.mp3",
+    "audioSlow": "/audio/v_mao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐱"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_niao",
+    "hanzi": "鸟",
+    "pinyin": "niǎo",
+    "th": "นก",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_niao.mp3",
+    "audioSlow": "/audio/v_niao_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐦"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_yu",
+    "hanzi": "鱼",
+    "pinyin": "yú",
+    "th": "ปลา",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_yu.mp3",
+    "audioSlow": "/audio/v_yu_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐟"
+    },
+    "writable": true
+  },
+  {
+    "id": "v_ma",
+    "hanzi": "马",
+    "pinyin": "mǎ",
+    "th": "ม้า",
+    "chapterId": "ch10",
+    "lessonId": "ch10_l2",
+    "audio": "/audio/v_ma.mp3",
+    "audioSlow": "/audio/v_ma_slow.mp3",
+    "visual": {
+      "type": "emoji",
+      "value": "🐴"
+    },
+    "writable": true
   }
 ]

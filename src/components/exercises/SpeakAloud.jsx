@@ -1,53 +1,60 @@
-import { Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import Button from "../ui/Button.jsx";
-import { playSentence, playSfx } from "../../lib/audio.js";
-import { findMissingChars } from "../../lib/pronunciationMatch.js";
-import { canRecognizeSpeech, listenForChinese, scorePronunciationOverlap } from "../../utils/pronunciation.js";
-import "../../styles/game-speak-aloud.css";
+import { resolveEntry, playEntry } from "./content.js";
+import "../game/speak.css";
 
-/**
- * dujeen-quest-gameplay-prompts.md Prompt D - "พูดตาม". Reuses
- * utils/pronunciation.js's canRecognizeSpeech/listenForChinese/
- * scorePronunciationOverlap as-is (already shared, browser-agnostic,
- * proven by the old engine's PronunciationMission) rather than
- * reimplementing speech recognition. The mic-level ripple and hold-to-
- * record gesture are new; mic permission is only requested on the first
- * press, never on mount.
- *
- * exercise: { sentence } - target { hanzi, pinyin, th, id }
- * onSkip: distinct from onAnswer - always available, doesn't affect score
- *   (used both for the player's own "ข้ามข้อนี้" and for unsupported browsers)
- */
-export default function SpeakAloud({ exercise, onAnswer, onSkip }) {
-  const { sentence } = exercise;
-  const supported = canRecognizeSpeech();
+const HANZI_RE = /[一-鿿]/;
+
+function compareHanzi(targetHanzi, transcript) {
+  const targetChars = [...targetHanzi].filter((ch) => HANZI_RE.test(ch));
+  const transcriptChars = [...(transcript || "")].filter((ch) => HANZI_RE.test(ch));
+
+  let matchCount = 0;
+  const mismatches = [];
+  targetChars.forEach((ch, i) => {
+    if (transcriptChars[i] === ch) matchCount += 1;
+    else mismatches.push(ch);
+  });
+
+  const ratio = targetChars.length ? matchCount / targetChars.length : 0;
+  if (ratio === 1) return { tier: "perfect", mismatches: [] };
+  if (ratio > 0.5) return { tier: "partial", mismatches };
+  return { tier: "low", mismatches };
+}
+
+function getSpeechRecognition() {
+  const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  return Ctor ? new Ctor() : null;
+}
+
+export default function SpeakAloud({ exercise, checked, onResult, onSkip }) {
+  const target = resolveEntry(exercise.targetId);
   const [recording, setRecording] = useState(false);
-  const [micLevel, setMicLevel] = useState(0);
-  const [tier, setTier] = useState(null);
-  const [missingChars, setMissingChars] = useState([]);
+  const [volume, setVolume] = useState(0);
+  const [result, setResult] = useState(null);
 
-  const stopRecognitionRef = useRef(null);
   const streamRef = useRef(null);
   const audioCtxRef = useRef(null);
   const rafRef = useRef(null);
+  const recognitionRef = useRef(null);
 
-  const stopMeter = () => {
+  useEffect(() => {
+    playEntry(exercise.targetId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exercise.id]);
+
+  const stopVisualizer = () => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = null;
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
-    audioCtxRef.current?.close?.();
+    audioCtxRef.current?.close().catch(() => {});
     audioCtxRef.current = null;
-    setMicLevel(0);
+    setVolume(0);
   };
 
-  useEffect(() => () => {
-    stopRecognitionRef.current?.();
-    stopMeter();
-  }, []);
+  useEffect(() => stopVisualizer, []);
 
-  const startMeter = async () => {
+  const startVisualizer = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -59,112 +66,104 @@ export default function SpeakAloud({ exercise, onAnswer, onSkip }) {
       analyser.fftSize = 256;
       source.connect(analyser);
       const data = new Uint8Array(analyser.frequencyBinCount);
+
       const tick = () => {
         analyser.getByteFrequencyData(data);
-        const average = data.reduce((sum, value) => sum + value, 0) / data.length;
-        setMicLevel(average / 255);
+        const avg = data.reduce((sum, v) => sum + v, 0) / data.length;
+        setVolume(Math.min(avg / 130, 1));
         rafRef.current = requestAnimationFrame(tick);
       };
       tick();
     } catch {
-      // Mic denied/unavailable - the ripple just won't show; recognition
-      // (started separately below) reports its own failure silently too.
+      // Mic denied/unavailable - recording UI just won't show levels.
     }
   };
 
-  const startRecording = () => {
-    if (!supported || recording) return;
-    setTier(null);
-    setMissingChars([]);
+  const handlePressStart = () => {
+    if (checked || recording) return;
+    const recognition = getSpeechRecognition();
+    if (!recognition) return;
+
+    setResult(null);
     setRecording(true);
-    startMeter();
-    stopRecognitionRef.current = listenForChinese({
-      onResult: (transcript) => {
-        const missing = findMissingChars(sentence.hanzi, transcript);
-        const score = scorePronunciationOverlap(sentence.hanzi, transcript);
-        if (missing.length === 0) {
-          setTier("great");
-          playSfx("stamp");
-          playSfx("correct");
-          window.setTimeout(() => onAnswer(true), 900);
-        } else if (score > 0.5) {
-          setTier("close");
-          setMissingChars(missing);
-        } else {
-          setTier("retry");
-        }
-      },
-      onError: () => setTier("retry"),
-      onEnd: () => {
-        setRecording(false);
-        stopMeter();
-      },
-    });
+    startVisualizer();
+
+    recognition.lang = "zh-CN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0]?.[0]?.transcript || "";
+      const tierResult = compareHanzi(target.hanzi, transcript);
+      setResult(tierResult);
+      const correct = tierResult.tier === "perfect";
+      onResult({ correct, quality: correct ? "good" : "again" });
+    };
+    recognition.onerror = () => {
+      const tierResult = { tier: "low", mismatches: [] };
+      setResult(tierResult);
+      onResult({ correct: false, quality: "again" });
+    };
+    recognition.onend = () => {
+      setRecording(false);
+      stopVisualizer();
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
   };
 
-  const stopRecording = () => {
-    stopRecognitionRef.current?.();
-    setRecording(false);
-    stopMeter();
+  const handlePressEnd = () => {
+    if (!recording) return;
+    recognitionRef.current?.stop();
   };
-
-  if (!supported) {
-    return (
-      <div className="exercise">
-        <div className="exercise-prompt-area">
-          <p className="exercise-instruction">โจทย์นี้ต้องใช้ไมโครโฟนซึ่งเบราว์เซอร์นี้ไม่รองรับ</p>
-        </div>
-        <div className="exercise-options-area">
-          <Button variant="ghost" onClick={onSkip}>
-            ข้ามข้อนี้
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="exercise">
-      <div className="exercise-prompt-area">
-        <p className="exercise-instruction">พูดตาม</p>
-        <div className="exercise-prompt">
-          <button type="button" className="exercise-speaker" onClick={() => playSentence(sentence.id)} aria-label="ฟังตัวอย่าง">
-            <strong className="exercise-hanzi">{sentence.hanzi}</strong>
+    <>
+      <div className="quizL">
+        <div className="ask">พูดตามให้ตรงกับคำนี้</div>
+        <div className="word">
+          <button type="button" className="spk" onClick={() => playEntry(exercise.targetId)}>
+            🔊
           </button>
+          <div>
+            <div className="py">{target.pinyin}</div>
+            <div className="hz">{target.hanzi}</div>
+          </div>
         </div>
-        <div className="exercise-pinyin">{sentence.pinyin}</div>
       </div>
-
-      <div className="exercise-options-area">
-        <div className="speak-aloud-mic-area">
+      <div>
+        <div className="micStage">
           <button
             type="button"
-            className={`speak-aloud-mic ${recording ? "is-recording" : ""}`}
-            style={{ "--mic-level": micLevel }}
-            onPointerDown={startRecording}
-            onPointerUp={stopRecording}
-            onPointerLeave={() => recording && stopRecording()}
-            aria-label={recording ? "กำลังอัดเสียง ปล่อยเพื่อจบ" : "กดค้างเพื่อพูด"}
+            className={["micBtn", recording && "recording"].filter(Boolean).join(" ")}
+            style={{ "--volume": volume }}
+            onPointerDown={handlePressStart}
+            onPointerUp={handlePressEnd}
+            onPointerLeave={handlePressEnd}
+            disabled={checked}
           >
-            <span className="speak-aloud-ripple" aria-hidden="true" />
-            <Mic size={32} />
+            🎙️
           </button>
-          <p className="speak-aloud-status" aria-live="polite">
-            {recording ? "กำลังฟัง ปล่อยเพื่อจบ..." : "กดค้างปุ่มไมค์แล้วพูดตาม"}
-          </p>
-
-          {tier === "close" ? (
-            <p className="speak-aloud-feedback">
-              ใกล้แล้ว! คำที่ยังไม่ตรง: <strong>{missingChars.join(" ")}</strong>
-            </p>
-          ) : null}
-          {tier === "retry" ? <p className="speak-aloud-feedback">ลองอีกครั้งนะ</p> : null}
+          <p className="micHint">{recording ? "กำลังฟัง... ปล่อยเมื่อพูดจบ" : "กดค้างแล้วพูดตาม"}</p>
         </div>
 
-        <Button variant="ghost" onClick={onSkip}>
+        {result && (
+          <div className={`speakResult tier-${result.tier}`}>
+            {result.tier === "perfect" && "ออกเสียงตรงทุกคำ เยี่ยมมาก!"}
+            {result.tier === "partial" && (
+              <>
+                ตรงเกินครึ่งแล้ว ลองฟังคำที่ยังไม่ตรง: <b>{result.mismatches.join(" ")}</b>
+              </>
+            )}
+            {result.tier === "low" && "ยังไม่ตรงพอ ลองฟังตัวอย่างแล้วพูดใหม่อีกครั้ง"}
+          </div>
+        )}
+
+        <button type="button" className="skipBtn" onClick={onSkip}>
           ข้ามข้อนี้
-        </Button>
+        </button>
       </div>
-    </div>
+    </>
   );
 }
