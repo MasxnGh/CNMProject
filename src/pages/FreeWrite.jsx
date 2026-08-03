@@ -8,7 +8,7 @@ import { buildWriterOptions } from "../components/exercises/hanziWriterConfig.js
 import { useWritingQuiz } from "../components/exercises/useWritingQuiz.js";
 import { useWriteGlow } from "../components/exercises/useWriteGlow.js";
 import WritingStage from "../components/exercises/WritingStage.jsx";
-import { playEntry } from "../components/exercises/content.js";
+import { manualReplay } from "../lib/audioPolicy.js";
 import { playTap, playWrong } from "../lib/sfx.js";
 import { hapticCorrect, hapticWrong } from "../lib/haptics.js";
 import Button from "../components/ui/Button.jsx";
@@ -200,7 +200,7 @@ export default function FreeWrite() {
           <div className="quizL">
             <div className="ask">เขียนตัวอักษรนี้</div>
             <div className="word">
-              <button type="button" className="spk" onClick={() => selectedWord && playEntry(selectedWord.id)}>
+              <button type="button" className="spk" onClick={() => selectedWord && manualReplay(selectedWord.id)}>
                 🔊
               </button>
               <div>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { sentenceById, vocabById, pickDecoyWords, playEntry } from "./content.js";
-import { speakText } from "../../lib/audio.js";
+import { sentenceById, vocabById } from "./content.js";
+import { pickChapterDecoyWords } from "../../lib/distractors.js";
+import { playOnSelect } from "../../lib/audioPolicy.js";
 import { useChipArrangement } from "../game/useChipArrangement.js";
 import { useChipFlip } from "../game/useChipFlip.js";
 import ChipSlots from "../game/ChipSlots.jsx";
@@ -12,7 +13,7 @@ export default function TranslateSentence({ exercise, selected, checked, onPick,
   const correctIds = sentence.tokens;
 
   const decoyIds = useMemo(
-    () => pickDecoyWords(correctIds, 2, exercise.chapterId),
+    () => pickChapterDecoyWords(correctIds, 2, exercise.chapterId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [exercise.id],
   );
@@ -68,7 +69,6 @@ export default function TranslateSentence({ exercise, selected, checked, onPick,
         setRevealCount(i);
         if (i >= correctIds.length) {
           clearInterval(interval);
-          playEntry(sentence.id);
         }
       }, 120);
       return () => clearInterval(interval);
@@ -90,7 +90,7 @@ export default function TranslateSentence({ exercise, selected, checked, onPick,
     if (checked) return;
     capture(chipId);
     arrangement.placeChip(chipId);
-    playEntry(chipId);
+    playOnSelect(exercise, chipId);
   };
 
   const handleSlotClick = (index) => {
@@ -99,7 +99,7 @@ export default function TranslateSentence({ exercise, selected, checked, onPick,
     if (!chipId) return;
     capture(chipId);
     arrangement.returnChip(index);
-    playEntry(chipId);
+    playOnSelect(exercise, chipId);
   };
 
   return (
@@ -107,9 +107,6 @@ export default function TranslateSentence({ exercise, selected, checked, onPick,
       <div className="quizL">
         <div className="ask">แปลประโยคนี้เป็นภาษาจีน</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => speakText(sentence.th)}>
-            🔊
-          </button>
           <div className="chipThaiPrompt">{sentence.th}</div>
         </div>
       </div>

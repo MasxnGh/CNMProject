@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { resolveEntry, playEntry } from "./content.js";
+import { resolveEntry } from "./content.js";
+import { manualReplay, playEntry } from "../../lib/audioPolicy.js";
 import "../game/speak.css";
 
 const HANZI_RE = /[一-鿿]/;
@@ -123,7 +124,7 @@ export default function SpeakAloud({ exercise, checked, onResult, onSkip }) {
       <div className="quizL">
         <div className="ask">พูดตามให้ตรงกับคำนี้</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => playEntry(exercise.targetId)}>
+          <button type="button" className="spk" onClick={() => manualReplay(exercise.targetId)}>
             🔊
           </button>
           <div>

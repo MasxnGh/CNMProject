@@ -1,4 +1,5 @@
-import { vocabById, playEntry } from "./content.js";
+import { vocabById } from "./content.js";
+import { manualReplay, playOnSelect } from "../../lib/audioPolicy.js";
 import ChoiceGrid from "./ChoiceGrid.jsx";
 
 const GRADIENT_ANGLES = [45, 90, 135, 180, 225, 270, 315, 360];
@@ -32,7 +33,7 @@ export default function PickImage({ exercise, selected, checked, onPick, checkBu
   const choices = exercise.choiceIds.map((id) => vocabById.get(id));
 
   const handlePick = (id) => {
-    playEntry(id);
+    playOnSelect(exercise, id);
     onPick(id);
   };
 
@@ -41,7 +42,7 @@ export default function PickImage({ exercise, selected, checked, onPick, checkBu
       <div className="quizL">
         <div className="ask">เลือกภาพที่ตรงกับคำนี้</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => playEntry(target.id)}>
+          <button type="button" className="spk" onClick={() => manualReplay(target.id)}>
             🔊
           </button>
           <div>

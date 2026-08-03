@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import HanziWriter from "hanzi-writer";
-import { vocabById, playEntry } from "./content.js";
+import { vocabById } from "./content.js";
+import { manualReplay } from "../../lib/audioPolicy.js";
 import { buildWriterOptions } from "./hanziWriterConfig.js";
 import { useWritingQuiz } from "./useWritingQuiz.js";
 import { useWriteGlow } from "./useWriteGlow.js";
@@ -113,7 +114,7 @@ export default function WriteCharacter({ exercise, guided = true, onResult, onUn
       <div className="quizL">
         <div className="ask">เขียนตัวอักษรนี้</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => playEntry(target.id)}>
+          <button type="button" className="spk" onClick={() => manualReplay(target.id)}>
             🔊
           </button>
           <div>

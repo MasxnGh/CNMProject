@@ -21,7 +21,7 @@ function LiteralBreakdown({ tokens }) {
   );
 }
 
-export default function FeedbackBar({ visible, correct, entry, onNext, onReplay, onReport }) {
+export default function FeedbackBar({ visible, correct, entry, onNext, onReplay, onReplaySlow, onReport }) {
   const [heading, setHeading] = useState(CORRECT_MESSAGES[0]);
   const [showLiteral, setShowLiteral] = useState(false);
   const [reported, setReported] = useState(false);
@@ -61,6 +61,11 @@ export default function FeedbackBar({ visible, correct, entry, onNext, onReplay,
             <button type="button" className="fxIcon" onClick={onReplay} aria-label="ฟังอีกครั้ง">
               🔊
             </button>
+            {onReplaySlow && (
+              <button type="button" className="fxIcon" onClick={onReplaySlow} aria-label="ฟังช้าๆ">
+                🐢
+              </button>
+            )}
             <button
               type="button"
               className={["fxIcon", reported && "reported"].filter(Boolean).join(" ")}

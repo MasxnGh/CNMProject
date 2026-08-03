@@ -1,18 +1,13 @@
-import { useEffect } from "react";
-import { resolveEntry, playEntry } from "./content.js";
+import { resolveEntry } from "./content.js";
+import { manualReplay, playOnSelect } from "../../lib/audioPolicy.js";
 import ChoiceGrid from "./ChoiceGrid.jsx";
 
 export default function PickAudio({ exercise, selected, checked, onPick, checkButton }) {
   const target = resolveEntry(exercise.targetId);
   const choices = exercise.choiceIds.map(resolveEntry);
 
-  useEffect(() => {
-    playEntry(exercise.targetId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exercise.id]);
-
   const handlePick = (id) => {
-    playEntry(id);
+    playOnSelect(exercise, id);
     onPick(id);
   };
 
@@ -21,10 +16,10 @@ export default function PickAudio({ exercise, selected, checked, onPick, checkBu
       <div className="quizL">
         <div className="ask">ฟังแล้วเลือกคำที่ตรงกัน</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => playEntry(target.id)}>
+          <button type="button" className="spk" onClick={() => manualReplay(target.id)}>
             🔊
           </button>
-          <button type="button" className="spk" onClick={() => playEntry(target.id, { slow: true })}>
+          <button type="button" className="spk" onClick={() => manualReplay(target.id, { slow: true })}>
             🐢
           </button>
         </div>

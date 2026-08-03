@@ -1,5 +1,6 @@
 import PickImage from "./PickImage.jsx";
 import PickTranslation from "./PickTranslation.jsx";
+import PickChinese from "./PickChinese.jsx";
 import PickAudio from "./PickAudio.jsx";
 import ArrangeFromAudio from "./ArrangeFromAudio.jsx";
 import CompleteTranslation from "./CompleteTranslation.jsx";
@@ -12,6 +13,7 @@ import { sentenceById } from "./content.js";
 export const EXERCISE_COMPONENTS = {
   pick_image: PickImage,
   pick_translation: PickTranslation,
+  pick_chinese: PickChinese,
   pick_audio: PickAudio,
   arrange_from_audio: ArrangeFromAudio,
   complete_translation: CompleteTranslation,
@@ -27,18 +29,18 @@ function arraysMatch(a, b) {
 
 export const CORRECTNESS = {
   pick_image: (exercise, answer) => answer === exercise.targetId,
-  pick_translation: (exercise, answer) => answer === exercise.targetId,
+  // Word-mode compares against targetId; sentence-mode's choices are keyed
+  // by targetSentenceId (correct) or synthetic "d0"/"d1"/... (distractors).
+  pick_translation: (exercise, answer) => answer === (exercise.targetId || exercise.targetSentenceId),
+  pick_chinese: (exercise, answer) => answer === exercise.targetSentenceId,
   pick_audio: (exercise, answer) => answer === exercise.targetId,
   arrange_from_audio: (exercise, answer) => {
     const sentence = sentenceById.get(exercise.targetSentenceId);
     return !!sentence && arraysMatch(answer, sentence.tokens);
   },
-  complete_translation: (exercise, answer) => {
-    const sentence = sentenceById.get(exercise.targetSentenceId);
-    if (!sentence) return false;
-    const correctId = sentence.tokens[exercise.blankIndex];
-    return Array.isArray(answer) ? answer[0] === correctId : answer === correctId;
-  },
+  // The blank is now on the Thai side: answer is the Thai chip text the
+  // player placed, checked against the Thai token at blankIndex.
+  complete_translation: (exercise, answer) => answer === exercise.thTokens[exercise.blankIndex],
   translate_sentence: (exercise, answer) => {
     const sentence = sentenceById.get(exercise.targetSentenceId);
     if (!sentence) return false;

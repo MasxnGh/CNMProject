@@ -16,6 +16,7 @@ const exercises = readJson("exercises.json");
 const EXERCISE_TYPES = new Set([
   "pick_image",
   "pick_translation",
+  "pick_chinese",
   "pick_audio",
   "arrange_from_audio",
   "complete_translation",
@@ -108,6 +109,70 @@ exercises.forEach((entry) => {
 
   if (entry.type === "write_character" && entry.targetId && !writableVocabIds.has(entry.targetId)) {
     errors.push(`exercise ${entry.id}: targetId "${entry.targetId}" is not marked writable in vocab.json`);
+  }
+
+  // The blank is on the Thai side now: thTokens/blankIndex/distractorTh
+  // replace the old Chinese-token blankIndex.
+  if (entry.type === "complete_translation") {
+    if (!Array.isArray(entry.thTokens) || entry.thTokens.length === 0) {
+      errors.push(`exercise ${entry.id}: complete_translation requires a non-empty thTokens array`);
+    } else if (!Number.isInteger(entry.blankIndex) || entry.blankIndex < 0 || entry.blankIndex >= entry.thTokens.length) {
+      errors.push(`exercise ${entry.id}: blankIndex ${entry.blankIndex} out of range for thTokens`);
+    } else {
+      const correctText = entry.thTokens[entry.blankIndex];
+      const distractorTh = entry.distractorTh || [];
+      if (distractorTh.length === 0) errors.push(`exercise ${entry.id}: complete_translation requires distractorTh`);
+      if (distractorTh.includes(correctText)) {
+        errors.push(`exercise ${entry.id}: distractorTh duplicates the correct answer "${correctText}"`);
+      }
+      findDuplicates(distractorTh.map((text) => ({ text })), "text").forEach((text) => {
+        errors.push(`exercise ${entry.id}: duplicate distractorTh "${text}"`);
+      });
+    }
+  }
+
+  // Distractors are inline {hanzi, pinyin} - synthetic near-misses, not real
+  // sentence ids (they never need audio, only the correct answer does).
+  if (entry.type === "pick_chinese") {
+    if (!Array.isArray(entry.distractors) || entry.distractors.length === 0) {
+      errors.push(`exercise ${entry.id}: pick_chinese requires a non-empty distractors array`);
+    } else {
+      entry.distractors.forEach((d, i) => {
+        if (!d.hanzi || !d.pinyin) errors.push(`exercise ${entry.id}: distractors[${i}] missing hanzi/pinyin`);
+      });
+      const targetSentence = sentences.find((s) => s.id === entry.targetSentenceId);
+      if (targetSentence && entry.distractors.some((d) => d.hanzi === targetSentence.hanzi)) {
+        errors.push(`exercise ${entry.id}: a distractor duplicates the correct sentence's hanzi`);
+      }
+      findDuplicates(entry.distractors, "hanzi").forEach((hanzi) => {
+        errors.push(`exercise ${entry.id}: duplicate distractor hanzi "${hanzi}"`);
+      });
+    }
+  }
+
+  // Sentence-mode pick_translation: distractorTexts are curated near-miss
+  // Thai translations, not real sentence ids.
+  if (entry.type === "pick_translation" && entry.targetSentenceId) {
+    const distractorTexts = entry.distractorTexts || [];
+    if (distractorTexts.length === 0) {
+      errors.push(`exercise ${entry.id}: sentence-mode pick_translation requires distractorTexts`);
+    }
+    const targetSentence = sentences.find((s) => s.id === entry.targetSentenceId);
+    if (targetSentence && distractorTexts.includes(targetSentence.th)) {
+      errors.push(`exercise ${entry.id}: distractorTexts duplicates the correct translation`);
+    }
+    findDuplicates(distractorTexts.map((text) => ({ text })), "text").forEach((text) => {
+      errors.push(`exercise ${entry.id}: duplicate distractorTexts "${text}"`);
+    });
+  }
+
+  // The pre-filled slot (a proper noun, usually) must be a real position in
+  // the target sentence's token list.
+  if (entry.type === "arrange_from_audio" && entry.prefilledIndex != null) {
+    const targetSentence = sentences.find((s) => s.id === entry.targetSentenceId);
+    if (targetSentence && (entry.prefilledIndex < 0 || entry.prefilledIndex >= targetSentence.tokens.length)) {
+      errors.push(`exercise ${entry.id}: prefilledIndex ${entry.prefilledIndex} out of range for the target sentence`);
+    }
   }
 });
 

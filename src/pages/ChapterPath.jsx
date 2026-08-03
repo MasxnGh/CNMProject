@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import chapters from "../content/chapters.json";
 import vocab from "../content/vocab.json";
 import { useProgress } from "../lib/progress.js";
-import { playWord } from "../lib/audio.js";
+import { manualReplay } from "../lib/audioPolicy.js";
 import { spendCoins } from "../lib/progressActions.js";
 import Lantern from "../components/ui/Lantern.jsx";
 import Sheet from "../components/ui/Sheet.jsx";
@@ -109,7 +109,7 @@ export default function ChapterPath() {
           <h5>คำศัพท์ในบทนี้</h5>
           <div className="chips">
             {chapterVocab.map((word) => (
-              <button key={word.id} type="button" className="chip" onClick={() => playWord(word.id)}>
+              <button key={word.id} type="button" className="chip" onClick={() => manualReplay(word.id)}>
                 <b>{word.hanzi}</b>
                 <i>{word.pinyin}</i>
               </button>
