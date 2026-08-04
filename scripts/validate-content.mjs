@@ -22,8 +22,8 @@ const EXERCISE_TYPES = new Set([
   "complete_translation",
   "translate_sentence",
   "dialogue_reply",
-  "speak_aloud",
   "write_character",
+  "match_pairs",
 ]);
 
 const errors = [];
@@ -47,7 +47,7 @@ const allLessons = chapters.flatMap((c) => c.lessons);
 findDuplicates(allLessons, "id").forEach((id) => errors.push(`Duplicate lesson id: ${id}`));
 
 const vocabIds = new Set(vocab.map((v) => v.id));
-const writableVocabIds = new Set(vocab.filter((v) => v.writable).map((v) => v.id));
+const vocabById = new Map(vocab.map((v) => [v.id, v]));
 const sentenceIds = new Set(sentences.map((s) => s.id));
 const lessonIds = new Set(allLessons.map((l) => l.id));
 const chapterIds = new Set(chapters.map((c) => c.id));
@@ -99,7 +99,9 @@ exercises.forEach((entry) => {
     errors.push(`exercise ${entry.id}: lessonId "${entry.lessonId}" not found in chapters.json`);
   }
 
-  const idRefs = [entry.targetId, entry.targetSentenceId, entry.promptId, entry.promptSentenceId, entry.correctId].filter(Boolean);
+  const idRefs = [
+    entry.targetId, entry.targetSentenceId, entry.promptId, entry.promptSentenceId, entry.correctId, entry.contextWord,
+  ].filter(Boolean);
   idRefs.forEach((id) => {
     if (!resolvable(id)) errors.push(`exercise ${entry.id}: "${id}" is not a known vocab or sentence id`);
   });
@@ -107,8 +109,20 @@ exercises.forEach((entry) => {
     if (!resolvable(id)) errors.push(`exercise ${entry.id}: choice "${id}" is not a known vocab or sentence id`);
   });
 
-  if (entry.type === "write_character" && entry.targetId && !writableVocabIds.has(entry.targetId)) {
-    errors.push(`exercise ${entry.id}: targetId "${entry.targetId}" is not marked writable in vocab.json`);
+  // Exactly one character, which must both belong to contextWord's own
+  // hanzi and be marked writable there.
+  if (entry.type === "write_character") {
+    if (!entry.targetChar || [...entry.targetChar].length !== 1) {
+      errors.push(`exercise ${entry.id}: write_character requires a single-character targetChar`);
+    }
+    const context = vocabById.get(entry.contextWord);
+    if (context && entry.targetChar) {
+      if (![...context.hanzi].includes(entry.targetChar)) {
+        errors.push(`exercise ${entry.id}: targetChar "${entry.targetChar}" is not in contextWord "${entry.contextWord}" (${context.hanzi})`);
+      } else if (!context.writableChars?.includes(entry.targetChar)) {
+        errors.push(`exercise ${entry.id}: targetChar "${entry.targetChar}" is not marked writable on "${entry.contextWord}"`);
+      }
+    }
   }
 
   // The blank is on the Thai side now: thTokens/blankIndex/distractorTh
@@ -172,6 +186,25 @@ exercises.forEach((entry) => {
     const targetSentence = sentences.find((s) => s.id === entry.targetSentenceId);
     if (targetSentence && (entry.prefilledIndex < 0 || entry.prefilledIndex >= targetSentence.tokens.length)) {
       errors.push(`exercise ${entry.id}: prefilledIndex ${entry.prefilledIndex} out of range for the target sentence`);
+    }
+  }
+
+  // Exactly 5 real, same-chapter, distinct vocab words - the board is fixed
+  // at 5 rows and every word must already have audio (vocab, not sentences).
+  if (entry.type === "match_pairs") {
+    if (!Array.isArray(entry.wordIds) || entry.wordIds.length !== 5) {
+      errors.push(`exercise ${entry.id}: match_pairs requires exactly 5 wordIds`);
+    } else {
+      entry.wordIds.forEach((id) => {
+        if (!vocabIds.has(id)) errors.push(`exercise ${entry.id}: wordIds "${id}" is not a known vocab id`);
+      });
+      findDuplicates(entry.wordIds.map((id) => ({ id })), "id").forEach((id) => {
+        errors.push(`exercise ${entry.id}: duplicate wordIds entry "${id}"`);
+      });
+      const wrongChapter = entry.wordIds.filter((id) => vocab.find((v) => v.id === id)?.chapterId !== entry.chapterId);
+      if (wrongChapter.length > 0) {
+        errors.push(`exercise ${entry.id}: wordIds ${wrongChapter.join(", ")} are not from chapter "${entry.chapterId}"`);
+      }
     }
   }
 });

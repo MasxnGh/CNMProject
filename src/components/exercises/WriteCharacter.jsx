@@ -23,12 +23,12 @@ function onCorrectSound() {
   hapticCorrect();
 }
 
-// entry.hanzi may be 1-2 characters (vocab.writable only allows up to 2) -
-// each is written in turn on the same canvas via HanziWriter.setCharacter,
-// driven by useWritingQuiz.
+// Exactly one character per exercise: exercise.targetChar is what gets
+// written, exercise.contextWord (a vocab id) is the full word it belongs to,
+// shown with that one character blanked out for context.
 export default function WriteCharacter({ exercise, guided = true, onResult, onUnavailable }) {
-  const target = vocabById.get(exercise.targetId);
-  const characters = target ? [...target.hanzi] : [];
+  const context = vocabById.get(exercise.contextWord);
+  const targetChar = exercise.targetChar;
 
   const containerRef = useRef(null);
   const glowRef = useRef(null);
@@ -45,14 +45,14 @@ export default function WriteCharacter({ exercise, guided = true, onResult, onUn
     onUnavailableRef.current = onUnavailable;
   });
 
-  const { charIndex, canUndo, startWord, handleUndo, handleClearAll, handleWatchDemo, giveUp } = useWritingQuiz(
+  const { canUndo, startWord, handleUndo, handleClearAll, handleWatchDemo, giveUp } = useWritingQuiz(
     writerRef,
     { onMistakeSound, onCorrectSound },
   );
 
   useWriteGlow(containerRef, glowRef);
 
-  const handleWordComplete = ({ gaveUp, usedHint, totalMistakes, drawnPaths }) => {
+  const handleCharComplete = ({ gaveUp, usedHint, totalMistakes, drawnPaths }) => {
     const quality = classifyWriteResult({
       gaveUp,
       usedHint,
@@ -73,13 +73,13 @@ export default function WriteCharacter({ exercise, guided = true, onResult, onUn
 
   useEffect(() => {
     const containerNode = containerRef.current;
-    if (characters.length === 0 || !containerNode) return undefined;
+    if (!targetChar || !containerNode) return undefined;
 
     const size = containerNode.clientWidth;
     canvasSizeRef.current = size;
     const writer = HanziWriter.create(
       containerNode,
-      characters[0],
+      targetChar,
       buildWriterOptions({
         size,
         guided,
@@ -90,7 +90,7 @@ export default function WriteCharacter({ exercise, guided = true, onResult, onUn
       }),
     );
     writerRef.current = writer;
-    startWord(characters, handleWordComplete);
+    startWord([targetChar], handleCharComplete);
 
     return () => {
       writerRef.current?.cancelQuiz();
@@ -107,26 +107,24 @@ export default function WriteCharacter({ exercise, guided = true, onResult, onUn
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!target || characters.length === 0 || unavailable) return null;
+  if (!context || !targetChar || unavailable) return null;
+
+  const blankedWord = [...context.hanzi].map((ch) => (ch === targetChar ? "＿" : ch)).join("");
 
   return (
     <>
       <div className="quizL">
-        <div className="ask">เขียนตัวอักษรนี้</div>
+        <div className="ask">เขียนตัวอักษรที่หายไป</div>
         <div className="word">
-          <button type="button" className="spk" onClick={() => manualReplay(target.id)}>
+          <button type="button" className="spk" onClick={() => manualReplay(context.id)}>
             🔊
           </button>
           <div>
-            <div className="py">{target.pinyin}</div>
-            <div className="writeTh">{target.th}</div>
+            <div className="py">{context.pinyin}</div>
+            <div className="hz">{blankedWord}</div>
+            <div className="writeTh">{context.th}</div>
           </div>
         </div>
-        {characters.length > 1 && (
-          <div className="writeCharProgress">
-            ตัวที่ {charIndex + 1}/{characters.length}
-          </div>
-        )}
       </div>
 
       <div>

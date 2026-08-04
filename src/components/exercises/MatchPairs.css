@@ -1,0 +1,77 @@
+.matchBoard {
+  display: flex;
+  gap: 12px;
+}
+
+.matchCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Same recipe as .opt (thick bottom shadow, sinks on press) - kept as its
+   own class since match rows need a fixed height .opt's grid cells don't. */
+.matchCell {
+  height: 64px;
+  border-radius: var(--r);
+  border: 2px solid transparent;
+  background: var(--night2);
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--shadow-card);
+  transition: transform .1s, opacity .5s ease, background .3s, border-color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  text-align: center;
+}
+.matchCell:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: none;
+}
+.matchCell:disabled {
+  cursor: default;
+}
+
+.matchCellAudio {
+  font-size: 26px;
+}
+.matchCellText {
+  font-size: var(--fs-opt-th);
+}
+
+.matchCell.selected {
+  border-color: var(--lantern);
+  box-shadow: 0 0 12px 2px rgba(255, 158, 44, .45);
+}
+
+.matchCell.matched {
+  border-color: var(--jade);
+  background: var(--opt-good-bg);
+  box-shadow: none;
+}
+.matchCell.matched.matchedFaded {
+  opacity: .25;
+  background: transparent;
+  border-color: var(--night3);
+  border-style: dashed;
+}
+
+.matchCell.wrong {
+  border-color: var(--seal);
+  background: var(--opt-bad-bg);
+  animation: shakeX .3s;
+}
+
+@media (min-width: 1080px) {
+  .matchBoard {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .matchCell {
+    height: 76px;
+  }
+}

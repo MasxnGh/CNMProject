@@ -54,7 +54,7 @@ export default function FeedbackBar({ visible, correct, entry, onNext, onReplay,
           <div>
             <h4>{correct ? heading : "ยังไม่ใช่"}</h4>
             <small>
-              {entry.hanzi} {entry.pinyin} — {entry.th}
+              <b className="fxHanzi">{entry.hanzi}</b> {entry.pinyin} — {entry.th}
             </small>
           </div>
           <div className="fxActions">

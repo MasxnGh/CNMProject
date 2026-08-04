@@ -9,7 +9,6 @@ import { hapticCorrect, hapticWrong } from "../lib/haptics.js";
 import { playOnEnter, playOnCheck, manualReplay } from "../lib/audioPolicy.js";
 import { isSelfReporting } from "../lib/exerciseKind.js";
 import { EXERCISE_COMPONENTS, CORRECTNESS } from "../components/exercises/QuestionRenderer.jsx";
-import { isSpeechRecognitionSupported } from "../components/exercises/support.js";
 import QuestionStage from "../components/exercises/QuestionStage.jsx";
 import CheckButton from "../components/exercises/CheckButton.jsx";
 import { resolveEntry, getEntryId } from "../components/exercises/content.js";
@@ -21,9 +20,7 @@ import Button from "../components/ui/Button.jsx";
 import "./Lesson.css";
 import "./UnlockTest.css";
 
-const ALLOWED_TYPES = new Set(
-  Object.keys(EXERCISE_COMPONENTS).filter((type) => type !== "speak_aloud" || isSpeechRecognitionSupported()),
-);
+const ALLOWED_TYPES = new Set(Object.keys(EXERCISE_COMPONENTS));
 const TEST_SIZE = 15;
 const MAX_LIVES = 3;
 
@@ -181,7 +178,7 @@ export default function UnlockTest() {
           usedHint: result.usedHint,
           totalMistakes: result.totalMistakes,
           entryId,
-          hanzi: resolveEntry(entryId)?.hanzi,
+          hanzi: currentExercise.targetChar,
           drawnPaths: result.drawnPaths,
           canvasSize: result.canvasSize,
         }),

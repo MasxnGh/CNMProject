@@ -13,6 +13,11 @@
   align-items: center;
   gap: 10px;
 }
+/* Flex items default to min-width:auto, which for a long sentence blocks
+   the wrap this bubble needs and pushes it past max-width instead. */
+.chatBubble > div {
+  min-width: 0;
+}
 .chatBubble.prompt {
   background: var(--night2);
   border-bottom-left-radius: 4px;
@@ -24,7 +29,10 @@
   border-radius: 14px;
   font-size: 18px;
 }
-.chatHz {
+/* Combined with .hz in DialogueReply.jsx (for the serif font family) -
+   .hz.chatHz's specificity must beat plain .hz regardless of which
+   stylesheet loads later, or these render at the big prompt size. */
+.hz.chatHz {
   font-size: 22px;
 }
 
@@ -65,8 +73,14 @@
   align-items: center;
   gap: 2px;
 }
-.optDialogueHz {
+.hz.optDialogueHz {
   font-size: 22px;
+}
+/* Same reasoning as .optAudio .py in exercises.css - keeps the choice-card
+   pinyin proportionate to its 22px hanzi instead of inheriting the (larger)
+   prompt-header pinyin size. */
+.optDialogue .py {
+  font-size: var(--fs-opt-zh-py);
 }
 .optDialogueTh {
   font-size: 12px;

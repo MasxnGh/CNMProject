@@ -46,9 +46,9 @@
  * @property {boolean} [draft] - true when the chapter has no real content
  *   yet and is only a placeholder scaffold.
  *
- * @typedef {"pick_image"|"pick_translation"|"pick_audio"|
+ * @typedef {"pick_image"|"pick_translation"|"pick_chinese"|"pick_audio"|
  *   "arrange_from_audio"|"complete_translation"|"translate_sentence"|
- *   "dialogue_reply"|"speak_aloud"} ExerciseType
+ *   "dialogue_reply"|"write_character"} ExerciseType
  *
  * @typedef {Object} Exercise
  * @property {string} id
@@ -56,7 +56,7 @@
  * @property {string} chapterId
  * @property {string} lessonId
  * @property {string} [targetId] - Vocab or Sentence id being tested; used
- *   by pick_image / pick_translation / pick_audio / speak_aloud.
+ *   by pick_image / pick_translation / pick_audio.
  * @property {string} [choiceIds] - candidate ids shown as options; used by
  *   pick_image / pick_translation / pick_audio / dialogue_reply.
  * @property {string} [targetSentenceId] - used by arrange_from_audio /

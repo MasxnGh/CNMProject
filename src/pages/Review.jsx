@@ -127,7 +127,7 @@ export default function Review() {
     playOnCheck(exercise);
 
     const exerciseEntryId = getEntryId(exercise);
-    const srsIds = isSentenceId(exerciseEntryId) ? sentenceById.get(exerciseEntryId).tokens : [exerciseEntryId];
+    const srsIds = exercise.wordIds || (isSentenceId(exerciseEntryId) ? sentenceById.get(exerciseEntryId).tokens : [exerciseEntryId]);
 
     setProgress((current) => ({
       ...applyReview(current, srsIds, quality),
@@ -175,7 +175,7 @@ export default function Review() {
           usedHint: result.usedHint,
           totalMistakes: result.totalMistakes,
           entryId,
-          hanzi: resolveEntry(entryId)?.hanzi,
+          hanzi: currentEntry.exercise.targetChar,
           drawnPaths: result.drawnPaths,
           canvasSize: result.canvasSize,
         }),

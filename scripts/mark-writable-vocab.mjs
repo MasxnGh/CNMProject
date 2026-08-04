@@ -1,10 +1,10 @@
 /**
- * Sets vocab.json's "writable" field: true only for words where every
- * character has stroke-order data in the locally installed hanzi-writer-data
- * package, the word is at most MAX_CHARS characters, and no character in it
- * has more than MAX_STROKES_PER_CHAR strokes (write_character exercises are
- * the slowest exercise type to answer - keeping the writable set small stops
- * them from showing up too often and wearing the player out).
+ * Sets vocab.json's "writableChars" field: the subset of each word's own
+ * characters that have stroke-order data in the locally installed
+ * hanzi-writer-data package and no more than MAX_STROKES_PER_CHAR strokes
+ * (write_character now asks about exactly one character per exercise, so
+ * eligibility is per-character, not per-word - a word's length no longer
+ * disqualifies it, only its individual characters can).
  * Run via `node scripts/mark-writable-vocab.mjs`.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -15,7 +15,6 @@ const rootDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const vocabPath = path.join(rootDir, "src/content/vocab.json");
 const dataDir = path.join(rootDir, "node_modules/hanzi-writer-data");
 
-const MAX_CHARS = 2;
 const MAX_STROKES_PER_CHAR = 12;
 
 function loadStrokeData(char) {
@@ -26,43 +25,44 @@ function loadStrokeData(char) {
 
 const vocab = JSON.parse(readFileSync(vocabPath, "utf8"));
 
-let writableCount = 0;
-const skippedTooLong = [];
-const skippedMissingData = [];
-const skippedTooManyStrokes = [];
+let totalChars = 0;
+let writableCharCount = 0;
+let wordsWithAtLeastOne = 0;
+const skippedMissingData = new Set();
+const skippedTooManyStrokes = new Set();
 
 const updated = vocab.map((word) => {
   const chars = [...word.hanzi];
+  totalChars += chars.length;
 
-  if (chars.length === 0 || chars.length > MAX_CHARS) {
-    if (chars.length > MAX_CHARS) skippedTooLong.push(word.hanzi);
-    return { ...word, writable: false };
-  }
+  const writableChars = chars.filter((char) => {
+    const data = loadStrokeData(char);
+    if (!data) {
+      skippedMissingData.add(char);
+      return false;
+    }
+    if (data.strokes.length > MAX_STROKES_PER_CHAR) {
+      skippedTooManyStrokes.add(char);
+      return false;
+    }
+    return true;
+  });
 
-  const charData = chars.map(loadStrokeData);
-  if (charData.some((data) => !data)) {
-    skippedMissingData.push(word.hanzi);
-    return { ...word, writable: false };
-  }
+  writableCharCount += writableChars.length;
+  if (writableChars.length > 0) wordsWithAtLeastOne += 1;
 
-  if (charData.some((data) => data.strokes.length > MAX_STROKES_PER_CHAR)) {
-    skippedTooManyStrokes.push(word.hanzi);
-    return { ...word, writable: false };
-  }
-
-  writableCount += 1;
-  return { ...word, writable: true };
+  const { writable, ...rest } = word;
+  return { ...rest, writableChars };
 });
 
 writeFileSync(vocabPath, `${JSON.stringify(updated, null, 2)}\n`);
 
-console.log(`vocab: ${vocab.length} total, writable: ${writableCount}`);
-if (skippedTooLong.length > 0) {
-  console.log(`skipped (>${MAX_CHARS} characters): ${skippedTooLong.join(", ")}`);
+console.log(`vocab: ${vocab.length} words, ${totalChars} characters total`);
+console.log(`writable characters: ${writableCharCount}/${totalChars}`);
+console.log(`words with at least one writable character: ${wordsWithAtLeastOne}/${vocab.length}`);
+if (skippedMissingData.size > 0) {
+  console.log(`skipped (missing stroke data): ${[...skippedMissingData].join(", ")}`);
 }
-if (skippedMissingData.length > 0) {
-  console.log(`skipped (missing stroke data): ${skippedMissingData.join(", ")}`);
-}
-if (skippedTooManyStrokes.length > 0) {
-  console.log(`skipped (a character has >${MAX_STROKES_PER_CHAR} strokes): ${skippedTooManyStrokes.join(", ")}`);
+if (skippedTooManyStrokes.size > 0) {
+  console.log(`skipped (>${MAX_STROKES_PER_CHAR} strokes): ${[...skippedTooManyStrokes].join(", ")}`);
 }

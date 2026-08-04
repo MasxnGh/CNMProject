@@ -2,14 +2,12 @@ import exercisesData from "../../content/exercises.json";
 import { getDueCards, getUpcomingCards } from "../../lib/srs.js";
 import { getEntryId } from "./content.js";
 import { EXERCISE_COMPONENTS } from "./QuestionRenderer.jsx";
-import { isSpeechRecognitionSupported } from "./support.js";
 import { isSentenceId, sentenceById } from "./content.js";
 
-const ALLOWED_TYPES = new Set(
-  Object.keys(EXERCISE_COMPONENTS).filter((type) => type !== "speak_aloud" || isSpeechRecognitionSupported()),
-);
+const ALLOWED_TYPES = new Set(Object.keys(EXERCISE_COMPONENTS));
 
 function exerciseTouchesWord(exercise, wordId) {
+  if (exercise.wordIds) return exercise.wordIds.includes(wordId);
   const entryId = getEntryId(exercise);
   if (entryId === wordId) return true;
   if (isSentenceId(entryId)) return !!sentenceById.get(entryId)?.tokens?.includes(wordId);
