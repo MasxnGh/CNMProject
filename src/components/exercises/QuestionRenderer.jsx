@@ -6,8 +6,8 @@ import ArrangeFromAudio from "./ArrangeFromAudio.jsx";
 import CompleteTranslation from "./CompleteTranslation.jsx";
 import TranslateSentence from "./TranslateSentence.jsx";
 import DialogueReply from "./DialogueReply.jsx";
-import SpeakAloud from "./SpeakAloud.jsx";
 import WriteCharacter from "./WriteCharacter.jsx";
+import MatchPairs from "./MatchPairs.jsx";
 import { sentenceById } from "./content.js";
 
 export const EXERCISE_COMPONENTS = {
@@ -19,8 +19,8 @@ export const EXERCISE_COMPONENTS = {
   complete_translation: CompleteTranslation,
   translate_sentence: TranslateSentence,
   dialogue_reply: DialogueReply,
-  speak_aloud: SpeakAloud,
   write_character: WriteCharacter,
+  match_pairs: MatchPairs,
 };
 
 function arraysMatch(a, b) {
@@ -49,12 +49,14 @@ export const CORRECTNESS = {
     return false;
   },
   dialogue_reply: (exercise, answer) => answer === exercise.correctId,
-  speak_aloud: (exercise, answer) => answer?.tier === "perfect",
   // write_character is self-reporting (see src/lib/exerciseKind.js) - it
   // never goes through the select-then-check flow that calls this, but the
   // entry is kept so every exercise type has one, consistent with the rest
   // of this map, and useable by anything else that wants a uniform checker.
   write_character: (exercise, answer) => answer?.correct === true,
+  // match_pairs is also self-reporting - it only ever finishes by matching
+  // every pair, so this is never actually false in practice.
+  match_pairs: (exercise, answer) => answer?.correct === true,
 };
 
 export default function QuestionRenderer({ exercise, ...props }) {

@@ -11,7 +11,6 @@ import { applyReview } from "../lib/srs.js";
 import { recordWriteCompletion } from "../lib/writeProgress.js";
 import { isSelfReporting } from "../lib/exerciseKind.js";
 import { EXERCISE_COMPONENTS, CORRECTNESS } from "../components/exercises/QuestionRenderer.jsx";
-import { isSpeechRecognitionSupported } from "../components/exercises/support.js";
 import QuestionStage from "../components/exercises/QuestionStage.jsx";
 import CheckButton from "../components/exercises/CheckButton.jsx";
 import { resolveEntry, getEntryId, isSentenceId, sentenceById } from "../components/exercises/content.js";
@@ -22,9 +21,7 @@ import Sheet from "../components/ui/Sheet.jsx";
 import Button from "../components/ui/Button.jsx";
 import "./Lesson.css";
 
-const ALLOWED_TYPES = new Set(
-  Object.keys(EXERCISE_COMPONENTS).filter((type) => type !== "speak_aloud" || isSpeechRecognitionSupported()),
-);
+const ALLOWED_TYPES = new Set(Object.keys(EXERCISE_COMPONENTS));
 
 export default function Lesson() {
   const { lessonId } = useParams();
@@ -91,7 +88,7 @@ export default function Lesson() {
     playOnCheck(currentExercise);
 
     const entryId = getEntryId(currentExercise);
-    const srsIds = isSentenceId(entryId) ? sentenceById.get(entryId).tokens : [entryId];
+    const srsIds = currentExercise.wordIds || (isSentenceId(entryId) ? sentenceById.get(entryId).tokens : [entryId]);
     setProgress((current) => applyReview(current, srsIds, quality));
 
     if (isCorrect) {
@@ -143,7 +140,7 @@ export default function Lesson() {
           usedHint: result.usedHint,
           totalMistakes: result.totalMistakes,
           entryId,
-          hanzi: resolveEntry(entryId)?.hanzi,
+          hanzi: currentExercise.targetChar,
           drawnPaths: result.drawnPaths,
           canvasSize: result.canvasSize,
         }),

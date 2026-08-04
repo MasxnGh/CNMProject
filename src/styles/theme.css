@@ -52,14 +52,57 @@
   --r: 18px;
   --rail: 0px;
   --pad: 20px;
+
+  /* Exercise text sizing - one scale for every exercise component, so a
+     readability pass never means hunting through 9+ component stylesheets.
+     Three tiers (mobile default, tablet at 720px, desktop at 1080px),
+     matching the breakpoints already used everywhere else in this file. */
+  --fs-hanzi-lg: 48px;   /* big prompt 汉字, e.g. the word header in Lesson */
+  --fs-pinyin: 17px;     /* pinyin annotating that prompt */
+  --fs-ask: 17px;        /* .ask instruction line */
+  --fs-opt-th: 16px;     /* choice buttons showing Thai text */
+  --fs-opt-zh: 24px;     /* choice buttons showing a Chinese sentence/word */
+  --fs-opt-zh-py: 14px;  /* pinyin inside those Chinese-text choices */
+  --fs-chip-zh: 22px;    /* draggable/fixed Chinese word chips */
+  --fs-chip-zh-py: 13px; /* pinyin on a Chinese chip, if ever shown */
+  --fs-chip-th: 17px;    /* draggable/fixed Thai word chips */
+  --fs-feedback: 15px;   /* FeedbackBar recap line (pinyin / th) */
+  --fs-feedback-hanzi: 26px; /* the 汉字 within that recap line */
 }
 
 @media (min-width: 720px) {
-  :root { --pad: 32px; }
+  :root {
+    --pad: 32px;
+    --fs-hanzi-lg: 60px;
+    --fs-pinyin: 19px;
+    --fs-ask: 18px;
+    --fs-opt-th: 17px;
+    --fs-opt-zh: 28px;
+    --fs-opt-zh-py: 15px;
+    --fs-chip-zh: 24px;
+    --fs-chip-zh-py: 14px;
+    --fs-chip-th: 18px;
+    --fs-feedback: 16px;
+    --fs-feedback-hanzi: 30px;
+  }
 }
 
 @media (min-width: 1080px) {
-  :root { --rail: 104px; --pad: 40px; }
+  :root {
+    --rail: 104px;
+    --pad: 40px;
+    --fs-hanzi-lg: 76px;
+    --fs-pinyin: 22px;
+    --fs-ask: 20px;
+    --fs-opt-th: 18px;
+    --fs-opt-zh: 32px;
+    --fs-opt-zh-py: 16px;
+    --fs-chip-zh: 26px;
+    --fs-chip-zh-py: 15px;
+    --fs-chip-th: 19px;
+    --fs-feedback: 17px;
+    --fs-feedback-hanzi: 34px;
+  }
 }
 
 * {

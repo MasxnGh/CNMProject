@@ -115,25 +115,20 @@
     "correctId": "v_nihao"
   },
   {
-    "id": "ex_ch01_l1_11",
-    "type": "speak_aloud",
-    "chapterId": "ch01",
-    "lessonId": "ch01_l1",
-    "targetId": "v_nihao"
-  },
-  {
     "id": "ex_ch01_l1_12",
     "type": "write_character",
     "chapterId": "ch01",
     "lessonId": "ch01_l1",
-    "targetId": "v_ni"
+    "targetChar": "你",
+    "contextWord": "v_ni"
   },
   {
     "id": "ex_ch01_l1_13",
     "type": "write_character",
     "chapterId": "ch01",
     "lessonId": "ch01_l1",
-    "targetId": "v_xiexie"
+    "targetChar": "谢",
+    "contextWord": "v_xiexie"
   },
   {
     "id": "ex_ch01_l1_14",
@@ -263,13 +258,6 @@
     "correctId": "v_nihao"
   },
   {
-    "id": "ex_ch01_l2_11",
-    "type": "speak_aloud",
-    "chapterId": "ch01",
-    "lessonId": "ch01_l2",
-    "targetId": "s_ni_hao_ma"
-  },
-  {
     "id": "ex_ch01_l3_01",
     "type": "pick_image",
     "chapterId": "ch01",
@@ -393,25 +381,20 @@
     "correctId": "s_wo_jiao_xiaoming"
   },
   {
-    "id": "ex_ch01_l3_12",
-    "type": "speak_aloud",
-    "chapterId": "ch01",
-    "lessonId": "ch01_l3",
-    "targetId": "s_wo_jiao_xiaoming"
-  },
-  {
     "id": "ex_ch01_l3_13",
     "type": "write_character",
     "chapterId": "ch01",
     "lessonId": "ch01_l3",
-    "targetId": "v_wo"
+    "targetChar": "我",
+    "contextWord": "v_wo"
   },
   {
     "id": "ex_ch01_l3_14",
     "type": "write_character",
     "chapterId": "ch01",
     "lessonId": "ch01_l3",
-    "targetId": "v_mingzi"
+    "targetChar": "名",
+    "contextWord": "v_mingzi"
   },
   {
     "id": "ex_ch01_l3_15",
@@ -526,20 +509,6 @@
       "s_ni_hao"
     ],
     "correctId": "s_hen_gaoxing_renshi_ni"
-  },
-  {
-    "id": "ex_ch01_l4_10",
-    "type": "speak_aloud",
-    "chapterId": "ch01",
-    "lessonId": "ch01_l4",
-    "targetId": "v_gaoxing"
-  },
-  {
-    "id": "ex_ch01_l4_11",
-    "type": "speak_aloud",
-    "chapterId": "ch01",
-    "lessonId": "ch01_l4",
-    "targetId": "s_hen_gaoxing_renshi_ni"
   },
   {
     "id": "ex_ch01_l5_01",
@@ -658,10 +627,10 @@
   },
   {
     "id": "ex_ch01_l5_11",
-    "type": "speak_aloud",
+    "type": "match_pairs",
     "chapterId": "ch01",
     "lessonId": "ch01_l5",
-    "targetId": "s_ni_jiao_shenme_mingzi"
+    "wordIds": ["v_nihao", "v_xiexie", "v_zaijian", "v_xiaoming", "v_gaoxing"]
   },
   {
     "id": "ex_ch02_l1_01",

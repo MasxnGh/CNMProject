@@ -1,11 +1,11 @@
 /**
- * Copies stroke-order data for exactly the characters vocab.json's writable
- * words need, from the installed hanzi-writer-data package into
+ * Copies stroke-order data for exactly the characters vocab.json's
+ * writableChars list, from the installed hanzi-writer-data package into
  * src/content/hanzi-data/. Keeping this a small, explicit local subset
  * (rather than dynamic-importing straight against node_modules/hanzi-writer-data,
  * which has ~9500 files) keeps the production build from pre-chunking every
  * character in the whole package. Run via `node scripts/copy-hanzi-data.mjs`
- * whenever vocab.json's writable set changes.
+ * whenever vocab.json's writableChars set changes.
  */
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -17,11 +17,7 @@ const sourceDir = path.join(rootDir, "node_modules/hanzi-writer-data");
 const targetDir = path.join(rootDir, "src/content/hanzi-data");
 
 const vocab = JSON.parse(readFileSync(vocabPath, "utf8"));
-const needed = new Set(
-  vocab
-    .filter((word) => word.writable)
-    .flatMap((word) => [...word.hanzi]),
-);
+const needed = new Set(vocab.flatMap((word) => word.writableChars || []));
 
 mkdirSync(targetDir, { recursive: true });
 

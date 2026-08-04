@@ -33,6 +33,9 @@ export const AUDIO_POLICY = {
   translate_sentence: { onEnter: null, onSelect: null, onCheck: "answer" },
   dialogue_reply: { onEnter: "prompt", onSelect: null, onCheck: "dialogue" },
   write_character: { onEnter: "prompt", onSelect: null, onCheck: "answer" },
+  // No onEnter (5 words can't all play at once) and no onCheck (there's no
+  // check button - MatchPairs plays its own quiet per-pair sfx directly).
+  match_pairs: { onEnter: null, onSelect: "option", onCheck: null },
 };
 
 // Maps each exercise type's own fields to the abstract prompt/answer ids the
@@ -43,8 +46,11 @@ function resolveAudioIds(exercise) {
   switch (exercise.type) {
     case "pick_image":
     case "pick_audio":
-    case "write_character":
       return { prompt: exercise.targetId, answer: exercise.targetId };
+    case "write_character":
+      // The audio is always the whole word (contextWord), never the single
+      // character being written - there's no separate audio per character.
+      return { prompt: exercise.contextWord, answer: exercise.contextWord };
     case "pick_translation": {
       // Word-mode uses targetId; sentence-mode uses targetSentenceId instead.
       const id = exercise.targetId || exercise.targetSentenceId;

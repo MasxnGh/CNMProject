@@ -21,7 +21,7 @@
 }
 
 .ask {
-  font-size: 15px;
+  font-size: var(--fs-ask);
   color: var(--dim);
   margin-bottom: 14px;
 }
@@ -51,8 +51,8 @@
   box-shadow: none;
 }
 
-.py { font-size: 14px; color: var(--lantern); }
-.hz { font-family: "Noto Serif SC", serif; font-size: 40px; line-height: 1.1; }
+.py { font-size: var(--fs-pinyin); color: var(--lantern); }
+.hz { font-family: "Noto Serif SC", serif; font-size: var(--fs-hanzi-lg); line-height: 1.1; }
 
 .grid {
   display: grid;
@@ -70,7 +70,7 @@
   text-align: center;
   color: inherit;
   font-family: inherit;
-  font-size: 15px;
+  font-size: var(--fs-opt-th);
   box-shadow: 0 5px 0 var(--shadow-card);
   transition: transform .1s;
 }
@@ -95,16 +95,13 @@
 
 @media (min-width: 720px) {
   .grid { gap: 16px; }
-  .opt { padding: 20px 12px; font-size: 16px; }
+  .opt { padding: 20px 12px; }
 }
 
 @media (min-width: 1080px) {
   .quizGrid { grid-template-columns: 360px 1fr; gap: 48px; align-items: start; }
   .quizL { position: sticky; top: 32px; }
-  .hz { font-size: 60px; }
-  .py { font-size: 17px; }
-  .ask { font-size: 17px; }
   .grid { margin-bottom: 24px; }
-  .opt { padding: 26px 14px; font-size: 17px; }
+  .opt { padding: 26px 14px; }
   .checkBtn { max-width: 300px; margin-left: auto; }
 }

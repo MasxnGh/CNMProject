@@ -68,7 +68,7 @@ export default function CompleteTranslation({ exercise, selected, checked, onPic
         </div>
       </div>
       <div>
-        <div className="chipStage" ref={containerRef}>
+        <div className="chipStage chipStageTh" ref={containerRef}>
           <div className="chipSlotsRow">
             {exercise.thTokens.map((token, i) => {
               if (i !== exercise.blankIndex) {

@@ -22,8 +22,15 @@
 .fx h4 { font-size: 19px; font-weight: 600; margin-bottom: 3px; }
 .fx.ok h4 { color: var(--jade); }
 .fx.no h4 { color: var(--wrong-accent); }
-.fx small { color: var(--dim); font-size: 13px; }
+.fx small { color: var(--dim); font-size: var(--fs-feedback); }
 .fx .btn { margin-top: 14px; }
+
+.fxHanzi {
+  font-family: "Noto Serif SC", serif;
+  font-size: var(--fs-feedback-hanzi);
+  color: var(--paper);
+  font-weight: 700;
+}
 
 .fxTop {
   display: flex;

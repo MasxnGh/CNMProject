@@ -56,7 +56,7 @@
   align-items: center;
   justify-content: center;
   font-family: "Noto Serif SC", serif;
-  font-size: 20px;
+  font-size: var(--fs-chip-zh);
   font-weight: 700;
   border: 0;
   color: inherit;
@@ -74,11 +74,22 @@
 
 .chipFixedToken {
   font-family: "Noto Serif SC", serif;
-  font-size: 20px;
+  font-size: var(--fs-chip-zh);
   font-weight: 700;
   display: flex;
   align-items: center;
   padding: 10px 4px;
+}
+
+/* Thai chips (complete_translation's answer tray) aren't Chinese - no serif
+   face, and a size of their own since Thai reads comfortably smaller.
+   ChipTray/ChipSlots render a fixed .wordChip/.chipFixedToken className, so
+   this scopes by the stage wrapper instead of a chip-level modifier class. */
+.chipStageTh .wordChip,
+.chipStageTh .chipFixedToken {
+  font-family: inherit;
+  font-weight: 400;
+  font-size: var(--fs-chip-th);
 }
 
 .chipContext {

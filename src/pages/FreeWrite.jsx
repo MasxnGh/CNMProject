@@ -29,8 +29,17 @@ export default function FreeWrite() {
   const navigate = useNavigate();
   const [progress, setProgress] = useProgress();
 
+  // Free-write still writes a whole word sequentially (unlike the
+  // write_character exercise, which now only ever asks for one character),
+  // so a word only qualifies here if every one of its characters is
+  // writable, not just some of them.
   const knownWords = useMemo(
-    () => vocab.filter((word) => word.writable && progress.completedLessons.includes(word.lessonId)),
+    () =>
+      vocab.filter(
+        (word) =>
+          progress.completedLessons.includes(word.lessonId) &&
+          [...word.hanzi].every((ch) => word.writableChars.includes(ch)),
+      ),
     [progress.completedLessons],
   );
 
