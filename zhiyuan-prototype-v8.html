@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>纸鸢 Zhǐ Yuān — ต้นแบบ v7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Noto+Serif+SC:wght@400;600;900&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#FCFAF5; --shell:#F5F0E6; --sand:#EDE5D6; --line:#E3DACA;
+  --card:#FFFFFF;
+  --ink:#241F1A; --ink2:#5C5348; --ink3:#96897A;
+  --cel:#6FA294; --cel-l:#DCEAE5; --cel-d:#3F6D62;
+  --verm:#CE4430; --verm-l:#FAE3DE; --verm-d:#8E2415;
+  --gold:#C08A2E; --gold-l:#F7EBD4; --gold-d:#835811;
+  --lapis:#3F6BA8; --lapis-l:#DEE8F5; --lapis-d:#24446F;
+  --plum:#A65682; --plum-l:#F4E2EC; --plum-d:#733755;
+  --acc:var(--verm); --acc-l:var(--verm-l); --acc-d:var(--verm-d);
+  --r:14px; --rl:22px; --pad:18px;
+  --out:cubic-bezier(.16,1,.3,1); --back:cubic-bezier(.34,1.7,.5,1);
+  --f:160ms; --b:340ms; --s:600ms;
+  --e1:0 1px 2px rgba(36,31,26,.05),0 2px 8px rgba(36,31,26,.05);
+  --e2:0 2px 4px rgba(36,31,26,.05),0 8px 24px rgba(36,31,26,.08);
+  --e3:0 4px 8px rgba(36,31,26,.06),0 18px 44px rgba(36,31,26,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:Kanit,sans-serif;font-weight:300;color:var(--ink);background:var(--ivory);
+  overflow-x:hidden;overscroll-behavior-y:none}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input{font-family:inherit}
+.zh{font-family:'Noto Serif SC',serif;font-weight:600}
+.zhb{font-family:'Noto Serif SC',serif;font-weight:900}
+.ser{font-family:'Cormorant Garamond',serif}
+::selection{background:var(--gold-l)}
+svg{display:block}
+
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+#burst{position:fixed;inset:0;z-index:95;pointer-events:none}
+.view{display:none}.view.on{display:block}
+
+/* ═══ BUTTON ═══ */
+.btn{display:inline-block;padding:14px 30px;border-radius:99px;position:relative;overflow:hidden;
+  font-weight:500;font-size:16px;color:#fff;letter-spacing:.3px;
+  background:linear-gradient(174deg,#E05C46,var(--verm) 46%,var(--verm-d));
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 4px 14px rgba(206,68,48,.3),0 1px 3px rgba(36,31,26,.14);
+  transition:transform var(--f) var(--out),box-shadow var(--b),filter var(--b)}
+.btn:after{content:'';position:absolute;top:-40%;bottom:-40%;left:-70%;width:34%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
+  transform:skewX(-20deg);transition:left var(--s) var(--out)}
+.btn:active{transform:translateY(2px) scale(.99);box-shadow:0 2px 8px rgba(206,68,48,.24)}
+.btn.g{background:var(--card);color:var(--ink);font-weight:400;
+  box-shadow:inset 0 0 0 1px var(--line),var(--e1)}
+.btn.gold{background:linear-gradient(174deg,#D9A448,var(--gold) 46%,var(--gold-d));
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 4px 14px rgba(192,138,46,.3)}
+.btn.cel{background:linear-gradient(174deg,#84B7A9,var(--cel) 46%,var(--cel-d));
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 4px 14px rgba(111,162,148,.3)}
+.btn.blk{display:block;width:100%;text-align:center}
+.btn.sm{padding:9px 19px;font-size:14px}
+.btn[disabled]{background:var(--sand);color:var(--ink3);box-shadow:none;cursor:default}
+.btn.pulse{animation:bp 2.2s ease-in-out infinite}
+@keyframes bp{0%,100%{box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 4px 14px rgba(206,68,48,.3)}
+  50%{box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 8px 26px rgba(206,68,48,.5)}}
+@media(hover:hover){.btn:not([disabled]):hover:after{left:130%}
+  .btn:not([disabled]):hover{transform:translateY(-2px);filter:brightness(1.03)}}
+
+/* ═══ LANDING ═══ */
+#v_land{position:relative;z-index:1}
+.lnav{position:fixed;top:0;left:0;right:0;z-index:60;padding:13px var(--pad);
+  display:flex;align-items:center;gap:14px;transition:all var(--b);
+  background:rgba(252,250,245,.72);backdrop-filter:blur(16px) saturate(1.2);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2)}
+.lnav.on{box-shadow:0 1px 0 var(--line),0 4px 20px rgba(36,31,26,.05)}
+.lnav .lg{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.lgi{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;
+  font-size:19px;color:#fff;background:linear-gradient(160deg,#E05C46,var(--verm-d));
+  box-shadow:0 3px 10px rgba(206,68,48,.3)}
+.lgt{font-size:16px;font-weight:500;letter-spacing:2px}
+.lk{display:none;gap:26px;font-size:14px;color:var(--ink2)}
+.lk a{color:inherit;text-decoration:none;transition:color var(--f)}
+.lk a:hover{color:var(--verm)}
+
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;
+  padding:104px var(--pad) 60px;text-align:center}
+.heroKite{width:132px;margin:0 auto 30px;animation:fly 6s ease-in-out infinite;transform-origin:50% 0}
+@keyframes fly{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-12px)}}
+.hero h1{font-size:clamp(50px,14vw,112px);font-weight:900;line-height:.96;letter-spacing:6px;
+  font-family:'Noto Serif SC',serif;color:var(--ink)}
+.hero .en{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,4.4vw,26px);
+  letter-spacing:8px;color:var(--ink3);margin-top:10px;font-weight:400}
+.hero .ld{font-size:clamp(14px,3.5vw,18px);color:var(--ink2);line-height:1.95;
+  max-width:540px;margin:22px auto 34px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hstat{display:flex;gap:0;justify-content:center;margin-top:50px;flex-wrap:wrap}
+.hstat div{padding:0 22px;text-align:center;border-right:1px solid var(--line)}
+.hstat div:last-child{border:0}
+.hstat b{display:block;font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;
+  color:var(--verm);line-height:1}
+.hstat span{font-size:11.5px;color:var(--ink3);letter-spacing:.5px}
+.shint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:11px;
+  color:var(--ink3);letter-spacing:2.6px;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.4}
+  50%{transform:translateX(-50%) translateY(8px);opacity:1}}
+
+.sec{padding:80px var(--pad);max-width:1160px;margin:0 auto;position:relative}
+.sec.tint{background:var(--shell)}
+.secH{text-align:center;margin-bottom:46px}
+.secH .kk{display:inline-block;padding:5px 16px;border-radius:99px;font-size:11px;
+  letter-spacing:3px;background:var(--acc-l);color:var(--acc-d);margin-bottom:14px}
+.secH h2{font-size:clamp(27px,6.4vw,42px);font-weight:500;line-height:1.3}
+.secH p{font-size:clamp(13.5px,3.4vw,16px);color:var(--ink2);margin-top:13px;line-height:1.9;
+  max-width:580px;margin-left:auto;margin-right:auto}
+.rev{opacity:0;transform:translateY(30px);transition:opacity .9s var(--out),transform .9s var(--out)}
+.rev.in{opacity:1;transform:none}
+
+.big3{display:grid;gap:18px}
+.b3{position:relative;padding:28px 24px;border-radius:var(--rl);background:var(--card);
+  box-shadow:var(--e2);overflow:hidden}
+.b3:before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--c)}
+.b3 .no{position:absolute;right:20px;top:14px;font-family:'Noto Serif SC',serif;font-size:70px;
+  font-weight:900;color:var(--c);opacity:.1;line-height:1}
+.b3 .si{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;
+  margin-bottom:16px;background:var(--cl)}
+.b3 h3{font-size:19.5px;font-weight:500;margin-bottom:9px}
+.b3 p{font-size:14px;color:var(--ink2);line-height:1.9}
+
+/* word gallery */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:13px}
+.gw{padding:14px 10px 12px;border-radius:var(--r);background:var(--card);text-align:center;
+  box-shadow:var(--e1);transition:transform var(--b) var(--out),box-shadow var(--b)}
+@media(hover:hover){.gw:hover{transform:translateY(-5px);box-shadow:var(--e2)}}
+.gw .im{width:66px;height:66px;margin:0 auto 9px;border-radius:50%;display:grid;place-items:center;
+  background:var(--bg)}
+.gw .im svg{width:44px;height:44px}
+.gw .h{font-family:'Noto Serif SC',serif;font-size:21px;font-weight:600}
+.gw .p{font-size:11px;color:var(--verm);margin-top:1px}
+.gw .t{font-size:12.5px;color:var(--ink2)}
+
+.demoSky{position:relative;height:230px;border-radius:var(--rl);overflow:hidden;margin-top:20px;
+  background:linear-gradient(180deg,#CFE4F2,#EAF2F8 58%,#FBF6EA);box-shadow:var(--e1)}
+.demoSky .zone{position:absolute;left:0;right:0;top:0;height:52px;
+  background:linear-gradient(180deg,rgba(206,68,48,.16),transparent);
+  border-bottom:1px dashed rgba(206,68,48,.4)}
+.demoSky .zl{position:absolute;top:11px;left:14px;font-size:10.5px;color:var(--verm-d);letter-spacing:1.2px}
+.dk{position:absolute;left:50%;width:86px;transform:translateX(-50%);animation:rise 5.4s linear infinite}
+@keyframes rise{0%{bottom:-90px;opacity:0}8%{opacity:1}88%{opacity:1}100%{bottom:240px;opacity:0}}
+.cloud{position:absolute;border-radius:99px;background:#fff;opacity:.75}
+
+.modes{display:grid;gap:16px}
+.mc{position:relative;padding:22px;border-radius:var(--rl);background:var(--card);
+  box-shadow:var(--e2);overflow:hidden}
+.mc .mh{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.mc .mi{width:48px;height:48px;flex:none;border-radius:15px;display:grid;place-items:center;
+  font-family:'Noto Serif SC',serif;font-size:22px;font-weight:900;color:var(--c);background:var(--cl)}
+.mc .mt{font-size:17.5px;font-weight:500}
+.mc .mz{font-size:12px;color:var(--c);letter-spacing:1px}
+.mc p{font-size:13.5px;color:var(--ink2);line-height:1.85}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.chips span{padding:5px 13px;border-radius:99px;font-size:12.5px;background:var(--shell);color:var(--ink2)}
+
+.feat{display:grid;gap:14px}
+.fit{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:var(--r);
+  background:var(--card);box-shadow:var(--e1)}
+.fit .fi{width:42px;height:42px;flex:none;border-radius:13px;display:grid;place-items:center;
+  background:var(--gold-l)}
+.fit .fi svg{width:22px;height:22px}
+.fit h4{font-size:15.5px;font-weight:500;margin-bottom:4px}
+.fit p{font-size:13px;color:var(--ink2);line-height:1.8}
+
+.fcta{text-align:center;padding:88px var(--pad) 110px;background:var(--shell)}
+.fcta h2{font-size:clamp(28px,7.4vw,48px);font-weight:500;line-height:1.32;margin-bottom:16px}
+.fcta p{color:var(--ink2);font-size:15px;margin-bottom:34px;line-height:1.9}
+.lfoot{padding:28px var(--pad) 44px;text-align:center;font-size:12px;color:var(--ink3);
+  background:var(--shell);box-shadow:inset 0 1px 0 var(--line)}
+
+
+/* ── level section ── */
+.lvlWrap{display:grid;gap:20px}
+.lvlCard{position:relative;overflow:hidden;padding:26px 24px;border-radius:var(--rl);
+  background:var(--card);box-shadow:var(--e2)}
+.lvlCard .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:99px;
+  background:var(--verm);color:#fff;font-size:13px;font-weight:500;margin-bottom:16px}
+.lvlCard .badge b{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:900}
+.lvlCard h3{font-size:21px;font-weight:500;margin-bottom:10px;line-height:1.35}
+.lvlCard p{font-size:14px;color:var(--ink2);line-height:1.9}
+.lvlCard .seal2{position:absolute;right:-14px;top:-14px;width:118px;height:118px;
+  border-radius:50%;background:var(--verm);opacity:.07}
+.lvlStats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.lvlStat{padding:15px;border-radius:var(--r);background:var(--shell);text-align:center}
+.lvlStat b{display:block;font-family:'Cormorant Garamond',serif;font-size:31px;font-weight:600;
+  color:var(--verm);line-height:1}
+.lvlStat span{font-size:11.5px;color:var(--ink3)}
+.catList{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.catRow{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:var(--r);
+  background:var(--card);box-shadow:var(--e1)}
+.catRow .ci2{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;
+  background:var(--cl)}
+.catRow .ci2 svg{width:24px;height:24px}
+.catRow .cz2{font-family:'Noto Serif SC',serif;font-size:12.5px;color:var(--c);font-weight:600}
+.catRow .cn2{font-size:14px;font-weight:400;line-height:1.2}
+.catRow .cw2{margin-left:auto;font-size:12px;color:var(--ink3);white-space:nowrap}
+.sampleGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:10px;
+  margin-top:18px}
+.samp{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--r);
+  background:var(--shell)}
+.samp .sh{font-family:'Noto Serif SC',serif;font-size:23px;font-weight:900;line-height:1}
+.samp .sp2{font-size:10.5px;color:var(--verm)}
+.samp .st2{font-size:12.5px;color:var(--ink2)}
+.notCard{display:flex;gap:13px;align-items:flex-start;padding:18px;border-radius:var(--rl);
+  background:var(--lapis-l);box-shadow:inset 0 0 0 1px rgba(63,107,168,.2)}
+.notCard .ni2{width:40px;height:40px;flex:none;border-radius:13px;display:grid;place-items:center;
+  background:#fff}
+.notCard .ni2 svg{width:24px;height:24px}
+.notCard b{font-size:15px;font-weight:500;display:block;margin-bottom:4px}
+.notCard p{font-size:13px;color:var(--ink2);line-height:1.8}
+@media(min-width:900px){.lvlWrap{grid-template-columns:1.15fr 1fr;align-items:start}
+  .lvlStats{grid-template-columns:repeat(4,1fr)}}
+
+/* ═══ GAME SHELL ═══ */
+.gbar{position:sticky;top:0;z-index:50;padding:12px var(--pad);display:flex;align-items:center;gap:11px;
+  background:rgba(252,250,245,.86);backdrop-filter:blur(16px) saturate(1.2);
+  box-shadow:0 1px 0 var(--line)}
+.gbar .ico{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;
+  font-size:17px;background:var(--card);box-shadow:var(--e1);transition:transform var(--f)}
+.gbar .ico:active{transform:scale(.94)}
+.gbar .tt{flex:1;min-width:0}
+.gbar .tz{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:900;color:var(--acc);line-height:1.1}
+.gbar .tn{font-size:11px;color:var(--ink3);letter-spacing:.5px}
+.who{display:flex;align-items:center;gap:7px;padding:6px 13px;border-radius:99px;background:var(--card);
+  box-shadow:var(--e1);font-size:13.5px;font-weight:400}
+.gwrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:18px var(--pad) 60px}
+
+/* ═══ NAME ═══ */
+.nameW{min-height:82svh;display:grid;place-items:center;text-align:center}
+.nin{width:100%;max-width:400px;margin:24px auto 18px}
+.nin input{width:100%;padding:17px 20px;border-radius:var(--r);font-size:18px;font-weight:400;
+  background:var(--card);color:var(--ink);outline:0;box-shadow:inset 0 0 0 1px var(--line),var(--e1);
+  transition:box-shadow var(--b)}
+.nin input:focus{box-shadow:inset 0 0 0 2px var(--verm),0 4px 18px rgba(206,68,48,.14)}
+.nin input::placeholder{color:var(--ink3)}
+.avp{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.avp button{width:54px;height:54px;border-radius:17px;background:var(--card);
+  box-shadow:var(--e1);transition:all var(--f) var(--out);display:grid;place-items:center}
+.avp button svg{width:32px;height:32px}
+.avp button.on{box-shadow:inset 0 0 0 2px var(--verm),0 6px 18px rgba(206,68,48,.22);
+  transform:translateY(-4px)}
+
+/* ═══ SETUP ═══ */
+.secT{display:flex;align-items:center;gap:11px;margin:28px 0 14px}
+.secT .k{width:26px;height:26px;flex:none;border-radius:8px;display:grid;place-items:center;
+  font-size:12.5px;font-weight:500;background:var(--acc);color:#fff}
+.secT h3{font-size:17px;font-weight:500}
+.diffs{display:grid;gap:12px}
+.diff{position:relative;text-align:left;padding:18px;border-radius:var(--rl);background:var(--card);
+  box-shadow:var(--e1);transition:all var(--b) var(--out);overflow:hidden}
+.diff:before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--c);
+  opacity:0;transition:opacity var(--b)}
+.diff.on:before{opacity:1}
+.diff.on{box-shadow:inset 0 0 0 1.5px var(--c),var(--e2);background:var(--cl)}
+.diff:active{transform:scale(.99)}
+.diff .dh{display:flex;align-items:center;gap:11px;margin-bottom:7px}
+.diff .dz{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:900;color:var(--c)}
+.diff .dt{font-size:18px;font-weight:500}
+.diff .dx{margin-left:auto;padding:4px 13px;border-radius:99px;font-size:13px;font-weight:500;
+  background:var(--c);color:#fff}
+.diff .dm{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:11px}
+.cat{position:relative;padding:14px 10px;border-radius:var(--r);background:var(--card);
+  box-shadow:var(--e1);transition:all var(--f) var(--out);text-align:center}
+.cat:active{transform:scale(.97)}
+.cat.on{box-shadow:inset 0 0 0 2px var(--c),var(--e2);background:var(--cl)}
+.cat .ci{width:48px;height:48px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;
+  background:var(--cl)}
+.cat.on .ci{background:#fff}
+.cat .ci svg{width:30px;height:30px}
+.cat .cz{font-family:'Noto Serif SC',serif;font-size:13px;color:var(--c);font-weight:600}
+.cat .cn{font-size:14.5px;font-weight:400;line-height:1.25}
+.cat .cc{font-size:11px;color:var(--ink3);margin-top:2px}
+.mds{display:grid;gap:12px}
+.md{position:relative;overflow:hidden;text-align:left;padding:18px 18px 16px;border-radius:var(--rl);
+  background:var(--card);box-shadow:var(--e1);transition:all var(--b) var(--out)}
+.md:before{content:'';position:absolute;inset:0;background:var(--c);opacity:0;
+  transition:opacity var(--b)}
+.md:after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c);
+  transform:scaleY(0);transform-origin:50% 0;transition:transform var(--b) var(--out)}
+.md>*{position:relative}
+.md:active{transform:scale(.99)}
+.md.on{box-shadow:inset 0 0 0 1.5px var(--c),var(--e2)}
+.md.on:before{opacity:.07}
+.md.on:after{transform:scaleY(1)}
+@media(hover:hover){.md:hover{transform:translateY(-3px);box-shadow:var(--e2)}
+  .md.on:hover{transform:translateY(-3px)}}
+.md .mtop{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+.md .mi{width:52px;height:52px;flex:none;border-radius:16px;display:grid;place-items:center;
+  font-family:'Noto Serif SC',serif;font-size:24px;font-weight:900;color:var(--c);
+  background:var(--cl);transition:all var(--b) var(--out)}
+.md.on .mi{background:var(--c);color:#fff;transform:rotate(-4deg) scale(1.04)}
+.md .mn{font-size:17px;font-weight:500;line-height:1.2}
+.md .mpy{font-size:10.5px;color:var(--ink3);letter-spacing:1.6px;margin-top:2px}
+.md .mchk{margin-left:auto;width:26px;height:26px;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-size:14px;color:#fff;background:var(--c);
+  opacity:0;transform:scale(.4);transition:all var(--b) var(--back)}
+.md.on .mchk{opacity:1;transform:none}
+.md .mm{font-size:13px;color:var(--ink2);line-height:1.7}
+.md .mtags{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.md .mtags span{padding:4px 11px;border-radius:99px;font-size:11.5px;background:var(--shell);
+  color:var(--ink2);transition:all var(--b)}
+.md.on .mtags span{background:var(--cl);color:var(--c)}
+.md .bg{position:absolute;top:14px;right:14px;padding:4px 12px;border-radius:99px;font-size:11px;
+  font-weight:500;letter-spacing:.4px;background:var(--gold);color:#fff;z-index:2;
+  box-shadow:0 3px 10px rgba(192,138,46,.34)}
+.md.wide{grid-column:1/-1}
+.md .mart{position:absolute;right:-6px;bottom:-10px;width:96px;height:96px;opacity:.1;
+  pointer-events:none}
+.md .mart svg{width:100%;height:100%}
+.md.on .mart{opacity:.16}
+/* ── section lock ── */
+.lockable{transition:opacity var(--b),filter var(--b)}
+.lockable.locked{opacity:.38;filter:grayscale(.7);pointer-events:none}
+.lockNote{display:none;align-items:flex-start;gap:11px;padding:15px 16px;border-radius:var(--r);
+  background:var(--lapis-l);box-shadow:inset 0 0 0 1px rgba(63,107,168,.22);margin-top:2px;
+  animation:lnIn .4s var(--out)}
+@keyframes lnIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.lockNote.on{display:flex}
+.lockNote .li{width:34px;height:34px;flex:none;border-radius:11px;display:grid;place-items:center;
+  background:#fff}
+.lockNote .li svg{width:22px;height:22px}
+.lockNote b{font-size:14px;font-weight:500;display:block;margin-bottom:2px}
+.lockNote p{font-size:12.5px;color:var(--ink2);line-height:1.65}
+.goBar{position:sticky;bottom:14px;margin-top:28px;z-index:6}
+
+/* ═══ PLAY ═══ */
+#v_play{position:relative}
+#sky{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#B9DAEF 0%,#D9EAF5 34%,#F1EFE4 72%,#FBF6EA 100%)}
+#skyC{position:absolute;inset:0}
+.dz{position:fixed;left:0;right:0;top:0;height:17svh;z-index:2;pointer-events:none;opacity:0;
+  transition:opacity var(--b);
+  background:linear-gradient(180deg,rgba(206,68,48,.2),transparent);
+  border-bottom:1px dashed rgba(206,68,48,.5)}
+.dz.on{opacity:1;animation:dzp 1.2s ease-in-out infinite}
+@keyframes dzp{0%,100%{opacity:.6}50%{opacity:1}}
+.dz .zl{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;
+  color:var(--verm-d);letter-spacing:2px}
+.pTop{position:fixed;top:0;left:0;right:0;z-index:20;padding:12px var(--pad);
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hc{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:99px;font-size:13.5px;
+  font-weight:500;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);box-shadow:var(--e1)}
+.hc .lb{font-size:10.5px;color:var(--ink3);font-weight:300}
+.hc.sc{color:var(--verm)}.hc.mx{color:var(--cel-d)}
+.amods{position:fixed;top:56px;left:0;right:0;z-index:20;padding:0 var(--pad);
+  display:flex;gap:6px;flex-wrap:wrap}
+.amod{padding:4px 12px;border-radius:99px;font-size:11px;font-weight:500;
+  background:var(--cl);color:var(--c);box-shadow:var(--e1)}
+#stage{position:fixed;inset:0;z-index:5;pointer-events:none}
+#kite{position:absolute;left:50%;width:min(230px,62vw);transform:translateX(-50%)}
+#kite .body{position:relative;background:var(--card);border-radius:20px;padding:16px 14px 14px;
+  box-shadow:var(--e3);text-align:center}
+#kite .body:before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:18px;height:18px;background:var(--card);border-radius:4px}
+#kite .im{width:min(120px,32vw);aspect-ratio:1;margin:0 auto 10px;border-radius:50%;
+  display:grid;place-items:center;background:var(--bg)}
+#kite .im svg{width:70%;height:70%}
+#kite .zh2{font-family:'Noto Serif SC',serif;font-size:clamp(30px,8vw,42px);font-weight:900;line-height:1.1}
+#kite .py{font-size:13.5px;color:var(--verm);margin-top:2px}
+#kite .th{font-size:clamp(19px,5vw,25px);font-weight:500;line-height:1.3}
+#kite .hint{font-size:12px;color:var(--ink3);margin-top:4px}
+#kite .tail{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:2px;height:70px;
+  background:linear-gradient(180deg,rgba(206,68,48,.55),transparent)}
+#kite .bow{position:absolute;left:50%;transform:translateX(-50%);width:12px;height:6px;
+  border-radius:99px;background:var(--verm);opacity:.7}
+#kite.ok{animation:soar .85s var(--back) forwards}
+@keyframes soar{0%{transform:translateX(-50%) scale(1)}
+  38%{transform:translateX(-50%) scale(1.1)}
+  100%{transform:translateX(-50%) scale(1.02) translateY(-180px);opacity:0}}
+#kite.no{animation:fall .8s ease-in forwards}
+@keyframes fall{0%{transform:translateX(-50%) scale(1) rotate(0)}
+  100%{transform:translateX(-50%) scale(.76) translateY(200px) rotate(-14deg);opacity:0}}
+.spkB{position:fixed;z-index:22;left:50%;transform:translateX(-50%);width:50px;height:50px;
+  border-radius:16px;display:grid;place-items:center;font-size:20px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(10px);box-shadow:var(--e2)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:14px var(--pad) 22px;
+  background:linear-gradient(180deg,rgba(251,246,234,0),rgba(251,246,234,.9) 24%,rgba(251,246,234,1));
+  backdrop-filter:blur(8px)}
+.aGrid{display:grid;gap:10px;max-width:640px;margin:0 auto}
+@media(min-width:620px){.aGrid{grid-template-columns:1fr 1fr}}
+.aB{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:var(--r);
+  background:var(--card);box-shadow:var(--e1);transition:all var(--f) var(--out);
+  opacity:0;transform:translateY(14px);animation:aIn .42s var(--out) forwards}
+@keyframes aIn{to{opacity:1;transform:none}}
+.aB:active{transform:scale(.98)}
+.aB .ai{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--bg)}
+.aB .ai svg{width:28px;height:28px}
+.aB .az{font-family:'Noto Serif SC',serif;font-size:21px;font-weight:600;line-height:1.15}
+.aB .ap{font-size:11.5px;color:var(--verm)}
+.aB .at{font-size:16px;font-weight:400}
+
+.aB.imgOpt{justify-content:center;padding:14px}
+.aB .ai.big{width:74px;height:74px}
+.aB .ai.big svg{width:46px;height:46px}
+@media(min-width:620px){.aB .ai.big{width:86px;height:86px}.aB .ai.big svg{width:54px;height:54px}}
+.aB.good{box-shadow:inset 0 0 0 2px var(--cel),0 6px 22px rgba(111,162,148,.32);background:var(--cel-l)}
+.aB.bad{box-shadow:inset 0 0 0 2px var(--verm);background:var(--verm-l);opacity:.65}
+.aB:disabled{cursor:default}
+#combo{position:fixed;top:104px;left:50%;transform:translateX(-50%) translateY(-14px) scale(.86);
+  z-index:30;padding:9px 20px;border-radius:99px;font-size:14.5px;font-weight:500;color:#fff;
+  background:linear-gradient(174deg,#D9A448,var(--gold-d));box-shadow:0 6px 22px rgba(192,138,46,.4);
+  opacity:0;transition:all var(--b) var(--back)}
+#combo.on{opacity:1;transform:translateX(-50%) scale(1)}
+#combo.hot{background:linear-gradient(174deg,#E05C46,var(--verm-d));box-shadow:0 6px 22px rgba(206,68,48,.42)}
+
+/* ═══ MODIFIER ═══ */
+.modW{text-align:center;padding-top:10px}
+.kk2{display:inline-block;padding:5px 16px;border-radius:99px;font-size:11.5px;letter-spacing:2px;
+  background:var(--acc-l);color:var(--acc-d)}
+.mcards{display:grid;gap:15px;margin:24px 0}
+@media(min-width:760px){.mcards{grid-template-columns:repeat(3,1fr)}}
+.mk{position:relative;padding:26px 18px;border-radius:var(--rl);text-align:center;background:var(--card);
+  box-shadow:var(--e2);overflow:hidden;transition:all var(--b) var(--out);
+  opacity:0;transform:translateY(24px) rotate(var(--rot));animation:mkIn .58s var(--back) forwards}
+@keyframes mkIn{to{opacity:1;transform:translateY(0) rotate(var(--rot))}}
+.mk:before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--c)}
+.mk:active{transform:translateY(2px) rotate(var(--rot))}
+@media(hover:hover){.mk:hover{transform:translateY(-8px) rotate(0);box-shadow:var(--e3)}}
+.mk .mz{font-family:'Noto Serif SC',serif;font-size:44px;font-weight:900;color:var(--c);
+  line-height:1;margin:8px 0 10px}
+.mk .mt{font-size:18px;font-weight:500}
+.mk .md2{font-size:13px;color:var(--ink2);line-height:1.8;margin-top:8px;min-height:46px}
+.mk .mx2{display:inline-block;margin-top:12px;padding:6px 17px;border-radius:99px;
+  font-weight:500;font-size:15px;background:var(--c);color:#fff}
+.mk .mx2.dn{background:var(--shell);color:var(--ink2)}
+
+/* ═══ RESULT ═══ */
+.resSky{position:relative;height:250px;border-radius:var(--rl);overflow:hidden;margin-bottom:18px;
+  background:linear-gradient(180deg,#B9DAEF,#DFEDF6 52%,#FBF6EA);box-shadow:var(--e1)}
+.resSky canvas{position:absolute;inset:0;width:100%;height:100%}
+.resSky .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:12.5px;color:var(--ink2)}
+.rHero{text-align:center;padding:26px 18px;border-radius:var(--rl);margin-bottom:16px;
+  background:var(--card);box-shadow:var(--e2)}
+.rHero .rz{font-family:'Noto Serif SC',serif;font-size:52px;font-weight:900;color:var(--verm);line-height:1}
+.rHero .rs{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,14vw,80px);font-weight:600;
+  line-height:1;margin:4px 0 2px}
+.rHero .rl{font-size:13.5px;color:var(--ink3)}
+.rHero .rnew{display:inline-block;margin-top:12px;padding:6px 18px;border-radius:99px;
+  background:var(--gold);color:#fff;font-weight:500;font-size:13px;animation:pp .9s var(--back)}
+@keyframes pp{0%{transform:scale(0) rotate(-16deg)}60%{transform:scale(1.13) rotate(5deg)}100%{transform:scale(1)}}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px}
+@media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{padding:16px;border-radius:var(--r);background:var(--card);text-align:center;box-shadow:var(--e1)}
+.stat b{display:block;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;line-height:1}
+.stat span{font-size:11px;color:var(--ink3)}
+.panel{padding:20px;border-radius:var(--rl);background:var(--card);box-shadow:var(--e1);margin-bottom:18px}
+.panel h3{font-size:16px;font-weight:500;margin-bottom:14px}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.wc{padding:12px 8px;border-radius:12px;background:var(--shell);text-align:center}
+.wc .im{width:42px;height:42px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;background:var(--bg)}
+.wc .im svg{width:26px;height:26px}
+.wc .h{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600}
+.wc .t{font-size:11.5px;color:var(--ink2)}
+.wc .dots{display:flex;gap:3px;justify-content:center;margin-top:6px}
+.wc .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.wc .dots i.f{background:var(--cel)}
+
+/* ═══ BOARD ═══ */
+.lbF{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:12px;scrollbar-width:none}
+.lbF::-webkit-scrollbar{display:none}
+.lbF button{flex:none;padding:8px 15px;border-radius:99px;font-size:13.5px;background:var(--card);
+  color:var(--ink2);box-shadow:var(--e1);transition:all var(--f)}
+.lbF button.on{background:var(--acc);color:#fff}
+.lbRow{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:var(--r);
+  background:var(--card);box-shadow:var(--e1);margin-bottom:9px;
+  opacity:0;transform:translateX(-14px);animation:lrIn .44s var(--out) forwards}
+@keyframes lrIn{to{opacity:1;transform:none}}
+.lbRow.me{box-shadow:inset 0 0 0 2px var(--gold),var(--e2);background:var(--gold-l)}
+.lbRow .rk{width:32px;height:32px;flex:none;border-radius:10px;display:grid;place-items:center;
+  font-weight:500;font-size:14px;background:var(--shell)}
+.lbRow.r1 .rk{background:var(--gold);color:#fff}
+.lbRow.r2 .rk{background:#C8CDD4;color:#fff}
+.lbRow.r3 .rk{background:#C99263;color:#fff}
+.lbRow .av{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:var(--shell)}
+.lbRow .av svg{width:22px;height:22px}
+.lbRow .nm{flex:1;min-width:0}
+.lbRow .nm b{font-size:15px;font-weight:500;display:block}
+.lbRow .nm span{font-size:11.5px;color:var(--ink3)}
+.lbRow .pt{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--verm)}
+.empty{padding:32px 18px;text-align:center;border-radius:var(--rl);color:var(--ink3);font-size:14px;
+  background:var(--shell)}
+
+
+/* ── compass pad ── */
+.cpad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  gap:10px;width:min(276px,80vw);margin:0 auto;aspect-ratio:1}
+.cpad>*{aspect-ratio:1;border-radius:var(--r);display:grid;place-items:center}
+.cpad button{background:var(--card);box-shadow:var(--e1);transition:all var(--f) var(--out);padding:0}
+.cpad button:active{transform:scale(.94)}
+.cpad button svg{width:58%;height:58%;display:block}
+.cpad .sp{visibility:hidden}
+.cpad .core{background:var(--shell);font-family:'Noto Serif SC',serif;
+  font-size:24px;font-weight:900;color:var(--ink3);box-shadow:inset 0 0 0 1px var(--line)}
+.cpad button.good{box-shadow:inset 0 0 0 2px var(--cel),0 6px 22px rgba(111,162,148,.34);background:var(--cel-l)}
+.cpad button.bad{box-shadow:inset 0 0 0 2px var(--verm);background:var(--verm-l)}
+/* ── clock choices ── */
+.clocks{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:420px;margin:0 auto}
+@media(min-width:620px){.clocks{grid-template-columns:repeat(4,1fr)}}
+.clk{padding:12px;border-radius:var(--r);background:var(--card);box-shadow:var(--e1);
+  transition:all var(--f) var(--out)}
+.clk:active{transform:scale(.96)}
+.clk svg{width:100%;height:auto}
+.clk.good{box-shadow:inset 0 0 0 2px var(--cel),0 6px 22px rgba(111,162,148,.34)}
+.clk.bad{box-shadow:inset 0 0 0 2px var(--verm);opacity:.6}
+/* ── sequence ── */
+.seqSlots{display:flex;gap:10px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.seqSlot{position:relative;width:72px;height:72px;border-radius:var(--r);
+  border:2px dashed var(--line);display:grid;place-items:center;
+  background:rgba(255,255,255,.55);transition:all var(--b) var(--out);cursor:default}
+.seqSlot .sv{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:900;color:var(--ink)}
+.seqSlot .sx{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;
+  background:var(--verm);color:#fff;font-size:14px;line-height:22px;text-align:center;
+  box-shadow:0 2px 6px rgba(206,68,48,.4)}
+.seqSlot.f{border-style:solid;border-color:var(--cel);background:var(--cel-l);cursor:pointer}
+.seqSlot.f:active{transform:scale(.94)}
+.seqSlot.right{border-color:var(--cel);background:var(--cel-l)}
+.seqSlot.wrongS{border-color:var(--verm);background:var(--verm-l)}
+.seqHint{font-size:12px;color:var(--ink3);text-align:center;margin-bottom:14px}
+.seqPool{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.seqChip{padding:12px 16px;border-radius:var(--r);background:var(--card);box-shadow:var(--e1);
+  text-align:center;transition:all var(--f) var(--out)}
+.seqChip:active{transform:scale(.95)}
+.seqChip.used{opacity:.2;pointer-events:none;transform:scale(.9)}
+.seqChip .z{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:900;line-height:1.1}
+.seqChip .t{font-size:11.5px;color:var(--ink2)}
+/* ── match ── */
+.mgridq{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:440px;margin:0 auto}
+@media(min-width:620px){.mgridq{grid-template-columns:repeat(4,1fr)}}
+.mcell{aspect-ratio:.86;border-radius:var(--r);background:var(--card);box-shadow:var(--e1);
+  display:grid;place-items:center;padding:8px;transition:all var(--b) var(--out);position:relative}
+.mcell:active{transform:scale(.95)}
+.mcell .im{width:66%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--bg)}
+.mcell .im svg{width:74%;height:74%}
+.mcell .z{font-family:'Noto Serif SC',serif;font-size:21px;font-weight:900;line-height:1.1;text-align:center}
+.mcell .p{font-size:10.5px;color:var(--verm)}
+.mcell.sel{box-shadow:inset 0 0 0 2px var(--gold),0 6px 20px rgba(192,138,46,.3)}
+.mcell.done{opacity:.28;pointer-events:none;transform:scale(.94)}
+.mcell.wrong{box-shadow:inset 0 0 0 2px var(--verm);animation:shk .34s}
+/* ── maze ── */
+.mzWrap{display:grid;gap:16px;place-items:center}
+.mzBoard{display:grid;gap:5px;padding:12px;border-radius:var(--rl);background:var(--card);
+  box-shadow:var(--e2)}
+.mzCell{width:min(56px,12vw);aspect-ratio:1;border-radius:9px;background:var(--shell);
+  display:grid;place-items:center;transition:all var(--b) var(--out);position:relative}
+.mzCell.wall{background:var(--ink);opacity:.85}
+.mzCell.goal{background:var(--cel-l);box-shadow:inset 0 0 0 2px var(--cel)}
+.mzCell.goal:after{content:'旗';font-family:'Noto Serif SC',serif;font-size:19px;color:var(--cel-d)}
+.mzCell.you{background:var(--verm-l);box-shadow:inset 0 0 0 2px var(--verm)}
+.mzCell.you:after{content:'';width:60%;aspect-ratio:1;border-radius:50%;
+  background:linear-gradient(160deg,#E05C46,var(--verm-d));box-shadow:0 3px 8px rgba(206,68,48,.4)}
+.mzCard{padding:18px 22px;border-radius:var(--rl);background:var(--card);box-shadow:var(--e2);
+  text-align:center;min-width:min(300px,86vw)}
+.mzCard .cmd{font-family:'Noto Serif SC',serif;font-size:clamp(30px,8vw,42px);font-weight:900;line-height:1.15}
+.mzCard .py2{font-size:14px;color:var(--verm);margin-top:3px}
+.mzCard .hint2{font-size:12.5px;color:var(--ink3);margin-top:6px}
+.mzStat{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+
+/* ═══ OVERLAY ═══ */
+.ov{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  padding:20px;background:rgba(36,31,26,.34);backdrop-filter:blur(4px)}
+.ov.on{display:flex;animation:fd .26s}
+@keyframes fd{from{opacity:0}to{opacity:1}}
+.ovC{width:100%;max-width:420px;padding:26px;border-radius:var(--rl);background:var(--card);
+  box-shadow:var(--e3);animation:ovIn .42s var(--back)}
+@keyframes ovIn{from{transform:scale(.9) translateY(18px)}to{transform:none}}
+.ovC h3{font-size:20px;font-weight:500;margin-bottom:8px}
+.ovC p{font-size:14px;color:var(--ink2);line-height:1.85;margin-bottom:20px}
+#flash{position:fixed;inset:0;z-index:70;pointer-events:none;opacity:0;transition:opacity var(--b)}
+#flash.ok{opacity:1;background:radial-gradient(130% 44% at 50% 110%,rgba(111,162,148,.34),transparent 60%)}
+#flash.no{opacity:1;box-shadow:inset 0 0 100px 14px rgba(206,68,48,.24)}
+.shk{animation:shk .34s}
+@keyframes shk{0%,100%{transform:translateX(0)}22%{transform:translateX(-8px)}
+  50%{transform:translateX(6px)}78%{transform:translateX(-3px)}}
+
+@media(min-width:640px){:root{--pad:26px}
+  .big3{grid-template-columns:repeat(3,1fr)}
+  .modes{grid-template-columns:repeat(2,1fr)}
+  .feat{grid-template-columns:repeat(2,1fr)}
+  .diffs{grid-template-columns:repeat(3,1fr)}
+  .mds{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.lk{display:flex}:root{--pad:40px}
+  .lnav{padding:16px 40px}
+  .modes{grid-template-columns:repeat(4,1fr)}
+  .feat{grid-template-columns:repeat(3,1fr)}
+  .sec{padding:104px 40px}
+  .hero{padding-top:130px}
+  .heroKite{width:168px}
+  .mds{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<canvas id="bgc"></canvas>
+
+<!-- ═══════ LANDING ═══════ -->
+<div class="view on" id="v_land">
+<nav class="lnav" id="lnav">
+  <div class="lg"><div class="lgi zhb">纸</div><div class="lgt">ZHI YUAN</div></div>
+  <div class="lk"><a href="#how">วิธีเล่น</a><a href="#level">ระดับภาษา</a><a href="#words">คำศัพท์</a><a href="#modes">โหมด</a><a href="#feat">ระบบ</a></div>
+  <button class="btn sm" onclick="go('name')">เริ่มเล่น</button>
+</nav>
+
+<header class="hero">
+  <div>
+    <div class="heroKite" id="heroKite"></div>
+    <h1>纸鸢</h1>
+    <div class="en">ZHI YUAN</div>
+    <p class="ld">เกมฝึกคำศัพท์จีนระดับ <b style="font-weight:500;color:var(--verm)">HSK 1</b>
+      สำหรับผู้เริ่มต้น เน้นคำที่คนจีนใช้จริงในชีวิตประจำวัน<br>
+      คำจะลอยขึ้นเป็นว่าวพร้อมภาพประกอบ ตอบให้ทันก่อนว่าวลอยพ้นฟ้า</p>
+    <div class="cta">
+      <button class="btn pulse" onclick="go('name')">เริ่มเล่นเลย</button>
+      <button class="btn g" onclick="document.getElementById('how').scrollIntoView()">ดูวิธีเล่นก่อน</button>
+    </div>
+    <div class="hstat">
+      <div><b>3</b><span>ระดับความยาก</span></div>
+      <div><b>16</b><span>หมวดคำศัพท์</span></div>
+      <div><b>83</b><span>ภาพวาดต้นฉบับ</span></div>
+      <div><b>48</b><span>กระดานคะแนน</span></div>
+    </div>
+  </div>
+  <div class="shint">เลื่อนลง ↓</div>
+</header>
+
+<section class="sec" id="how">
+  <div class="secH rev"><div class="kk">HOW TO PLAY</div>
+    <h2>เล่นยังไง</h2>
+    <p>ไม่มีด่านให้ผ่าน เลือกเองว่าจะฝึกหมวดไหนและยากแค่ไหน</p></div>
+  <div class="big3">
+    <div class="b3 rev" style="--c:var(--verm);--cl:var(--verm-l)"><div class="no zhb">一</div>
+      <div class="si" id="si1"></div><h3>ตั้งค่าก่อนเล่น</h3>
+      <p>เลือกระดับความยาก และเลือกหมวดคำศัพท์ได้หลายหมวดพร้อมกัน
+         คำที่คุณยังไม่แม่นจะถูกสุ่มมาบ่อยกว่าคำที่จำได้แล้ว</p></div>
+    <div class="b3 rev" style="--c:var(--cel);--cl:var(--cel-l);transition-delay:.1s"><div class="no zhb">二</div>
+      <div class="si" id="si2"></div><h3>ตอบก่อนว่าวลอยพ้น</h3>
+      <p>ว่าวลอยขึ้นเรื่อยๆ พร้อมภาพและคำถาม ถ้าปล่อยให้ถึงเขตลมบนถือว่าพลาด
+         ตอบตอนว่าวยังอยู่ต่ำจะได้คะแนนโบนัสมากกว่า</p></div>
+    <div class="b3 rev" style="--c:var(--lapis);--cl:var(--lapis-l);transition-delay:.2s"><div class="no zhb">三</div>
+      <div class="si" id="si3"></div><h3>จบรอบเลือกการ์ด</h3>
+      <p>ทุกครั้งที่จบรอบจะได้เลือกการ์ด 1 ใบจาก 3 ใบ การ์ดเปลี่ยนกติกาของรอบถัดไป
+         ยากขึ้นแลกกับตัวคูณคะแนนที่สูงขึ้น</p></div>
+  </div>
+  <div class="demoSky rev" id="demoSky">
+    <div class="zone"></div><div class="zl">เขตลมบน — ห้ามให้ว่าวลอยถึง</div>
+    <div class="dk" id="demoKite"></div>
+  </div>
+</section>
+
+
+<section class="sec" id="level">
+  <div class="secH rev"><div class="kk">LEVEL &amp; VOCABULARY</div>
+    <h2>ใช้ภาษาระดับไหน</h2>
+    <p>ทุกคำในเกมคัดจากระดับ HSK 1 ซึ่งเป็นระดับเริ่มต้นที่สุดของการสอบวัดระดับภาษาจีน
+       และคัดซ้ำอีกชั้นให้เหลือเฉพาะคำที่ใช้บ่อยจริงในชีวิตประจำวัน</p></div>
+  <div class="lvlWrap">
+    <div class="lvlCard rev">
+      <div class="seal2"></div>
+      <div class="badge"><b>HSK</b> ระดับ 1 · ผู้เริ่มต้น</div>
+      <h3>ระดับเริ่มต้นที่สุด เรียนได้แม้ไม่เคยรู้ภาษาจีนมาก่อน</h3>
+      <p>HSK คือการสอบวัดระดับภาษาจีนมาตรฐานของทางการจีน แบ่งเป็น 6 ระดับ
+         ระดับ 1 คือขั้นแรกสุด ครอบคลุมคำศัพท์พื้นฐานราว 150 คำ
+         ผู้ที่ผ่านระดับนี้จะสื่อสารประโยคง่ายๆ ในชีวิตประจำวันได้<br><br>
+         เกมนี้เลือกใช้ระดับ 1 ทั้งหมด เพราะต้องการให้คนไทยที่ไม่เคยเรียนภาษาจีนมาก่อน
+         เริ่มเล่นได้ทันทีโดยไม่ต้องเตรียมตัว และคำที่จำได้จากเกมเอาไปใช้พูดได้จริง</p>
+      <div class="lvlStats">
+        <div class="lvlStat"><b>165</b><span>คำศัพท์</span></div>
+        <div class="lvlStat"><b>16</b><span>หมวดหมู่</span></div>
+        <div class="lvlStat"><b>107</b><span>ภาพประกอบ</span></div>
+        <div class="lvlStat"><b>1</b><span>ระดับ HSK</span></div>
+      </div>
+    </div>
+    <div class="rev" style="display:grid;gap:14px">
+      <div class="notCard">
+        <div class="ni2" id="notIc"></div>
+        <div><b>คัดเฉพาะคำที่ใช้บ่อยจริง</b>
+          <p>ไม่ได้ยัดคำศัพท์ทั้งบัญชีมาให้ท่อง แต่เลือกเฉพาะคำที่โผล่ในบทสนทนาประจำวัน
+             เช่น การทักทาย การถามราคา การบอกเวลา และคำกริยาที่ใช้ทุกวัน
+             คำที่เจอน้อยหรือใช้เฉพาะในตำราจะถูกตัดออก</p></div>
+      </div>
+      <div class="notCard" style="background:var(--gold-l);box-shadow:inset 0 0 0 1px rgba(192,138,46,.22)">
+        <div class="ni2" id="notIc2"></div>
+        <div><b>เรียงจากที่จำเป็นที่สุดก่อน</b>
+          <p>หมวดที่มีคำเยอะที่สุดคือคำกริยา 22 คำ และตัวเลข 16 คำ
+             เพราะสองหมวดนี้คือสิ่งที่ต้องใช้ทุกประโยค
+             ส่วนคำที่คุณยังตอบผิดบ่อยจะถูกสุ่มมาถามซ้ำถี่กว่าคำที่จำได้แล้ว</p></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px;font-weight:500;margin:36px 0 14px" class="rev">16 หมวดหมู่ในเกม</h3>
+  <div class="catList rev" id="catList"></div>
+
+  <h3 style="font-size:18px;font-weight:500;margin:32px 0 0" class="rev">ตัวอย่างคำที่ใช้บ่อยที่สุด</h3>
+  <div class="sampleGrid rev" id="sampleGrid"></div>
+</section>
+
+<section class="sec tint" id="words">
+  <div class="secH rev"><div class="kk">ILLUSTRATIONS</div>
+    <h2>ทุกคำมีภาพของตัวเอง</h2>
+    <p>ภาพทั้งหมดวาดขึ้นใหม่เป็นเวกเตอร์ สไตล์เดียวกันทั้งชุด คมชัดทุกขนาดหน้าจอ</p></div>
+  <div class="gal rev" id="gallery"></div>
+</section>
+
+<section class="sec" id="modes">
+  <div class="secH rev"><div class="kk">GAME MODES</div>
+    <h2>ห้าโหมด ห้าความรู้สึก</h2></div>
+  <div class="modes">
+    <div class="mc rev" style="--c:var(--verm);--cl:var(--verm-l)">
+      <div class="mh"><div class="mi">险</div><div><div class="mt">เส้นทางเสี่ยง</div><div class="mz">XIAN LU</div></div></div>
+      <p>3 รอบ รอบละ 6 ข้อ ระหว่างรอบเลือกการ์ดพลิกกติกา ไม่มีสองรอบไหนเหมือนกัน</p>
+      <div class="chips"><span>การ์ดสุ่ม</span><span>ตัวคูณสะสม</span></div></div>
+    <div class="mc rev" style="--c:var(--cel);--cl:var(--cel-l);transition-delay:.08s">
+      <div class="mh"><div class="mi">天</div><div><div class="mt">ฟ้ากว้าง</div><div class="mz">CHANG TIAN</div></div></div>
+      <p>ไม่มีรอบ ไม่มีจุดจบ ว่าวลอยเร็วขึ้นเรื่อยๆ เล่นจนพลาด 3 ครั้ง</p>
+      <div class="chips"><span>ไม่จำกัดข้อ</span><span>เร่งขึ้นเรื่อยๆ</span></div></div>
+    <div class="mc rev" style="--c:var(--gold);--cl:var(--gold-l);transition-delay:.16s">
+      <div class="mh"><div class="mi">瑕</div><div><div class="mt">ไร้ที่ติ</div><div class="mz">WU XIA</div></div></div>
+      <p>ผิดข้อเดียวจบทันที ไม่มีการ์ดช่วย วัดกันที่ความแม่นล้วนๆ</p>
+      <div class="chips"><span>ผิดครั้งเดียวจบ</span></div></div>
+    <div class="mc rev" style="--c:var(--lapis);--cl:var(--lapis-l);transition-delay:.24s">
+      <div class="mh"><div class="mi">静</div><div><div class="mt">ฝึกสงบ</div><div class="mz">JING XIN</div></div></div>
+      <p>ว่าวลอยช้ามาก ไม่มีคะแนน ไม่ขึ้นกระดาน เหมาะกับตอนอยากทบทวน</p>
+      <div class="chips"><span>ไม่กดดัน</span></div></div>
+    <div class="mc rev" style="--c:var(--plum);--cl:var(--plum-l);transition-delay:.32s">
+      <div class="mh"><div class="mi">宫</div><div><div class="mt">เขาวงกต</div><div class="mz">MI GONG</div></div></div>
+      <p>อ่านคำสั่งทิศทางภาษาจีนแล้วเดินให้ถึงธง เดินผิดทางเสียคะแนน โหมดนี้ใช้หมวดทิศทางล้วนๆ</p>
+      <div class="chips"><span>ใช้ทิศทาง</span><span>มีกำแพงกั้น</span></div></div>
+  </div>
+</section>
+
+<section class="sec tint" id="feat">
+  <div class="secH rev"><div class="kk">SYSTEMS</div><h2>ระบบเบื้องหลัง</h2></div>
+  <div class="feat" id="featList"></div>
+</section>
+
+<section class="fcta">
+  <div class="rev">
+    <h2>พร้อมปล่อยว่าวตัวแรกหรือยัง</h2>
+    <p>ไม่ต้องสมัคร ไม่ต้องดาวน์โหลด ใส่ชื่อแล้วเริ่มได้เลย</p>
+    <button class="btn" onclick="go('name')">เริ่มเล่นเลย</button>
+  </div>
+</section>
+<div class="lfoot">纸鸢 Zhi Yuan · ต้นแบบหน้าตาสำหรับโครงงาน · ภาพประกอบวาดขึ้นใหม่ทั้งหมด</div>
+</div>
+
+<!-- ═══════ NAME ═══════ -->
+<div class="view" id="v_name"><div class="gwrap"><div class="nameW"><div>
+  <div style="width:96px;margin:0 auto 22px" id="nameKite"></div>
+  <div class="kk2">ก่อนเริ่ม</div>
+  <h2 style="font-size:clamp(25px,6vw,34px);font-weight:500;margin-top:13px">คุณชื่ออะไร</h2>
+  <p style="color:var(--ink2);font-size:14px;margin-top:8px">ชื่อนี้จะปรากฏบนกระดานคะแนน</p>
+  <div class="nin"><input id="nameInput" maxlength="14" placeholder="ใส่ชื่อผู้เล่น" autocomplete="off"></div>
+  <div class="avp" id="avp"></div>
+  <button class="btn" id="nameGo" onclick="saveName()">ไปต่อ</button>
+</div></div></div></div>
+
+<!-- ═══════ SETUP ═══════ -->
+<div class="view" id="v_setup">
+  <nav class="gbar">
+    <button class="ico" onclick="go('land')">‹</button>
+    <div class="tt"><div class="tz">设置</div><div class="tn">ตั้งค่าการเล่น</div></div>
+    <div class="who" id="who1"></div>
+    <button class="ico" onclick="go('board')">🏆</button>
+  </nav>
+  <div class="gwrap">
+    <div class="secT"><div class="k">1</div><h3>ระดับความยาก</h3></div>
+    <div class="diffs" id="diffs"></div>
+    <div id="catSec">
+      <div class="secT lockable"><div class="k">2</div><h3>หมวดคำศัพท์ <span style="font-size:12.5px;color:var(--ink3)" id="catN"></span></h3></div>
+      <div class="lockNote" id="catLock">
+        <div class="li" id="catLockIc"></div>
+        <div><b>โหมดเขาวงกตใช้หมวดทิศทางอยู่แล้ว</b>
+          <p>คำสั่งทั้งหมดในเขาวงกตเป็นคำบอกทิศทาง เช่น 向左走 · 往东走<br>
+             จึงไม่ต้องเลือกหมวดเอง เปลี่ยนเป็นโหมดอื่นเมื่อไหร่ ตัวเลือกจะกลับมา</p></div>
+      </div>
+      <div class="cats lockable" id="cats"></div>
+    </div>
+    <div class="secT"><div class="k">3</div><h3>โหมดการเล่น</h3></div>
+    <div class="mds" id="mds"></div>
+    <div class="goBar"><button class="btn blk" id="goBtn" onclick="startRun()">เริ่มเล่น</button></div>
+  </div>
+</div>
+
+<!-- ═══════ PLAY ═══════ -->
+<div class="view" id="v_play">
+  <div id="sky"><canvas id="skyC"></canvas></div>
+  <div class="dz" id="dzone"><div class="zl">เขตลมบน</div></div>
+  <div class="pTop">
+    <button class="hc" onclick="quitRun()">✕</button>
+    <div class="hc"><span class="lb">รอบ</span><span id="hRound">1/3</span></div>
+    <div class="hc sc"><span class="lb">คะแนน</span><span id="hScore">0</span></div>
+    <div class="hc mx" id="hMult">×1.0</div>
+    <div class="hc"><span class="lb">พลาด</span><span id="hMiss">0/3</span></div>
+  </div>
+  <div class="amods" id="amods"></div>
+  <div id="stage"><div id="kite"><div class="body" id="kbody"></div><div class="tail"></div></div></div>
+  <button class="spkB" id="spkB" onclick="ping(1)">🔊</button>
+  <div class="dock"><div class="aGrid" id="aGrid"></div></div>
+</div>
+
+<!-- ═══════ MODIFIER ═══════ -->
+<div class="view" id="v_mod"><div class="gwrap"><div class="modW">
+  <div class="kk2" id="modRound">จบรอบที่ 1</div>
+  <h2 style="font-size:clamp(25px,6vw,34px);font-weight:500;margin-top:14px">เลือกการ์ดพลิกกติกา</h2>
+  <p style="color:var(--ink2);font-size:14px;margin-top:8px">มีผลกับรอบถัดไป · ยิ่งเสี่ยงยิ่งคูณสูง</p>
+  <div class="mcards" id="mcards"></div>
+</div></div></div>
+
+
+<!-- ═══════ MAZE ═══════ -->
+<div class="view" id="v_maze">
+  <nav class="gbar">
+    <button class="ico" onclick="quitMaze()">✕</button>
+    <div class="tt"><div class="tz">迷宫</div><div class="tn">เขาวงกตทิศทาง</div></div>
+    <div class="who" id="who4"></div>
+  </nav>
+  <div class="gwrap"><div class="mzWrap">
+    <div class="mzStat">
+      <div class="hc"><span class="lb">ก้าว</span><span id="mzStep">0</span></div>
+      <div class="hc sc"><span class="lb">คะแนน</span><span id="mzScore">0</span></div>
+      <div class="hc"><span class="lb">ด่าน</span><span id="mzLv">1</span></div>
+    </div>
+    <div class="mzCard">
+      <div class="cmd" id="mzCmd">向右走</div>
+      <div class="py2" id="mzPy">xiàng yòu zǒu</div>
+      <div class="hint2">อ่านคำสั่งแล้วกดปุ่มทิศทางให้ถูก</div>
+    </div>
+    <div class="mzBoard" id="mzBoard"></div>
+    <div class="cpad" id="mzPad"></div>
+  </div></div>
+</div>
+
+<!-- ═══════ RESULT ═══════ -->
+<div class="view" id="v_result">
+  <nav class="gbar">
+    <button class="ico" onclick="go('setup')">‹</button>
+    <div class="tt"><div class="tz">结果</div><div class="tn">สรุปผล</div></div>
+    <div class="who" id="who2"></div>
+  </nav>
+  <div class="gwrap">
+    <div class="resSky"><canvas id="resC"></canvas><div class="cap" id="resCap"></div></div>
+    <div class="rHero"><div class="rz" id="rGrade">优</div><div class="rs ser" id="rScore">0</div>
+      <div class="rl" id="rLabel">คะแนนรวม</div><div id="rNew"></div></div>
+    <div class="stats" id="rStats"></div>
+    <div class="panel"><h3>คำที่เลื่อนขั้นในรอบนี้</h3><div class="wgrid" id="rWords"></div></div>
+    <div style="display:grid;gap:11px">
+      <button class="btn blk" onclick="startRun()">เล่นอีกครั้ง</button>
+      <button class="btn blk g" onclick="go('board')">ดูกระดานคะแนน</button>
+      <button class="btn blk g" onclick="go('setup')">เปลี่ยนหมวดหรือระดับ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ BOARD ═══════ -->
+<div class="view" id="v_board">
+  <nav class="gbar">
+    <button class="ico" onclick="go('setup')">‹</button>
+    <div class="tt"><div class="tz">榜</div><div class="tn">กระดานคะแนน</div></div>
+    <div class="who" id="who3"></div>
+  </nav>
+  <div class="gwrap">
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">หมวด</div>
+    <div class="lbF" id="lbCats"></div>
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">ระดับ</div>
+    <div class="lbF" id="lbDiffs"></div>
+    <div id="lbList" style="margin-top:6px"></div>
+  </div>
+</div>
+
+<div id="combo"></div>
+<div id="flash"></div>
+<canvas id="burst"></canvas>
+<div class="ov" id="ov"><div class="ovC" id="ovC"></div></div>
+
+<script>
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const $=id=>document.getElementById(id);
+
+/* ════════════ ILLUSTRATION LIBRARY ════════════ */
+const P={ink:'#3A332B',red:'#CE4430',red2:'#8E2415',cel:'#6FA294',cel2:'#3F6D62',
+  gold:'#C08A2E',gold2:'#835811',lap:'#3F6BA8',lap2:'#24446F',plum:'#A65682',
+  skin:'#E8B98F',skin2:'#C9915F',wh:'#FFFDF8',cream:'#F2E7D2',gy:'#B9AFA0',
+  grn:'#5C9B54',brn:'#8A5F3C',blu:'#6BA8D8'};
+function S(b){return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${b}</svg>`}
+const head=(y,c)=>`<circle cx="32" cy="${y}" r="9" fill="${c||P.skin}"/>`;
+const ART={
+ // greetings
+ nihao:S(`${head(20)}<path d="M32 30c-8 0-13 5-13 12v10h26V42c0-7-5-12-13-12z" fill="${P.red}"/>
+   <path d="M18 34l-6-9" stroke="${P.skin}" stroke-width="5" stroke-linecap="round"/>
+   <circle cx="11" cy="23" r="5" fill="${P.skin}"/>
+   <path d="M6 17l2-3M11 15l0-4M17 17l2-3" stroke="${P.gold}" stroke-width="2" stroke-linecap="round"/>`),
+ xiexie:S(`${head(19)}<path d="M32 29c-8 0-13 5-13 12v11h26V41c0-7-5-12-13-12z" fill="${P.cel}"/>
+   <path d="M26 38l6-6 6 6-6 8z" fill="${P.skin}"/>
+   <path d="M26 38l6 6 6-6" stroke="${P.skin2}" stroke-width="1.6" fill="none"/>`),
+ zaijian:S(`${head(20)}<path d="M32 30c-8 0-13 5-13 12v10h26V42c0-7-5-12-13-12z" fill="${P.lap}"/>
+   <path d="M46 32l7-8" stroke="${P.skin}" stroke-width="5" stroke-linecap="round"/>
+   <circle cx="54" cy="21" r="5" fill="${P.skin}"/>
+   <path d="M44 20q5-5 10 0" stroke="${P.gy}" stroke-width="2" fill="none" stroke-linecap="round"/>`),
+ duibuqi:S(`<circle cx="32" cy="26" r="9" fill="${P.skin}"/>
+   <path d="M32 36c-8 0-14 5-14 12v6h28v-6c0-7-6-12-14-12z" fill="${P.plum}"/>
+   <path d="M24 24q3 3 6 0M34 24q3 3 6 0" stroke="${P.ink}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+   <path d="M28 32q4 3 8 0" stroke="${P.ink}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`),
+ // family
+ baba:S(`${head(20)}<path d="M32 30c-9 0-14 5-14 13v9h28v-9c0-8-5-13-14-13z" fill="${P.lap}"/>
+   <path d="M23 12q9-6 18 0v3H23z" fill="${P.ink}"/>
+   <path d="M27 39h10v13h-10z" fill="${P.lap2}"/>`),
+ mama:S(`${head(20)}<path d="M32 30c-9 0-14 5-14 13v9h28v-9c0-8-5-13-14-13z" fill="${P.plum}"/>
+   <path d="M21 20q0-13 11-13t11 13q-3-7-11-7T21 20z" fill="${P.ink}"/>
+   <path d="M22 22q-3 6-1 12M42 22q3 6 1 12" stroke="${P.ink}" stroke-width="3.4" stroke-linecap="round" fill="none"/>`),
+ gege:S(`${head(22,P.skin)}<path d="M32 32c-8 0-12 4-12 11v9h24v-9c0-7-4-11-12-11z" fill="${P.cel}"/>
+   <path d="M24 15q8-5 16 0v3H24z" fill="${P.ink}"/>`),
+ jiejie:S(`${head(22,P.skin)}<path d="M32 32c-8 0-12 4-12 11v9h24v-9c0-7-4-11-12-11z" fill="${P.red}"/>
+   <path d="M22 22q0-11 10-11t10 11q-3-6-10-6t-10 6z" fill="${P.ink}"/>
+   <circle cx="43" cy="18" r="3" fill="${P.gold}"/>`),
+ jia:S(`<path d="M32 10L54 30v24H10V30z" fill="${P.cream}"/>
+   <path d="M32 8L58 31H6z" fill="${P.red}"/>
+   <rect x="26" y="38" width="12" height="16" rx="1.5" fill="${P.brn}"/>
+   <rect x="14" y="34" width="8" height="8" rx="1.5" fill="${P.lap}"/>
+   <rect x="42" y="34" width="8" height="8" rx="1.5" fill="${P.lap}"/>`),
+ // food
+ mifan:S(`<path d="M12 32h40c0 12-9 20-20 20s-20-8-20-20z" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.4"/>
+   <path d="M14 32q18-14 36 0z" fill="${P.wh}"/>
+   <ellipse cx="32" cy="31" rx="19" ry="5" fill="${P.cream}"/>
+   <path d="M42 14l6 18" stroke="${P.brn}" stroke-width="2.4" stroke-linecap="round"/>
+   <path d="M48 14l-2 18" stroke="${P.brn}" stroke-width="2.4" stroke-linecap="round"/>`),
+ shui:S(`<path d="M20 14h24l-3 38H23z" fill="${P.blu}" opacity=".3"/>
+   <path d="M21 26h22l-2 25H23z" fill="${P.blu}"/>
+   <path d="M20 14h24l-3 38H23z" fill="none" stroke="${P.lap2}" stroke-width="1.6"/>
+   <ellipse cx="32" cy="26" rx="11" ry="2.5" fill="${P.wh}" opacity=".7"/>`),
+ cha:S(`<path d="M14 26h30v12c0 8-7 14-15 14s-15-6-15-14z" fill="${P.cel}"/>
+   <ellipse cx="29" cy="26" rx="15" ry="4" fill="${P.cel2}"/>
+   <path d="M44 30h5a5 5 0 010 10h-5" fill="none" stroke="${P.cel2}" stroke-width="3"/>
+   <path d="M26 16q2-5 5 0M33 14q2-5 5 0" stroke="${P.gy}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`),
+ mian:S(`<path d="M10 30h44c0 13-10 22-22 22s-22-9-22-22z" fill="${P.cream}" stroke="${P.gy}" stroke-width="1.4"/>
+   <path d="M16 30q6-8 16-8t16 8" fill="none" stroke="${P.gold}" stroke-width="3" stroke-linecap="round"/>
+   <path d="M20 30q4-13 12-13t12 13" fill="none" stroke="${P.gold2}" stroke-width="2.4" stroke-linecap="round"/>
+   <circle cx="26" cy="38" r="4" fill="${P.gold}"/><circle cx="40" cy="40" r="3" fill="${P.grn}"/>`),
+ pingguo:S(`<path d="M32 20c-4-4-14-3-14 10s7 22 14 22 14-9 14-22-10-14-14-10z" fill="${P.red}"/>
+   <path d="M32 20c0-6 2-9 6-11" stroke="${P.brn}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+   <path d="M34 12q7-3 9 3-6 3-9-3z" fill="${P.grn}"/>
+   <path d="M24 28q-2 6 0 11" stroke="${P.wh}" stroke-width="2.4" opacity=".5" fill="none" stroke-linecap="round"/>`),
+ yu:S(`<path d="M46 32c0 8-9 14-19 14-8 0-14-6-14-14s6-14 14-14c10 0 19 6 19 14z" fill="${P.blu}"/>
+   <path d="M46 32l10-9v18z" fill="${P.lap}"/>
+   <circle cx="22" cy="29" r="2.6" fill="${P.wh}"/><circle cx="22" cy="29" r="1.3" fill="${P.ink}"/>
+   <path d="M30 24q6 8 0 16" stroke="${P.lap2}" stroke-width="1.8" fill="none" opacity=".6"/>`),
+ // animals
+ mao:S(`<path d="M17 26l-3-12 11 6zM47 26l3-12-11 6z" fill="${P.gold}"/>
+   <ellipse cx="32" cy="34" rx="18" ry="16" fill="${P.gold}"/>
+   <circle cx="25" cy="31" r="2.6" fill="${P.ink}"/><circle cx="39" cy="31" r="2.6" fill="${P.ink}"/>
+   <path d="M32 37l-3 3h6z" fill="${P.red}"/>
+   <path d="M32 40v3M28 43q4 3 8 0" stroke="${P.ink}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+   <path d="M14 34h-8M14 38h-8M50 34h8M50 38h8" stroke="${P.ink}" stroke-width="1.3" stroke-linecap="round"/>`),
+ gou:S(`<ellipse cx="32" cy="35" rx="17" ry="15" fill="${P.brn}"/>
+   <path d="M15 20q-6 4-3 14 6 2 8-6z" fill="${P.brn}"/><path d="M49 20q6 4 3 14-6 2-8-6z" fill="${P.brn}"/>
+   <circle cx="26" cy="32" r="2.6" fill="${P.ink}"/><circle cx="38" cy="32" r="2.6" fill="${P.ink}"/>
+   <ellipse cx="32" cy="40" rx="4.4" ry="3.4" fill="${P.ink}"/>
+   <path d="M32 44v3M28 47q4 3 8 0" stroke="${P.ink}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`),
+ niao:S(`<ellipse cx="30" cy="34" rx="15" ry="13" fill="${P.cel}"/>
+   <circle cx="42" cy="24" r="8" fill="${P.cel}"/>
+   <path d="M50 24l7 3-7 3z" fill="${P.gold}"/>
+   <circle cx="44" cy="22" r="2.2" fill="${P.ink}"/>
+   <path d="M18 30q10 4 14 12-12 2-14-12z" fill="${P.cel2}"/>
+   <path d="M15 34l-9 4 9 4z" fill="${P.cel2}"/>`),
+ ma:S(`<path d="M22 50V34q0-10 10-12l12-4v-6l8 6v10q0 6-8 8v14z" fill="${P.brn}"/>
+   <path d="M44 12l4-5 2 6z" fill="${P.brn}"/>
+   <circle cx="47" cy="16" r="1.8" fill="${P.ink}"/>
+   <path d="M40 12q-8 2-11 10" stroke="${P.ink}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>
+   <path d="M26 50v6M36 50v6" stroke="${P.brn}" stroke-width="5" stroke-linecap="round"/>`),
+ // objects
+ shu:S(`<path d="M32 20q-8-6-20-4v32q12-2 20 4z" fill="${P.red}"/>
+   <path d="M32 20q8-6 20-4v32q-12-2-20 4z" fill="${P.red2}"/>
+   <path d="M32 20v32" stroke="${P.cream}" stroke-width="2"/>
+   <path d="M18 24q6-1 10 1M18 30q6-1 10 1M36 25q6-2 10-1M36 31q6-2 10-1"
+     stroke="${P.cream}" stroke-width="1.4" fill="none" opacity=".65"/>`),
+ che:S(`<path d="M10 40v-6l6-12h30l8 12v6z" fill="${P.lap}"/>
+   <path d="M19 25h12v9H15z" fill="${P.blu}"/><path d="M35 25h9l6 9H35z" fill="${P.blu}"/>
+   <circle cx="20" cy="43" r="6" fill="${P.ink}"/><circle cx="20" cy="43" r="2.4" fill="${P.gy}"/>
+   <circle cx="45" cy="43" r="6" fill="${P.ink}"/><circle cx="45" cy="43" r="2.4" fill="${P.gy}"/>`),
+ shouji:S(`<rect x="20" y="8" width="24" height="48" rx="5" fill="${P.ink}"/>
+   <rect x="23" y="14" width="18" height="34" rx="2" fill="${P.blu}"/>
+   <circle cx="32" cy="52" r="2.2" fill="${P.gy}"/>
+   <path d="M27 22h8M27 27h12M27 32h9" stroke="${P.wh}" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>`),
+ qian:S(`<circle cx="32" cy="32" r="20" fill="${P.gold}"/>
+   <circle cx="32" cy="32" r="15" fill="none" stroke="${P.gold2}" stroke-width="1.6"/>
+   <rect x="26" y="26" width="12" height="12" rx="1.5" fill="${P.cream}"/>
+   <path d="M32 20v-4M32 48v-4" stroke="${P.gold2}" stroke-width="2" stroke-linecap="round"/>`),
+ san:S(`<path d="M6 34q0-22 26-22t26 22z" fill="${P.red}"/>
+   <path d="M6 34q9-6 13 0t13 0 13 0 13 0" fill="none" stroke="${P.red2}" stroke-width="1.6"/>
+   <path d="M32 12v34a5 5 0 01-10 0" fill="none" stroke="${P.brn}" stroke-width="2.6" stroke-linecap="round"/>`),
+ yaoshi:S(`<circle cx="20" cy="24" r="10" fill="none" stroke="${P.gold}" stroke-width="5"/>
+   <path d="M27 30l22 22" stroke="${P.gold}" stroke-width="5" stroke-linecap="round"/>
+   <path d="M41 44l5 5M46 39l5 5" stroke="${P.gold}" stroke-width="4" stroke-linecap="round"/>`),
+ // nature
+ taiyang:S(`<circle cx="32" cy="32" r="13" fill="${P.gold}"/>
+   <g stroke="${P.gold}" stroke-width="3.4" stroke-linecap="round">
+   <path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4 4M45 45l4 4M49 15l-4 4M19 45l-4 4"/></g>`),
+ yueliang:S(`<path d="M40 8a24 24 0 100 48 20 20 0 010-48z" fill="${P.gold}"/>
+   <circle cx="50" cy="16" r="2.4" fill="${P.gold}" opacity=".7"/>
+   <circle cx="54" cy="26" r="1.8" fill="${P.gold}" opacity=".55"/>`),
+ shan:S(`<path d="M4 52l18-30 10 15 8-12 20 27z" fill="${P.cel2}"/>
+   <path d="M22 22l7 11H15z" fill="${P.wh}"/>
+   <path d="M40 25l5 8H35z" fill="${P.wh}"/>`),
+ shu2:S(`<path d="M29 52V34h6v18z" fill="${P.brn}"/>
+   <circle cx="32" cy="24" r="13" fill="${P.grn}"/>
+   <circle cx="21" cy="30" r="9" fill="${P.grn}"/><circle cx="43" cy="30" r="9" fill="${P.grn}"/>
+   <circle cx="27" cy="18" r="7" fill="#6FB165"/>`),
+ hua:S(`<path d="M31 52V32h3v20z" fill="${P.grn}"/>
+   <path d="M33 42q8-2 10-8-9-2-10 8z" fill="${P.grn}"/>
+   <g fill="${P.plum}"><ellipse cx="32" cy="16" rx="6" ry="9"/><ellipse cx="32" cy="32" rx="6" ry="9"/>
+   <ellipse cx="24" cy="24" rx="9" ry="6"/><ellipse cx="40" cy="24" rx="9" ry="6"/></g>
+   <circle cx="32" cy="24" r="5" fill="${P.gold}"/>`),
+ yu2:S(`<path d="M14 30a12 12 0 0122-7 9 9 0 0114 7 8 8 0 01-2 16H20a10 10 0 01-6-16z" fill="${P.gy}"/>
+   <g stroke="${P.blu}" stroke-width="3.4" stroke-linecap="round">
+   <path d="M20 52l-3 7M32 52l-3 7M44 52l-3 7"/></g>`),
+ // body
+ shou:S(`<path d="M22 52V30q0-4 4-4t4 4v-8q0-4 4-4t4 4v-3q0-4 4-4t4 4v20q0 13-12 13z" fill="${P.skin}"/>
+   <path d="M22 34q-6 2-6 8t8 8" fill="none" stroke="${P.skin}" stroke-width="5" stroke-linecap="round"/>`),
+ yanjing:S(`<path d="M6 32q13-16 26 0-13 16-26 0z" fill="${P.wh}" stroke="${P.ink}" stroke-width="1.6" transform="translate(13)"/>
+   <circle cx="32" cy="32" r="7" fill="${P.lap}"/><circle cx="32" cy="32" r="3.4" fill="${P.ink}"/>
+   <circle cx="34" cy="30" r="1.6" fill="${P.wh}"/>`),
+ zui:S(`<path d="M12 30q20-14 40 0-20 20-40 0z" fill="${P.red}"/>
+   <path d="M12 30q20 6 40 0" fill="none" stroke="${P.red2}" stroke-width="1.6"/>
+   <path d="M18 27q6-3 12 0" fill="${P.wh}" opacity=".55"/>`),
+ erduo:S(`<path d="M22 14q16-8 22 6t-8 20q-6 4-4 12h-10q-4-10 2-16t2-12-4 2z" fill="${P.skin}"/>
+   <path d="M32 24q6 0 6 6t-6 8" fill="none" stroke="${P.skin2}" stroke-width="2.4"/>`),
+ tou:S(`<circle cx="32" cy="30" r="17" fill="${P.skin}"/>
+   <path d="M15 26q4-16 17-16t17 16q-6-8-17-8t-17 8z" fill="${P.ink}"/>
+   <circle cx="26" cy="30" r="2.4" fill="${P.ink}"/><circle cx="38" cy="30" r="2.4" fill="${P.ink}"/>
+   <path d="M27 38q5 4 10 0" fill="none" stroke="${P.ink}" stroke-width="1.8" stroke-linecap="round"/>`),
+ jiao:S(`<path d="M18 40q0-14 8-20t14 0q4 6 4 12l6 8q3 6-3 8H24q-6 0-6-8z" fill="${P.skin}"/>
+   <circle cx="45" cy="42" r="2.4" fill="${P.skin2}"/><circle cx="49" cy="45" r="2" fill="${P.skin2}"/>`),
+ // colors
+ hong:S(`<circle cx="32" cy="32" r="19" fill="${P.red}"/><circle cx="26" cy="26" r="5" fill="#fff" opacity=".28"/>`),
+ lan:S(`<circle cx="32" cy="32" r="19" fill="${P.lap}"/><circle cx="26" cy="26" r="5" fill="#fff" opacity=".28"/>`),
+ lv:S(`<circle cx="32" cy="32" r="19" fill="${P.grn}"/><circle cx="26" cy="26" r="5" fill="#fff" opacity=".28"/>`),
+ huang:S(`<circle cx="32" cy="32" r="19" fill="${P.gold}"/><circle cx="26" cy="26" r="5" fill="#fff" opacity=".3"/>`),
+ hei:S(`<circle cx="32" cy="32" r="19" fill="${P.ink}"/><circle cx="26" cy="26" r="5" fill="#fff" opacity=".16"/>`),
+ bai:S(`<circle cx="32" cy="32" r="19" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <circle cx="26" cy="26" r="5" fill="${P.cream}" opacity=".8"/>`),
+
+ // directions
+ shang:S(`<circle cx="32" cy="32" r="21" fill="${P.lap2}" opacity=".12"/>
+   <path d="M32 14l14 16h-8v18h-12V30h-8z" fill="${P.lap}"/>`),
+ xia:S(`<circle cx="32" cy="32" r="21" fill="${P.lap2}" opacity=".12"/>
+   <path d="M32 50L18 34h8V16h12v18h8z" fill="${P.lap}"/>`),
+ zuo:S(`<circle cx="32" cy="32" r="21" fill="${P.cel2}" opacity=".12"/>
+   <path d="M14 32l16-14v8h18v12H30v8z" fill="${P.cel}"/>`),
+ you:S(`<circle cx="32" cy="32" r="21" fill="${P.cel2}" opacity=".12"/>
+   <path d="M50 32L34 46v-8H16V26h18v-8z" fill="${P.cel}"/>`),
+ qianDir:S(`<circle cx="32" cy="32" r="21" fill="${P.gold2}" opacity=".12"/>
+   <path d="M32 12l12 14h-6v10h-12V26h-6z" fill="${P.gold}"/>
+   <ellipse cx="32" cy="46" rx="13" ry="5" fill="${P.gold}" opacity=".45"/>`),
+ hou:S(`<circle cx="32" cy="32" r="21" fill="${P.gold2}" opacity=".12"/>
+   <path d="M32 52L20 38h6V28h12v10h6z" fill="${P.gold}"/>
+   <ellipse cx="32" cy="18" rx="13" ry="5" fill="${P.gold}" opacity=".45"/>`),
+ li:S(`<rect x="12" y="16" width="40" height="34" rx="5" fill="none" stroke="${P.brn}" stroke-width="3.4"/>
+   <circle cx="32" cy="33" r="8" fill="${P.red}"/>`),
+ wai:S(`<rect x="12" y="16" width="40" height="34" rx="5" fill="none" stroke="${P.brn}" stroke-width="3.4"/>
+   <circle cx="55" cy="14" r="8" fill="${P.red}"/>`),
+ dong:S(`<circle cx="32" cy="32" r="20" fill="none" stroke="${P.gy}" stroke-width="2.4"/>
+   <path d="M32 32L48 24 40 40z" fill="${P.red}"/><path d="M32 32L16 40l8-16z" fill="${P.wh}" stroke="${P.gy}" stroke-width="1"/>
+   <circle cx="32" cy="32" r="3" fill="${P.ink}"/>
+   <text x="52" y="36" font-size="11" fill="${P.ink}" font-family="serif">东</text>`),
+ xi:S(`<circle cx="32" cy="32" r="20" fill="none" stroke="${P.gy}" stroke-width="2.4"/>
+   <path d="M32 32L16 24l8 16z" fill="${P.red}"/><path d="M32 32l16 8-8-16z" fill="${P.wh}" stroke="${P.gy}" stroke-width="1"/>
+   <circle cx="32" cy="32" r="3" fill="${P.ink}"/>
+   <text x="2" y="36" font-size="11" fill="${P.ink}" font-family="serif">西</text>`),
+ // time
+ jintian:S(`<rect x="10" y="14" width="44" height="40" rx="5" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="10" y="14" width="44" height="11" rx="5" fill="${P.red}"/>
+   <path d="M20 10v8M44 10v8" stroke="${P.red2}" stroke-width="3.4" stroke-linecap="round"/>
+   <circle cx="32" cy="40" r="9" fill="${P.gold}"/>`),
+ mingtian:S(`<rect x="10" y="14" width="44" height="40" rx="5" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="10" y="14" width="44" height="11" rx="5" fill="${P.cel}"/>
+   <path d="M20 10v8M44 10v8" stroke="${P.cel2}" stroke-width="3.4" stroke-linecap="round"/>
+   <path d="M24 40h16M34 34l6 6-6 6" stroke="${P.cel}" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+ zuotian:S(`<rect x="10" y="14" width="44" height="40" rx="5" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="10" y="14" width="44" height="11" rx="5" fill="${P.gy}"/>
+   <path d="M20 10v8M44 10v8" stroke="${P.ink}" stroke-width="3.4" stroke-linecap="round"/>
+   <path d="M40 40H24M30 34l-6 6 6 6" stroke="${P.gy}" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+ zaoshang:S(`<path d="M6 46h52" stroke="${P.gy}" stroke-width="2.4" stroke-linecap="round"/>
+   <circle cx="32" cy="40" r="13" fill="${P.gold}"/>
+   <g stroke="${P.gold}" stroke-width="3" stroke-linecap="round">
+   <path d="M32 18v6M13 27l4 4M51 27l-4 4M6 40h5M53 40h5"/></g>`),
+ wanshang:S(`<path d="M40 12a20 20 0 100 40 17 17 0 010-40z" fill="${P.lap}"/>
+   <circle cx="18" cy="18" r="2.2" fill="${P.gold}"/><circle cx="14" cy="30" r="1.6" fill="${P.gold}"/>
+   <circle cx="24" cy="10" r="1.6" fill="${P.gold}"/>`),
+ dian:S(`<circle cx="32" cy="32" r="21" fill="${P.wh}" stroke="${P.ink}" stroke-width="2.6"/>
+   <path d="M32 32V18M32 32l10 7" stroke="${P.ink}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="32" cy="32" r="2.6" fill="${P.red}"/>
+   <g fill="${P.ink}"><circle cx="32" cy="15" r="1.4"/><circle cx="49" cy="32" r="1.4"/>
+   <circle cx="32" cy="49" r="1.4"/><circle cx="15" cy="32" r="1.4"/></g>`),
+ fen:S(`<circle cx="32" cy="32" r="21" fill="${P.wh}" stroke="${P.ink}" stroke-width="2.6"/>
+   <path d="M32 32V16" stroke="${P.red}" stroke-width="2.4" stroke-linecap="round"/>
+   <path d="M32 32l12 4" stroke="${P.ink}" stroke-width="2.4" stroke-linecap="round"/>
+   <circle cx="32" cy="32" r="2.4" fill="${P.red}"/>`),
+ xingqi:S(`<rect x="8" y="16" width="48" height="36" rx="5" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="8" y="16" width="48" height="9" rx="5" fill="${P.lap}"/>
+   <g fill="${P.gy}"><rect x="14" y="30" width="7" height="6" rx="1.4"/><rect x="24" y="30" width="7" height="6" rx="1.4"/>
+   <rect x="34" y="30" width="7" height="6" rx="1.4"/><rect x="44" y="30" width="7" height="6" rx="1.4"/>
+   <rect x="14" y="40" width="7" height="6" rx="1.4"/><rect x="24" y="40" width="7" height="6" rx="1.4"/></g>
+   <rect x="34" y="40" width="7" height="6" rx="1.4" fill="${P.red}"/>`),
+ xianzai:S(`<circle cx="32" cy="32" r="20" fill="none" stroke="${P.red}" stroke-width="3"/>
+   <path d="M32 32V19M32 32h10" stroke="${P.red}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="32" cy="32" r="3" fill="${P.red}"/>
+   <path d="M50 14l6-6M56 20h7" stroke="${P.gold}" stroke-width="2.6" stroke-linecap="round"/>`),
+ nian:S(`<rect x="10" y="16" width="44" height="38" rx="5" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="10" y="16" width="44" height="10" rx="5" fill="${P.gold}"/>
+   <text x="32" y="46" font-size="17" text-anchor="middle" fill="${P.ink}" font-family="serif">年</text>`),
+ maze:S(`<rect x="8" y="8" width="48" height="48" rx="4" fill="none" stroke="${P.ink}" stroke-width="3"/>
+   <path d="M8 24h20M36 8v24M20 40v16M28 40h28M44 24v8" stroke="${P.ink}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="16" cy="16" r="4" fill="${P.red}"/><circle cx="48" cy="48" r="4" fill="${P.cel}"/>`),
+ pair:S(`<rect x="6" y="14" width="22" height="30" rx="4" fill="${P.lap}" transform="rotate(-7 17 29)"/>
+   <rect x="36" y="20" width="22" height="30" rx="4" fill="${P.red}" transform="rotate(7 47 35)"/>
+   <path d="M28 30h8" stroke="${P.gold}" stroke-width="3" stroke-linecap="round"/>`),
+ order:S(`<rect x="8" y="10" width="14" height="14" rx="3" fill="${P.red}"/>
+   <rect x="26" y="26" width="14" height="14" rx="3" fill="${P.gold}"/>
+   <rect x="44" y="42" width="14" height="14" rx="3" fill="${P.cel}"/>
+   <path d="M22 20l6 4M40 36l6 4" stroke="${P.gy}" stroke-width="2.4" stroke-linecap="round"/>`),
+
+ didi:S(`${head(23,P.skin)}<path d="M32 33c-8 0-12 4-12 11v8h24v-8c0-7-4-11-12-11z" fill="${P.gold}"/>
+   <path d="M25 17q7-5 14 0v3H25z" fill="${P.ink}"/>`),
+ meimei:S(`${head(23,P.skin)}<path d="M32 33c-8 0-12 4-12 11v8h24v-8c0-7-4-11-12-11z" fill="${P.plum}"/>
+   <path d="M23 23q0-11 9-11t9 11q-3-6-9-6t-9 6z" fill="${P.ink}"/>
+   <circle cx="41" cy="19" r="2.6" fill="${P.red}"/>`),
+ pengyou:S(`<circle cx="22" cy="22" r="8" fill="${P.skin}"/><circle cx="42" cy="22" r="8" fill="${P.skin}"/>
+   <path d="M22 31c-7 0-11 4-11 10v11h22V41c0-6-4-10-11-10z" fill="${P.cel}"/>
+   <path d="M42 31c-7 0-11 4-11 10v11h22V41c0-6-4-10-11-10z" fill="${P.lap}"/>`),
+ diannao:S(`<rect x="10" y="14" width="44" height="28" rx="3" fill="${P.ink}"/>
+   <rect x="13" y="17" width="38" height="22" rx="2" fill="${P.lap}"/>
+   <path d="M4 46h56l-4 6H8z" fill="${P.gy}"/>`),
+ dianshi:S(`<rect x="8" y="12" width="48" height="34" rx="4" fill="${P.ink}"/>
+   <rect x="12" y="16" width="40" height="26" rx="2" fill="${P.cel}"/>
+   <path d="M22 46l-4 8M42 46l4 8" stroke="${P.ink}" stroke-width="3.4" stroke-linecap="round"/>`),
+ zhuozi:S(`<rect x="6" y="22" width="52" height="7" rx="2" fill="${P.brn}"/>
+   <path d="M12 29v24M52 29v24" stroke="${P.brn}" stroke-width="5" stroke-linecap="round"/>`),
+ yizi:S(`<path d="M20 8h6v30h-6z" fill="${P.brn}"/><rect x="18" y="36" width="30" height="6" rx="2" fill="${P.brn}"/>
+   <path d="M22 42v14M44 42v14" stroke="${P.brn}" stroke-width="4.4" stroke-linecap="round"/>`),
+ yifu:S(`<path d="M24 12l8 6 8-6 12 7-5 10-5-3v26H22V26l-5 3-5-10z" fill="${P.lap}"/>
+   <path d="M32 18v34" stroke="${P.lap2}" stroke-width="1.6"/>`),
+ beizi:S(`<path d="M18 16h26l-3 34H21z" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <path d="M20 28h22l-2 20H22z" fill="${P.cel}"/>
+   <path d="M44 22h5a5 5 0 010 10h-5" fill="none" stroke="${P.gy}" stroke-width="2.6"/>`),
+ cai:S(`<path d="M32 50q-14 0-14-14 0-8 6-12 0-8 8-8t8 8q6 4 6 12 0 14-14 14z" fill="${P.grn}"/>
+   <path d="M32 20v28" stroke="#3F7A38" stroke-width="2" fill="none"/>
+   <path d="M20 34q12-4 24 0" stroke="#3F7A38" stroke-width="1.8" fill="none"/>`),
+ shuiguo:S(`<circle cx="24" cy="36" r="13" fill="${P.red}"/>
+   <circle cx="42" cy="32" r="11" fill="${P.gold}"/>
+   <path d="M24 23q0-6 4-8" stroke="${P.brn}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+   <path d="M28 15q6-2 8 3-5 3-8-3z" fill="${P.grn}"/>`),
+ yiyuan:S(`<rect x="10" y="18" width="44" height="34" rx="4" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <rect x="26" y="8" width="12" height="12" rx="2" fill="${P.red}"/>
+   <path d="M32 10v8M28 14h8" stroke="${P.wh}" stroke-width="2.6" stroke-linecap="round"/>
+   <rect x="27" y="38" width="10" height="14" rx="1.5" fill="${P.lap}"/>
+   <rect x="16" y="26" width="8" height="8" rx="1.5" fill="${P.blu}"/>
+   <rect x="40" y="26" width="8" height="8" rx="1.5" fill="${P.blu}"/>`),
+ shangdian:S(`<path d="M8 24h48v28H8z" fill="${P.cream}"/>
+   <path d="M6 14h52l-4 10H10z" fill="${P.red}"/>
+   <path d="M14 14v10M24 14v10M34 14v10M44 14v10" stroke="${P.wh}" stroke-width="1.8" opacity=".7"/>
+   <rect x="24" y="34" width="16" height="18" rx="2" fill="${P.brn}"/>`),
+ xuexiao:S(`<path d="M32 8L56 22v30H8V22z" fill="${P.cream}"/>
+   <path d="M32 6L60 22H4z" fill="${P.lap}"/>
+   <rect x="26" y="36" width="12" height="16" rx="1.5" fill="${P.brn}"/>
+   <rect x="14" y="28" width="9" height="9" rx="1.5" fill="${P.blu}"/>
+   <rect x="41" y="28" width="9" height="9" rx="1.5" fill="${P.blu}"/>
+   <path d="M32 6V0" stroke="${P.gy}" stroke-width="2"/><path d="M32 1h9v6h-9z" fill="${P.red}"/>`),
+ huoche:S(`<rect x="8" y="20" width="30" height="24" rx="4" fill="${P.lap}"/>
+   <rect x="12" y="25" width="9" height="9" rx="1.5" fill="${P.blu}"/>
+   <rect x="25" y="25" width="9" height="9" rx="1.5" fill="${P.blu}"/>
+   <rect x="40" y="26" width="16" height="18" rx="3" fill="${P.red}"/>
+   <circle cx="17" cy="48" r="5" fill="${P.ink}"/><circle cx="31" cy="48" r="5" fill="${P.ink}"/>
+   <circle cx="48" cy="48" r="5" fill="${P.ink}"/>`),
+ feiji:S(`<path d="M6 34l52-12-8 14 8 14-52-12z" fill="${P.lap}"/>
+   <path d="M28 30l-8-14h6l12 12z" fill="${P.blu}"/>
+   <path d="M28 38l-8 14h6l12-12z" fill="${P.blu}"/>`),
+ laoshi2:S(`<rect x="6" y="10" width="40" height="28" rx="3" fill="${P.cel2}"/>
+   <rect x="9" y="13" width="34" height="22" rx="2" fill="#2E5A50"/>
+   ${head(24,P.skin).replace('cx="32"','cx="50"').replace('r="9"','r="7"')}
+   <path d="M50 32c-6 0-9 4-9 10v10h18V42c0-6-3-10-9-10z" fill="${P.red}"/>`),
+ xuesheng2:S(`${head(20,P.skin)}<path d="M32 30c-9 0-14 5-14 13v9h28v-9c0-8-5-13-14-13z" fill="${P.lap}"/>
+   <path d="M32 6L52 14 32 22 12 14z" fill="${P.ink}"/><path d="M32 22v6" stroke="${P.ink}" stroke-width="2"/>
+   <rect x="26" y="36" width="12" height="16" rx="2" fill="${P.gold}"/>`),
+ zi:S(`<rect x="10" y="10" width="44" height="44" rx="4" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.6"/>
+   <path d="M32 10v44M10 32h44" stroke="${P.line||'#E3DACA'}" stroke-width="1"/>
+   <text x="32" y="42" font-size="26" text-anchor="middle" fill="${P.ink}" font-family="serif">字</text>`),
+ zhongguo:S(`<rect x="8" y="16" width="48" height="32" rx="2" fill="${P.red}"/>
+   <path d="M18 24l2 5 5 .4-4 3.4 1.4 5-4.4-3-4.4 3 1.4-5-4-3.4 5-.4z" fill="${P.gold}"/>
+   <circle cx="30" cy="22" r="2" fill="${P.gold}"/><circle cx="34" cy="27" r="2" fill="${P.gold}"/>
+   <circle cx="34" cy="34" r="2" fill="${P.gold}"/><circle cx="30" cy="39" r="2" fill="${P.gold}"/>`),
+ gaoxing:S(`<circle cx="32" cy="32" r="21" fill="${P.gold}"/>
+   <circle cx="24" cy="27" r="2.8" fill="${P.ink}"/><circle cx="40" cy="27" r="2.8" fill="${P.ink}"/>
+   <path d="M22 37q10 10 20 0" fill="none" stroke="${P.ink}" stroke-width="3" stroke-linecap="round"/>`),
+ leng:S(`<path d="M32 8v48M12 20l40 24M52 20L12 44" stroke="${P.blu}" stroke-width="3.4" stroke-linecap="round"/>
+   <circle cx="32" cy="32" r="4" fill="${P.lap}"/>`),
+ re:S(`<path d="M32 8q10 12 10 20a10 10 0 01-20 0c0-8 10-20 10-20z" fill="${P.red}"/>
+   <path d="M32 22q4 6 4 9a4 4 0 01-8 0c0-3 4-9 4-9z" fill="${P.gold}"/>
+   <path d="M18 48q6-4 14 0t14 0" stroke="${P.red}" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+ kan:S(`<path d="M6 32q13-16 26 0-13 16-26 0z" fill="${P.wh}" stroke="${P.ink}" stroke-width="1.6" transform="translate(13)"/>
+   <circle cx="32" cy="32" r="7" fill="${P.cel}"/><circle cx="32" cy="32" r="3.4" fill="${P.ink}"/>`),
+ // ui icons
+ target:S(`<circle cx="32" cy="32" r="20" fill="none" stroke="${P.red}" stroke-width="4"/>
+   <circle cx="32" cy="32" r="11" fill="none" stroke="${P.red}" stroke-width="4"/>
+   <circle cx="32" cy="32" r="3.4" fill="${P.red}"/>`),
+ kiteIcon:S(`<path d="M32 8L52 30 32 56 12 30z" fill="${P.cel}"/>
+   <path d="M32 8v48M12 30h40" stroke="${P.cel2}" stroke-width="1.6"/>`),
+ cards:S(`<rect x="8" y="18" width="20" height="30" rx="3" fill="${P.lap}" transform="rotate(-9 18 33)"/>
+   <rect x="22" y="14" width="20" height="30" rx="3" fill="${P.gold}"/>
+   <rect x="38" y="18" width="20" height="30" rx="3" fill="${P.red}" transform="rotate(9 48 33)"/>`),
+ brain:S(`<path d="M26 12q-12 0-12 10 0 4 3 6-3 3-3 7t4 6q0 8 9 8h5V12z" fill="${P.plum}"/>
+   <path d="M38 12q12 0 12 10 0 4-3 6 3 3 3 7t-4 6q0 8-9 8h-5V12z" fill="#B9709A"/>`),
+ sky:S(`<circle cx="46" cy="18" r="8" fill="${P.gold}"/>
+   <path d="M10 42q0-9 9-9 2-8 11-8t11 8q9 0 9 9z" fill="${P.wh}"/>
+   <path d="M6 50h52" stroke="${P.cel}" stroke-width="3" stroke-linecap="round"/>`),
+ chart:S(`<rect x="10" y="34" width="10" height="20" rx="2" fill="${P.cel}"/>
+   <rect x="27" y="22" width="10" height="32" rx="2" fill="${P.gold}"/>
+   <rect x="44" y="12" width="10" height="42" rx="2" fill="${P.red}"/>`),
+ trophy:S(`<path d="M20 10h24v14q0 12-12 12t-12-12z" fill="${P.gold}"/>
+   <path d="M20 14h-7q0 10 8 12M44 14h7q0 10-8 12" fill="none" stroke="${P.gold2}" stroke-width="3"/>
+   <path d="M28 36h8v10h-8z" fill="${P.gold2}"/><rect x="20" y="46" width="24" height="6" rx="2" fill="${P.gold2}"/>`),
+ sound:S(`<path d="M12 26h9l11-9v30l-11-9h-9z" fill="${P.lap}"/>
+   <path d="M40 24q5 8 0 16M46 19q9 13 0 26" fill="none" stroke="${P.lap}" stroke-width="3" stroke-linecap="round"/>`),
+ phone2:S(`<rect x="18" y="6" width="28" height="52" rx="6" fill="${P.ink}"/>
+   <rect x="22" y="13" width="20" height="36" rx="2" fill="${P.cel}"/>`),
+};
+/* avatars */
+const AVA={
+ fox:S(`<path d="M14 18l4 12M50 18l-4 12" stroke="${P.gold}" stroke-width="8" stroke-linecap="round"/>
+   <path d="M32 16c-12 0-18 9-18 18s8 16 18 16 18-6 18-16-6-18-18-18z" fill="${P.gold}"/>
+   <path d="M32 34c-6 0-9 4-9 8s4 8 9 8 9-4 9-8-3-8-9-8z" fill="${P.wh}"/>
+   <circle cx="25" cy="31" r="2.4" fill="${P.ink}"/><circle cx="39" cy="31" r="2.4" fill="${P.ink}"/>
+   <path d="M32 40l-2.5 2.5h5z" fill="${P.ink}"/>`),
+ panda:S(`<circle cx="17" cy="18" r="7" fill="${P.ink}"/><circle cx="47" cy="18" r="7" fill="${P.ink}"/>
+   <circle cx="32" cy="34" r="18" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.2"/>
+   <ellipse cx="25" cy="32" rx="5" ry="6" fill="${P.ink}"/><ellipse cx="39" cy="32" rx="5" ry="6" fill="${P.ink}"/>
+   <circle cx="25" cy="32" r="2" fill="${P.wh}"/><circle cx="39" cy="32" r="2" fill="${P.wh}"/>
+   <ellipse cx="32" cy="42" rx="3.4" ry="2.6" fill="${P.ink}"/>`),
+ tiger:S(`<circle cx="18" cy="19" r="6" fill="${P.gold2}"/><circle cx="46" cy="19" r="6" fill="${P.gold2}"/>
+   <circle cx="32" cy="34" r="18" fill="${P.gold}"/>
+   <path d="M24 20l2 7M32 18v8M40 20l-2 7" stroke="${P.ink}" stroke-width="2.4" stroke-linecap="round"/>
+   <circle cx="25" cy="32" r="2.4" fill="${P.ink}"/><circle cx="39" cy="32" r="2.4" fill="${P.ink}"/>
+   <path d="M32 39l-3 3h6z" fill="${P.ink}"/>`),
+ owl:S(`<path d="M32 12c-12 0-18 10-18 21s8 17 18 17 18-6 18-17-6-21-18-21z" fill="${P.brn}"/>
+   <circle cx="24" cy="30" r="8" fill="${P.wh}"/><circle cx="40" cy="30" r="8" fill="${P.wh}"/>
+   <circle cx="24" cy="30" r="4" fill="${P.ink}"/><circle cx="40" cy="30" r="4" fill="${P.ink}"/>
+   <path d="M32 36l-4 5h8z" fill="${P.gold}"/>
+   <path d="M14 16l6 6M50 16l-6 6" stroke="${P.brn}" stroke-width="5" stroke-linecap="round"/>`),
+ rabbit:S(`<ellipse cx="22" cy="14" rx="5" ry="12" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.2"/>
+   <ellipse cx="42" cy="14" rx="5" ry="12" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.2"/>
+   <ellipse cx="22" cy="14" rx="2.4" ry="7" fill="${P.plum}" opacity=".45"/>
+   <ellipse cx="42" cy="14" rx="2.4" ry="7" fill="${P.plum}" opacity=".45"/>
+   <circle cx="32" cy="38" r="16" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.2"/>
+   <circle cx="26" cy="36" r="2.4" fill="${P.ink}"/><circle cx="38" cy="36" r="2.4" fill="${P.ink}"/>
+   <path d="M32 42l-2.5 2.5h5z" fill="${P.plum}"/>`),
+ bear:S(`<circle cx="17" cy="20" r="7" fill="${P.brn}"/><circle cx="47" cy="20" r="7" fill="${P.brn}"/>
+   <circle cx="32" cy="35" r="18" fill="${P.brn}"/>
+   <ellipse cx="32" cy="42" rx="10" ry="8" fill="${P.cream}"/>
+   <circle cx="26" cy="31" r="2.4" fill="${P.ink}"/><circle cx="38" cy="31" r="2.4" fill="${P.ink}"/>
+   <ellipse cx="32" cy="40" rx="3.4" ry="2.6" fill="${P.ink}"/>`),
+ cat2:S(`<path d="M16 24l-2-11 11 6zM48 24l2-11-11 6z" fill="${P.gy}"/>
+   <circle cx="32" cy="35" r="17" fill="${P.gy}"/>
+   <circle cx="26" cy="32" r="2.4" fill="${P.ink}"/><circle cx="38" cy="32" r="2.4" fill="${P.ink}"/>
+   <path d="M32 39l-2.5 2.5h5z" fill="${P.plum}"/>
+   <path d="M15 36H8M15 40H8M49 36h7M49 40h7" stroke="${P.ink}" stroke-width="1.2" stroke-linecap="round"/>`),
+ crane:S(`<path d="M30 52q-12-4-12-16t12-14q10-2 14 6" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.4"/>
+   <circle cx="45" cy="20" r="7" fill="${P.wh}" stroke="${P.gy}" stroke-width="1.4"/>
+   <path d="M45 13q0-5 3-6" stroke="${P.red}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="47" cy="19" r="1.8" fill="${P.ink}"/>
+   <path d="M52 22l8 3-8 3z" fill="${P.gold}"/>
+   <path d="M22 30q10 6 12 14" stroke="${P.ink}" stroke-width="1.4" fill="none" opacity=".3"/>`),
+};
+
+
+/* clock face generator */
+function clockSVG(h,m,hi){
+  const ha=(h%12)*30+m*.5-90, ma=m*6-90, R=Math.PI/180;
+  const hx=32+15*Math.cos(ha*R), hy=32+15*Math.sin(ha*R);
+  const mx=32+21*Math.cos(ma*R), my=32+21*Math.sin(ma*R);
+  let ticks='';
+  for(let i=0;i<12;i++){const a=i*30-90;
+    const x1=32+25*Math.cos(a*R),y1=32+25*Math.sin(a*R);
+    const x2=32+28*Math.cos(a*R),y2=32+28*Math.sin(a*R);
+    ticks+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${P.gy}" stroke-width="${i%3?1.2:2.4}"/>`}
+  return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+   <circle cx="32" cy="32" r="30" fill="${hi?'#FAE3DE':P.wh}" stroke="${hi?P.red:P.ink}" stroke-width="2.6"/>
+   ${ticks}
+   <line x1="32" y1="32" x2="${hx}" y2="${hy}" stroke="${P.ink}" stroke-width="3.6" stroke-linecap="round"/>
+   <line x1="32" y1="32" x2="${mx}" y2="${my}" stroke="${P.red}" stroke-width="2.4" stroke-linecap="round"/>
+   <circle cx="32" cy="32" r="2.8" fill="${P.red}"/></svg>`;
+}
+
+/* ════════════ DATA ════════════ */
+const AVK=['fox','panda','tiger','owl','rabbit','bear','cat2','crane'];
+const DIFFS=[
+ {id:'easy',zh:'易',th:'ง่าย',c:'var(--cel)',cl:'var(--cel-l)',mult:1.0,rise:15,opts:3,pin:1,
+  d:'มีพินอินตลอด · มีเวลาคิดพอสมควร · ตัวเลือก 3 ข้อ'},
+ {id:'mid',zh:'中',th:'กลาง',c:'var(--gold)',cl:'var(--gold-l)',mult:1.7,rise:10,opts:4,pin:1,
+  d:'พินอินเฉพาะโจทย์ · ต้องตอบไว · ตัวเลือก 4 ข้อ'},
+ {id:'hard',zh:'难',th:'ยาก',c:'var(--verm)',cl:'var(--verm-l)',mult:2.6,rise:7,opts:4,pin:0,
+  d:'ไม่มีพินอิน · ลอยเร็วมาก · ตัวลวงคล้ายมาก'},
+];
+const CATS=[
+ {id:'greet',ic:'nihao',zh:'问候',nm:'ทักทาย',c:'var(--verm)',cl:'var(--verm-l)'},
+ {id:'person',ic:'pengyou',zh:'人称',nm:'คนและสรรพนาม',c:'var(--plum)',cl:'var(--plum-l)'},
+ {id:'fam',ic:'jia',zh:'家人',nm:'ครอบครัว',c:'var(--plum)',cl:'var(--plum-l)'},
+ {id:'num',ic:'qian',zh:'数字',nm:'ตัวเลข',c:'var(--gold)',cl:'var(--gold-l)'},
+ {id:'food',ic:'mifan',zh:'饮食',nm:'อาหาร',c:'var(--gold)',cl:'var(--gold-l)'},
+ {id:'animal',ic:'mao',zh:'动物',nm:'สัตว์',c:'var(--cel)',cl:'var(--cel-l)'},
+ {id:'obj',ic:'shu',zh:'物品',nm:'ของใช้',c:'var(--lapis)',cl:'var(--lapis-l)'},
+ {id:'place',ic:'xuexiao',zh:'地方',nm:'สถานที่',c:'var(--lapis)',cl:'var(--lapis-l)'},
+ {id:'nature',ic:'taiyang',zh:'自然',nm:'ธรรมชาติ',c:'var(--cel)',cl:'var(--cel-l)'},
+ {id:'body',ic:'shou',zh:'身体',nm:'ร่างกาย',c:'var(--plum)',cl:'var(--plum-l)'},
+ {id:'color',ic:'hong',zh:'颜色',nm:'สี',c:'var(--gold)',cl:'var(--gold-l)'},
+ {id:'verb',ic:'kan',zh:'动作',nm:'คำกริยา',c:'var(--verm)',cl:'var(--verm-l)'},
+ {id:'adj',ic:'gaoxing',zh:'形容',nm:'คำคุณศัพท์',c:'var(--verm)',cl:'var(--verm-l)'},
+ {id:'dir',ic:'shang',zh:'方向',nm:'ทิศทาง',c:'var(--lapis)',cl:'var(--lapis-l)'},
+ {id:'time',ic:'dian',zh:'时间',nm:'เวลา',c:'var(--verm)',cl:'var(--verm-l)'},
+ {id:'q',ic:'target',zh:'疑问',nm:'คำถาม',c:'var(--cel)',cl:'var(--cel-l)'},
+];
+const MODES=[
+ {id:'risk',zh:'险',py:'XIAN LU',nm:'เส้นทางเสี่ยง',bg:'แนะนำ',c:'var(--verm)',cl:'var(--verm-l)',
+  art:'cards',d:'เล่น 3 รอบ จบแต่ละรอบได้เลือกการ์ดพลิกกติกา ยิ่งเสี่ยงยิ่งคูณคะแนนสูง',
+  tags:['3 รอบ','การ์ดสุ่ม','ขึ้นกระดาน']},
+ {id:'endless',zh:'天',py:'CHANG TIAN',nm:'ฟ้ากว้าง',c:'var(--cel)',cl:'var(--cel-l)',
+  art:'sky',d:'ไม่จำกัดจำนวนข้อ ว่าวลอยเร็วขึ้นเรื่อยๆ เล่นจนพลาดครบ 3 ครั้ง',
+  tags:['ไม่จำกัดข้อ','เร่งขึ้นเรื่อยๆ']},
+ {id:'perfect',zh:'瑕',py:'WU XIA',nm:'ไร้ที่ติ',c:'var(--gold)',cl:'var(--gold-l)',
+  art:'target',d:'ตอบผิดข้อเดียวจบทันที ไม่มีการ์ดช่วย วัดกันที่ความแม่นล้วนๆ',
+  tags:['ผิดครั้งเดียวจบ','คูณสูงสุด']},
+ {id:'zen',zh:'静',py:'JING XIN',nm:'ฝึกสงบ',c:'var(--lapis)',cl:'var(--lapis-l)',
+  art:'kiteIcon',d:'ว่าวลอยช้ามาก ไม่มีคะแนน ไม่ขึ้นกระดาน เหมาะกับตอนอยากทบทวนคำใหม่',
+  tags:['ไม่กดดัน','ไม่บันทึกสถิติ']},
+ {id:'maze',zh:'宫',py:'MI GONG',nm:'เขาวงกต',bg:'ใหม่',c:'var(--plum)',cl:'var(--plum-l)',
+  art:'maze',wide:1,d:'อ่านคำสั่งทิศทางภาษาจีนแล้วเดินให้ถึงธง เดินผิดทางเสียคะแนน โหมดนี้ใช้หมวดทิศทางโดยอัตโนมัติ ไม่ต้องเลือกหมวดเอง',
+  tags:['ใช้หมวดทิศทาง','มีกำแพงกั้น','ด่านยากขึ้นเรื่อยๆ']},
+];
+const MODS=[
+ {id:'nopin',zh:'无拼',nm:'ไร้พินอิน',d:'ซ่อนพินอินทั้งหมด',x:1.5,c:'var(--lapis)'},
+ {id:'noimg',zh:'无画',nm:'ไร้ภาพ',d:'ไม่มีภาพช่วยเลย อ่านตัวอักษรล้วน',x:1.7,c:'var(--plum)'},
+ {id:'rush',zh:'急风',nm:'ลมแรง',d:'ว่าวลอยเร็วขึ้นเท่าตัว',x:2.0,c:'var(--verm)'},
+ {id:'twin',zh:'双生',nm:'คู่แฝด',d:'ตัวลวงคล้ายคำตอบมาก',x:1.8,c:'var(--gold)'},
+ {id:'blind',zh:'盲打',nm:'มืดบอด',d:'เหลือแต่ภาพ ไม่มีตัวอักษรจีนช่วย',x:2.2,c:'var(--plum)'},
+ {id:'chain',zh:'连环',nm:'ลูกโซ่',d:'คอมโบให้คะแนนทวีคูณ',x:1.3,c:'var(--cel)'},
+ {id:'shield',zh:'护身',nm:'เกราะกัน',d:'พลาดได้ฟรี 1 ครั้ง',x:0.8,c:'var(--cel)'},
+ {id:'slow',zh:'缓风',nm:'ลมสงบ',d:'ว่าวลอยช้าลงครึ่งหนึ่ง',x:0.75,c:'var(--cel)'},
+];
+const BGC={greet:'var(--verm-l)',fam:'var(--plum-l)',food:'var(--gold-l)',animal:'var(--cel-l)',
+ obj:'var(--lapis-l)',nature:'var(--cel-l)',body:'var(--plum-l)',color:'var(--shell)',
+ dir:'var(--lapis-l)',time:'var(--verm-l)',person:'var(--plum-l)',num:'var(--gold-l)',
+ place:'var(--lapis-l)',verb:'var(--verm-l)',adj:'var(--verm-l)',q:'var(--cel-l)'};
+const V=[
+ // 问候 ทักทาย
+ ['greet','你好','nǐ hǎo','สวัสดี','nihao'],['greet','谢谢','xiè xie','ขอบคุณ','xiexie'],
+ ['greet','再见','zài jiàn','ลาก่อน','zaijian'],['greet','对不起','duì bu qǐ','ขอโทษ','duibuqi'],
+ ['greet','不客气','bú kè qi','ไม่เป็นไร','xiexie'],['greet','没关系','méi guān xi','ไม่เป็นไร','duibuqi'],
+ ['greet','请','qǐng','เชิญ','nihao'],['greet','喂','wèi','ฮัลโหล','shouji'],
+ // 人称 คนและสรรพนาม
+ ['person','我','wǒ','ฉัน',''],['person','你','nǐ','คุณ',''],['person','他','tā','เขา (ชาย)',''],
+ ['person','她','tā','เธอ (หญิง)',''],['person','我们','wǒ men','พวกเรา',''],
+ ['person','人','rén','คน',''],['person','名字','míng zi','ชื่อ',''],
+ ['person','朋友','péng you','เพื่อน','pengyou'],['person','同学','tóng xué','เพื่อนร่วมชั้น','xuesheng2'],
+ ['person','先生','xiān sheng','คุณ (ชาย)','baba'],['person','小姐','xiǎo jie','คุณ (หญิง)','jiejie'],
+ ['person','老师','lǎo shī','ครู','laoshi2'],['person','学生','xué sheng','นักเรียน','xuesheng2'],
+ ['person','医生','yī shēng','หมอ','yiyuan'],
+ // 家人 ครอบครัว
+ ['fam','爸爸','bà ba','พ่อ','baba'],['fam','妈妈','mā ma','แม่','mama'],
+ ['fam','哥哥','gē ge','พี่ชาย','gege'],['fam','姐姐','jiě jie','พี่สาว','jiejie'],
+ ['fam','弟弟','dì di','น้องชาย','didi'],['fam','妹妹','mèi mei','น้องสาว','meimei'],
+ ['fam','儿子','ér zi','ลูกชาย','didi'],['fam','女儿','nǚ ér','ลูกสาว','meimei'],
+ ['fam','家','jiā','บ้าน','jia'],
+ // 数字 ตัวเลข
+ ['num','一','yī','หนึ่ง',''],['num','二','èr','สอง',''],['num','三','sān','สาม',''],
+ ['num','四','sì','สี่',''],['num','五','wǔ','ห้า',''],['num','六','liù','หก',''],
+ ['num','七','qī','เจ็ด',''],['num','八','bā','แปด',''],['num','九','jiǔ','เก้า',''],
+ ['num','十','shí','สิบ',''],['num','零','líng','ศูนย์',''],['num','百','bǎi','ร้อย',''],
+ ['num','钱','qián','เงิน','qian'],['num','块','kuài','บาท (ลักษณนามเงิน)','qian'],
+ ['num','岁','suì','ขวบ ปี',''],['num','个','gè','อัน ชิ้น',''],
+ // 饮食 อาหาร
+ ['food','吃','chī','กิน','zui'],['food','喝','hē','ดื่ม','beizi'],
+ ['food','米饭','mǐ fàn','ข้าว','mifan'],['food','水','shuǐ','น้ำ','shui'],
+ ['food','茶','chá','ชา','cha'],['food','面','miàn','บะหมี่','mian'],
+ ['food','菜','cài','กับข้าว ผัก','cai'],['food','苹果','píng guǒ','แอปเปิล','pingguo'],
+ ['food','水果','shuǐ guǒ','ผลไม้','shuiguo'],['food','鱼','yú','ปลา','yu'],
+ ['food','杯子','bēi zi','แก้ว','beizi'],
+ // 动物 สัตว์
+ ['animal','猫','māo','แมว','mao'],['animal','狗','gǒu','สุนัข','gou'],
+ ['animal','鸟','niǎo','นก','niao'],['animal','马','mǎ','ม้า','ma'],
+ // 物品 ของใช้
+ ['obj','书','shū','หนังสือ','shu'],['obj','车','chē','รถ','che'],
+ ['obj','手机','shǒu jī','มือถือ','shouji'],['obj','电脑','diàn nǎo','คอมพิวเตอร์','diannao'],
+ ['obj','电视','diàn shì','โทรทัศน์','dianshi'],['obj','桌子','zhuō zi','โต๊ะ','zhuozi'],
+ ['obj','椅子','yǐ zi','เก้าอี้','yizi'],['obj','衣服','yī fu','เสื้อผ้า','yifu'],
+ ['obj','伞','sǎn','ร่ม','san'],['obj','钥匙','yào shi','กุญแจ','yaoshi'],
+ ['obj','字','zì','ตัวอักษร','zi'],
+ // 地方 สถานที่
+ ['place','学校','xué xiào','โรงเรียน','xuexiao'],['place','商店','shāng diàn','ร้านค้า','shangdian'],
+ ['place','医院','yī yuàn','โรงพยาบาล','yiyuan'],['place','中国','Zhōng guó','ประเทศจีน','zhongguo'],
+ ['place','火车','huǒ chē','รถไฟ','huoche'],['place','飞机','fēi jī','เครื่องบิน','feiji'],
+ ['place','出租车','chū zū chē','แท็กซี่','che'],
+ // 自然 ธรรมชาติ
+ ['nature','太阳','tài yáng','ดวงอาทิตย์','taiyang'],['nature','月亮','yuè liang','ดวงจันทร์','yueliang'],
+ ['nature','山','shān','ภูเขา','shan'],['nature','树','shù','ต้นไม้','shu2'],
+ ['nature','花','huā','ดอกไม้','hua'],['nature','下雨','xià yǔ','ฝนตก','yu2'],
+ ['nature','天气','tiān qì','อากาศ','taiyang'],
+ // 身体 ร่างกาย
+ ['body','手','shǒu','มือ','shou'],['body','眼睛','yǎn jing','ตา','yanjing'],
+ ['body','嘴','zuǐ','ปาก','zui'],['body','耳朵','ěr duo','หู','erduo'],
+ ['body','头','tóu','หัว','tou'],['body','脚','jiǎo','เท้า','jiao'],
+ // 颜色 สี
+ ['color','红','hóng','สีแดง','hong'],['color','蓝','lán','สีน้ำเงิน','lan'],
+ ['color','绿','lǜ','สีเขียว','lv'],['color','黄','huáng','สีเหลือง','huang'],
+ ['color','黑','hēi','สีดำ','hei'],['color','白','bái','สีขาว','bai'],
+ // 动作 คำกริยา
+ ['verb','是','shì','เป็น คือ',''],['verb','有','yǒu','มี',''],
+ ['verb','叫','jiào','ชื่อว่า',''],['verb','看','kàn','ดู อ่าน',''],
+ ['verb','听','tīng','ฟัง',''],['verb','说','shuō','พูด',''],
+ ['verb','读','dú','อ่านออกเสียง',''],['verb','写','xiě','เขียน',''],
+ ['verb','走','zǒu','เดิน',''],['verb','来','lái','มา',''],
+ ['verb','去','qù','ไป',''],['verb','做','zuò','ทำ',''],
+ ['verb','买','mǎi','ซื้อ',''],['verb','学习','xué xí','เรียน',''],
+ ['verb','工作','gōng zuò','ทำงาน',''],['verb','睡觉','shuì jiào','นอน',''],
+ ['verb','认识','rèn shi','รู้จัก',''],['verb','坐','zuò','นั่ง',''],
+ ['verb','住','zhù','อาศัยอยู่',''],['verb','回','huí','กลับ',''],
+ ['verb','爱','ài','รัก',''],['verb','喜欢','xǐ huan','ชอบ',''],
+ // 形容 คำคุณศัพท์
+ ['adj','好','hǎo','ดี',''],['adj','大','dà','ใหญ่',''],
+ ['adj','小','xiǎo','เล็ก',''],['adj','多','duō','มาก',''],
+ ['adj','少','shǎo','น้อย',''],['adj','高兴','gāo xìng','ดีใจ',''],
+ ['adj','漂亮','piào liang','สวย',''],['adj','冷','lěng','หนาว',''],
+ ['adj','热','rè','ร้อน',''],['adj','好吃','hǎo chī','อร่อย',''],
+ ['adj','忙','máng','ยุ่ง',''],['adj','对','duì','ถูกต้อง',''],
+ // 方向 ทิศทาง
+ ['dir','上','shàng','บน','shang'],['dir','下','xià','ล่าง','xia'],
+ ['dir','左','zuǒ','ซ้าย','zuo'],['dir','右','yòu','ขวา','you'],
+ ['dir','前','qián','ข้างหน้า','qianDir'],['dir','后','hòu','ข้างหลัง','hou'],
+ ['dir','里','lǐ','ข้างใน','li'],['dir','外','wài','ข้างนอก','wai'],
+ ['dir','东','dōng','ตะวันออก','dong'],['dir','西','xī','ตะวันตก','xi'],
+ ['dir','中','zhōng','ตรงกลาง',''],
+ // 时间 เวลา
+ ['time','今天','jīn tiān','วันนี้','jintian'],['time','明天','míng tiān','พรุ่งนี้','mingtian'],
+ ['time','昨天','zuó tiān','เมื่อวาน','zuotian'],['time','早上','zǎo shang','ตอนเช้า','zaoshang'],
+ ['time','晚上','wǎn shang','ตอนเย็น','wanshang'],['time','中午','zhōng wǔ','ตอนเที่ยง','taiyang'],
+ ['time','点','diǎn','โมง','dian'],['time','分','fēn','นาที','fen'],
+ ['time','星期','xīng qī','สัปดาห์','xingqi'],['time','现在','xiàn zài','ตอนนี้','xianzai'],
+ ['time','年','nián','ปี','nian'],['time','月','yuè','เดือน','yueliang'],
+ ['time','号','hào','วันที่','jintian'],
+ // 疑问 คำถาม
+ ['q','什么','shén me','อะไร',''],['q','谁','shéi','ใคร',''],
+ ['q','哪儿','nǎr','ที่ไหน',''],['q','几','jǐ','กี่',''],
+ ['q','多少','duō shao','เท่าไหร่',''],['q','怎么','zěn me','อย่างไร',''],
+ ['q','怎么样','zěn me yàng','เป็นอย่างไร',''],['q','为什么','wèi shén me','ทำไม',''],
+].map((r,i)=>({i,cat:r[0],h:r[1],p:r[2],t:r[3],ic:r[4]}));
+/* คำที่มีภาพวาดหรือไม่ ใช้ตัดสินว่าโจทย์ชนิดที่ต้องใช้ภาพจะหยิบคำนี้ได้ไหม */
+const hasArt=v=>!!(v.ic&&ART[v.ic]);
+
+
+/* direction vector map for compass questions */
+const DIRV={'上':[0,-1],'下':[0,1],'左':[-1,0],'右':[1,0],
+  '前':[0,-1],'后':[0,1],'东':[1,0],'西':[-1,0]};
+const DIRPAD=[['上',0,-1],['下',0,1],['左',-1,0],['右',1,0]];
+/* clock reading data: hanzi -> [h,m] */
+const CLOCKS=[
+ ['三点','sān diǎn',3,0],['三点半','sān diǎn bàn',3,30],
+ ['七点','qī diǎn',7,0],['七点半','qī diǎn bàn',7,30],
+ ['九点一刻','jiǔ diǎn yí kè',9,15],['十二点','shí èr diǎn',12,0],
+ ['五点四十五','wǔ diǎn sì shí wǔ',5,45],['八点十分','bā diǎn shí fēn',8,10],
+];
+/* ordered sequences for the sequence question */
+/* ทุกชุดต้องระบุ cat เพื่อให้แสดงเฉพาะตอนที่ผู้เล่นเลือกหมวดนั้นจริง */
+const SEQS=[
+ {cat:'time',t:'เรียงตามลำดับเวลา',items:[['昨天','เมื่อวาน'],['今天','วันนี้'],['明天','พรุ่งนี้']]},
+ {cat:'time',t:'เรียงตามลำดับของวัน',items:[['早上','เช้า'],['中午','เที่ยง'],['晚上','เย็น']]},
+ {cat:'num',t:'เรียงจากน้อยไปมาก',items:[['一','1'],['三','3'],['五','5'],['十','10']]},
+ {cat:'num',t:'เรียงจากน้อยไปมาก',items:[['二','2'],['四','4'],['六','6'],['八','8']]},
+ {cat:'num',t:'เรียงจากน้อยไปมาก',items:[['七','7'],['八','8'],['九','9'],['十','10']]},
+ {cat:'dir',t:'เรียงจากบนลงล่าง',items:[['上','บน'],['中','กลาง'],['下','ล่าง']]},
+];
+
+let rRAF=null,kY=0,CUR=null,locked=false;
+let ME={name:'',av:'fox'};
+let SEL={diff:'mid',cats:['greet'],mode:'risk'};
+let RUN=null;
+/* กระดานคะแนนเก็บเฉพาะผลของผู้เล่นจริงในเครื่องนี้ ไม่มีข้อมูลสมมติ */
+const BOARD={},MAST={};
+CATS.forEach(c=>DIFFS.forEach(d=>{BOARD[c.id+'|'+d.id]=[]}));
+
+/* ════════════ KITE SVG ════════════ */
+function kiteSVG(c1,c2){return `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+ <path d="M50 6L92 56 50 118 8 56z" fill="${c1}"/>
+ <path d="M50 6L92 56 50 118z" fill="${c2}"/>
+ <path d="M50 6v112M8 56h84" stroke="rgba(255,255,255,.55)" stroke-width="1.6"/>
+ <path d="M50 118q6 8 0 14t0 14" stroke="${c2}" stroke-width="2" fill="none" stroke-linecap="round"/>
+ <ellipse cx="44" cy="126" rx="5" ry="2.4" fill="${c1}"/>
+ <ellipse cx="56" cy="138" rx="5" ry="2.4" fill="${c1}"/></svg>`}
+$('heroKite').innerHTML=kiteSVG('#CE4430','#8E2415');
+$('nameKite').innerHTML=kiteSVG('#6FA294','#3F6D62');
+$('demoKite').innerHTML=kiteSVG('#C08A2E','#835811');
+$('si1').innerHTML=ART.target;$('si2').innerHTML=ART.kiteIcon;$('si3').innerHTML=ART.cards;
+
+/* gallery */
+$('gallery').innerHTML=V.filter(hasArt).slice(0,24).map(v=>`
+ <div class="gw"><div class="im" style="--bg:${BGC[v.cat]}">${ART[v.ic]||''}</div>
+  <div class="h">${v.h}</div><div class="p">${v.p}</div><div class="t">${v.t}</div></div>`).join('');
+
+/* หมวดหมู่ทั้งหมดในหน้าหลัก */
+$('catList').innerHTML=CATS.map(c=>{
+  const n=V.filter(v=>v.cat===c.id).length;
+  return `<div class="catRow" style="--c:${c.c};--cl:${c.cl}">
+    <div class="ci2">${ART[c.ic]||''}</div>
+    <div><div class="cz2">${c.zh}</div><div class="cn2">${c.nm}</div></div>
+    <div class="cw2">${n} คำ</div></div>`}).join('');
+/* คำตัวอย่างที่ใช้บ่อยที่สุด คัดจากหมวดที่ใช้ทุกวัน */
+const SAMPLE=['你好','谢谢','我','是','有','什么','多少','好','吃','去',
+  '今天','点','人','钱','大','不客气'];
+$('sampleGrid').innerHTML=SAMPLE.map(h=>{
+  const v=V.find(x=>x.h===h);if(!v)return '';
+  return `<div class="samp">
+    <div><div class="sh">${v.h}</div><div class="sp2">${v.p}</div></div>
+    <div class="st2">${v.t}</div></div>`}).join('');
+$('notIc').innerHTML=ART.target;
+$('notIc2').innerHTML=ART.chart;
+
+$('featList').innerHTML=[
+ ['brain','คำที่ยังไม่แม่นโผล่บ่อยกว่า','ทุกคำมีระดับความจำ 5 ขั้น ระบบถ่วงน้ำหนักให้คำที่คุณอ่อนโผล่บ่อยขึ้นเอง'],
+ ['sky','ฟ้าของคุณเอง','ทุกคำที่ตอบถูกกลายเป็นว่าวหนึ่งตัวบนฟ้า จบเกมแล้วได้เห็นฟ้าที่ตัวเองปล่อยไว้'],
+ ['chart','ระดับยากคูณคะแนนจริง','ไม่ได้แค่เร็วขึ้น แต่ตัวลวงคล้ายคำตอบมากขึ้นและซ่อนตัวช่วยทั้งหมด'],
+ ['trophy','กระดานแยกตามหมวดและระดับ','16 หมวด คูณ 3 ระดับ เท่ากับ 48 กระดาน ทำอันดับหนึ่งในหมวดที่ถนัดได้ง่ายกว่า'],
+ ['sound','เสียงทุกคำ','ทุกคำมีเสียงอ่าน กดฟังซ้ำได้ตลอด'],
+ ['phone2','เล่นได้ทุกเครื่อง','ออกแบบให้ใช้นิ้วบนมือถือสะดวก และขยายเต็มจอบนคอมพิวเตอร์'],
+].map(f=>`<div class="fit rev"><div class="fi">${ART[f[0]]}</div>
+  <div><h4>${f[1]}</h4><p>${f[2]}</p></div></div>`).join('');
+
+/* ════════════ BG CANVAS ════════════ */
+const bgc=$('bgc'),bx=bgc.getContext('2d');
+let W,H,DPR,clouds=[],birds=[];
+function initBg(){
+  DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+  bgc.width=W*DPR;bgc.height=H*DPR;bgc.style.width=W+'px';bgc.style.height=H+'px';
+  bx.setTransform(DPR,0,0,DPR,0,0);
+  clouds=[];for(let i=0;i<7;i++)clouds.push({x:Math.random()*W,y:Math.random()*H*.55,
+    s:Math.random()*.7+.55,v:Math.random()*.16+.05,a:Math.random()*.3+.24});
+  birds=[];for(let i=0;i<4;i++)birds.push({x:Math.random()*W,y:Math.random()*H*.4+40,
+    v:Math.random()*.4+.22,ph:Math.random()*6.3,s:Math.random()*.5+.5});
+}
+function cloud(c,x,y,s,a){
+  c.globalAlpha=a;c.fillStyle='#fff';
+  [[0,0,26],[22,4,20],[-22,4,18],[10,-10,17],[-10,-8,15]].forEach(p=>{
+    c.beginPath();c.arc(x+p[0]*s,y+p[1]*s,p[2]*s,0,6.3);c.fill()});
+  c.globalAlpha=1;
+}
+let t0=0;
+function drawBg(ts){
+  const dt=Math.min((ts-t0)/16.7,3);t0=ts;
+  bx.clearRect(0,0,W,H);
+  for(const c of clouds){c.x+=c.v*dt;if(c.x>W+90)c.x=-90;cloud(bx,c.x,c.y,c.s,c.a)}
+  bx.strokeStyle='rgba(58,51,43,.3)';bx.lineWidth=1.6;bx.lineCap='round';
+  for(const b of birds){b.x+=b.v*dt;b.ph+=.05*dt;if(b.x>W+30)b.x=-30;
+    const f=Math.sin(b.ph)*4;
+    bx.beginPath();bx.moveTo(b.x-7*b.s,b.y);bx.quadraticCurveTo(b.x-3*b.s,b.y-f,b.x,b.y);
+    bx.quadraticCurveTo(b.x+3*b.s,b.y-f,b.x+7*b.s,b.y);bx.stroke()}
+  if(!RM)requestAnimationFrame(drawBg);
+}
+initBg();if(!RM)requestAnimationFrame(drawBg);
+addEventListener('resize',()=>{initBg();sizeB()});
+
+/* ════════════ BURST ════════════ */
+const bc=$('burst'),cx2=bc.getContext('2d');
+let parts=[],bRun=false;
+function sizeB(){bc.width=innerWidth*DPR;bc.height=innerHeight*DPR;
+  bc.style.width=innerWidth+'px';bc.style.height=innerHeight+'px';cx2.setTransform(DPR,0,0,DPR,0,0)}
+sizeB();
+function burst(x,y,col,n){
+  if(RM)return;
+  for(let i=0;i<n;i++){const a=Math.random()*6.3,sp=Math.random()*7.5+2;
+    parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3,s:Math.random()*6+3,
+      rot:Math.random()*6.3,vr:(Math.random()-.5)*.3,life:1,dec:Math.random()*.014+.009,
+      c:col[Math.floor(Math.random()*col.length)]})}
+  if(!bRun){bRun=true;requestAnimationFrame(stepB)}
+}
+function stepB(){
+  cx2.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life>0);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.2;p.vx*=.99;p.rot+=p.vr;p.life-=p.dec;
+    cx2.save();cx2.translate(p.x,p.y);cx2.rotate(p.rot);
+    cx2.globalAlpha=Math.max(p.life,0);cx2.fillStyle=p.c;
+    cx2.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);cx2.restore()}
+  cx2.globalAlpha=1;if(parts.length)requestAnimationFrame(stepB);else bRun=false;
+}
+
+/* ════════════ LANDING ════════════ */
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.13});
+  document.querySelectorAll('.rev').forEach(e=>io.observe(e));
+}else{
+  /* เบราว์เซอร์เก่าไม่รองรับ ให้แสดงเนื้อหาทันทีแทนที่จะซ่อนไว้ถาวร */
+  document.querySelectorAll('.rev').forEach(e=>e.classList.add('in'));
+}
+addEventListener('scroll',()=>{$('lnav').classList.toggle('on',scrollY>60)},{passive:true});
+/* demo clouds */
+const ds=$('demoSky');
+[[14,60,44],[70,26,32],[48,120,38]].forEach(c=>{
+  const d=document.createElement('div');d.className='cloud';
+  d.style.cssText=`width:${c[2]*2}px;height:${c[2]}px;top:${c[0]}%;left:${c[1]}px`;
+  ds.appendChild(d)});
+
+/* ════════════ NAME ════════════ */
+$('avp').innerHTML=AVK.map((k,i)=>`<button class="${i?'':'on'}" onclick="pickAv(this,'${k}')">${AVA[k]}</button>`).join('');
+function pickAv(el,k){document.querySelectorAll('.avp button').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');ME.av=k;ping()}
+const ni=$('nameInput');
+ni.addEventListener('input',()=>{$('nameGo').disabled=!ni.value.trim()});
+ni.addEventListener('keydown',e=>{if(e.key==='Enter'&&ni.value.trim())saveName()});
+$('nameGo').disabled=true;
+function saveName(){
+  ME.name=ni.value.trim()||'ผู้เล่น';
+  const w=`<span style="width:22px;height:22px;display:grid;place-items:center">${AVA[ME.av]}</span>${ME.name}`;
+  ['who1','who2','who3','who4'].forEach(id=>{const e=$(id);if(e)e.innerHTML=w});
+  go('setup');
+}
+
+/* ════════════ SETUP ════════════ */
+$('diffs').innerHTML=DIFFS.map(d=>`
+ <button class="diff ${d.id==='mid'?'on':''}" style="--c:${d.c};--cl:${d.cl}" data-d="${d.id}" onclick="pd('${d.id}')">
+  <div class="dh"><span class="dz">${d.zh}</span><span class="dt">${d.th}</span>
+    <span class="dx">×${d.mult.toFixed(1)}</span></div>
+  <div class="dm">${d.d}</div></button>`).join('');
+$('cats').innerHTML=CATS.map(c=>`
+ <button class="cat ${c.id==='greet'?'on':''}" style="--c:${c.c};--cl:${c.cl}" data-c="${c.id}" onclick="tc('${c.id}')">
+  <div class="ci">${ART[c.ic]}</div><div class="cz">${c.zh}</div><div class="cn">${c.nm}</div>
+  <div class="cc">${V.filter(v=>v.cat===c.id).length} คำ</div></button>`).join('');
+$('mds').innerHTML=MODES.map(m=>`
+ <button class="md ${m.id==='risk'?'on':''}${m.wide?' wide':''}" style="--c:${m.c};--cl:${m.cl}"
+   data-m="${m.id}" onclick="pm('${m.id}')">
+  ${m.bg?`<span class="bg">${m.bg}</span>`:''}
+  <div class="mart">${ART[m.art]||''}</div>
+  <div class="mtop"><div class="mi">${m.zh}</div>
+    <div><div class="mn">${m.nm}</div><div class="mpy">${m.py}</div></div>
+    <div class="mchk">✓</div></div>
+  <div class="mm">${m.d}</div>
+  <div class="mtags">${m.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+ </button>`).join('');
+function pd(id){SEL.diff=id;document.querySelectorAll('.diff').forEach(b=>b.classList.toggle('on',b.dataset.d===id));ping()}
+function tc(id){const i=SEL.cats.indexOf(id);
+  if(i<0)SEL.cats.push(id);else if(SEL.cats.length>1)SEL.cats.splice(i,1);
+  document.querySelectorAll('.cat').forEach(b=>b.classList.toggle('on',SEL.cats.includes(b.dataset.c)));
+  tick();ping()}
+function pm(id){SEL.mode=id;document.querySelectorAll('.md').forEach(b=>b.classList.toggle('on',b.dataset.m===id));tick();ping()}
+function tick(){
+  const m=MODES.find(x=>x.id===SEL.mode),d=DIFFS.find(x=>x.id===SEL.diff);
+  const isMaze=SEL.mode==='maze';
+  /* โหมดเขาวงกตใช้หมวดทิศทางตายตัว จึงล็อกส่วนเลือกหมวดไว้ */
+  document.querySelectorAll('#catSec .lockable').forEach(e=>e.classList.toggle('locked',isMaze));
+  $('catLock').classList.toggle('on',isMaze);
+  if(isMaze){
+    $('goBtn').textContent='เริ่มเล่น · เขาวงกต';
+    return;
+  }
+  const w=V.filter(v=>SEL.cats.includes(v.cat)).length;
+  $('catN').textContent=`· ${SEL.cats.length} หมวด (${w} คำ)`;
+  $('goBtn').textContent=`เริ่มเล่น · ${m.nm} · ${d.th}`;
+}
+$('catLockIc').innerHTML=ART.maze;
+tick();
+
+/* ════════════ RUN ════════════ */
+function pickWord(needArt){
+  let l=V.filter(v=>SEL.cats.includes(v.cat));
+  if(needArt){const a=l.filter(hasArt);if(a.length>=4)l=a}
+  const w=l.map(v=>6-(MAST[v.i]||0));const t=w.reduce((a,b)=>a+b,0);
+  let r=Math.random()*t;for(let i=0;i<l.length;i++){r-=w[i];if(r<=0)return l[i]}
+  return l[0];
+}
+function startRun(){
+  if(SEL.mode==='maze'){startMaze();return}
+  const d=DIFFS.find(x=>x.id===SEL.diff);
+  RUN={d,mode:SEL.mode,round:1,qIn:0,score:0,combo:0,best:0,ok:0,tot:0,miss:0,
+    mods:[],mult:d.mult,lev:[],shield:0,end:0,kites:[],up:1};
+  go('play');nextQ();
+}
+function quitRun(){conf('ออกจากเกม?','คะแนนรอบนี้จะไม่ถูกบันทึก','ออกเลย',
+  ()=>{closeOv();stopRise();go('setup')})}
+function hasMod(id){return RUN.mods.includes(id)}
+function hud(){
+  $('hRound').textContent=RUN.mode==='risk'?RUN.round+'/3':'—';
+  $('hScore').textContent=RUN.score;
+  $('hMult').textContent='×'+RUN.mult.toFixed(1);
+  $('hMiss').textContent=RUN.mode==='perfect'?'0/1':RUN.miss+'/3';
+  $('amods').innerHTML=RUN.mods.map(id=>{const m=MODS.find(x=>x.id===id);
+    return `<span class="amod" style="--c:${m.c};--cl:${m.c.replace(')','-l)')}">${m.zh} ${m.nm}</span>`}).join('');
+}
+function stopRise(){if(rRAF)cancelAnimationFrame(rRAF);rRAF=null}
+function nextQ(){
+  locked=false;
+  /* คำที่ยังไม่มีภาพวาดจะไม่ถูกใช้กับโจทย์ชนิดที่ต้องใช้ภาพ */
+  const artPool=V.filter(v=>SEL.cats.includes(v.cat)&&hasArt(v));
+  const canImg=artPool.length>=4;
+  const w=pickWord(canImg&&Math.random()<.62);
+  const wArt=hasArt(w);
+  let kinds;
+  const imgKinds=(canImg&&wArt)?['img2zh','img2th','zh2img','th2img']:[];
+  if(hasMod('blind'))      kinds=imgKinds.length?['img2th','th2img']:['zh2th','th2zh'];
+  else if(hasMod('noimg')) kinds=['zh2th','th2zh'];
+  else kinds=['zh2th','th2zh'].concat(imgKinds);
+  if(SEL.cats.includes('dir'))kinds.push('compass','compass');
+  if(SEL.cats.includes('time'))kinds.push('clock','clock');
+  if(!hasMod('noimg')&&artPool.length>=6)kinds.push('match');
+  if(SEQS.some(q=>SEL.cats.includes(q.cat)))kinds.push('order');
+  const kind=kinds[Math.floor(Math.random()*kinds.length)];
+  if(kind==='compass'&&renderCompass())return;
+  if(kind==='clock'&&renderClock())return;
+  if(kind==='match'&&renderMatch())return;
+  if(kind==='order'&&renderOrder())return;
+  let n=RUN.d.opts;
+  const needArtOpts=(kind==='zh2img'||kind==='th2img');
+  const inCat=v=>v.i!==w.i&&SEL.cats.includes(v.cat);
+  let pl=V.filter(v=>inCat(v)&&(!needArtOpts||hasArt(v)));
+  /* ถ้าตัวลวงในหมวดไม่พอ ให้ผ่อนเงื่อนไข "ต้องมีภาพ" ก่อน
+     ห้ามผ่อนเงื่อนไขหมวดเป็นอันขาด ไม่งั้นจะมีคำนอกหมวดโผล่มา */
+  if(pl.length<n-1)pl=V.filter(inCat);
+  if(pl.length<n-1)n=Math.max(2,pl.length+1);
+  if(hasMod('twin')||RUN.d.id==='hard'){const s=pl.filter(v=>v.cat===w.cat);pl=s.concat(pl)}
+  const wrong=[],used=new Set();
+  for(const c of pl){if(wrong.length>=n-1)break;if(!used.has(c.i)){used.add(c.i);wrong.push(c)}}
+  const opts=[w,...wrong].sort(()=>Math.random()-.5);
+  CUR={w,kind,opts};
+  const pin=RUN.d.pin&&!hasMod('nopin');
+  /* blind และ noimg คุมผ่านชุด kinds ด้านบนแล้ว ไม่ต้องเช็คซ้ำตรงนี้ */
+  const img=`<div class="im" style="--bg:${BGC[w.cat]}">${ART[w.ic]||''}</div>`;
+  /* กฎเหล็ก: ภาพประกอบต้องปรากฏเพียงฝั่งเดียวเท่านั้น
+     ถ้าโจทย์มีภาพ ตัวเลือกห้ามมีภาพ และกลับกัน
+     ไม่งั้นภาพจะกลายเป็นการเฉลยคำตอบ */
+  const HASIMG={img2zh:'q',img2th:'q',zh2img:'a',th2img:'a',zh2th:'',th2zh:''};
+  const side=HASIMG[kind];
+  const qImg=side==='q'?img:'';
+  let inner='';
+  if(kind==='img2zh')      inner=`${qImg}<div class="hint">ภาพนี้คือคำจีนคำไหน</div>`;
+  else if(kind==='img2th') inner=`${qImg}<div class="hint">ภาพนี้แปลว่าอะไร</div>`;
+  else if(kind==='zh2img') inner=`${pin?`<div class="py">${w.p}</div>`:''}<div class="zh2">${w.h}</div>
+      <div class="hint">เลือกภาพที่ตรงกับคำนี้</div>`;
+  else if(kind==='th2img') inner=`<div class="th">${w.t}</div>
+      <div class="hint">เลือกภาพที่ตรงกับความหมายนี้</div>`;
+  else if(kind==='zh2th')  inner=`${pin?`<div class="py">${w.p}</div>`:''}<div class="zh2">${w.h}</div>
+      <div class="hint">คำนี้แปลว่าอะไร</div>`;
+  else                     inner=`<div class="th">${w.t}</div>
+      <div class="hint">เลือกคำจีนที่ตรงกัน</div>`;
+  $('kbody').innerHTML=inner;
+  const k=$('kite');k.className='';
+  kY=-26;k.style.bottom=kY+'%';
+  const aImg=(side==='a');
+  $('aGrid').innerHTML=opts.map((o,i)=>{
+    let body;
+    if(aImg){
+      /* ตัวเลือกเป็นภาพล้วน ห้ามมีตัวอักษรกำกับ ไม่งั้นเฉลย */
+      body=`<div class="ai big" style="--bg:${BGC[o.cat]}">${ART[o.ic]||''}</div>`;
+    }else if(kind==='img2th'||kind==='zh2th'){
+      body=`<div class="at">${o.t}</div>`;
+    }else{
+      body=`<div><div class="az">${o.h}</div>${pin?`<div class="ap">${o.p}</div>`:''}</div>`;
+    }
+    return `<button class="aB${aImg?' imgOpt':''}" style="animation-delay:${i*70}ms"
+      onclick="ans(${o.i},this)">${body}</button>`}).join('');
+  hud();startRise();
+}
+function startRise(){
+  stopRise();
+  let sp=RUN.d.rise;
+  /* โจทย์ที่ต้องกดหลายครั้งกว่าจะจบ ให้เวลามากขึ้นตามสัดส่วน */
+  const SLOW={order:2.2,match:2.6,clock:1.3};
+  if(CUR&&SLOW[CUR.kind])sp*=SLOW[CUR.kind];
+  if(hasMod('rush'))sp/=2; if(hasMod('slow'))sp*=2;
+  if(RUN.mode==='zen')sp*=3; if(RUN.mode==='endless')sp/=RUN.up;
+  const per=100/(sp*60);let last=performance.now();
+  function loop(now){
+    const dt=Math.min((now-last)/16.7,3);last=now;
+    kY+=per*dt;
+    $('kite').style.bottom=kY+'%';
+    $('spkB').style.bottom=`calc(${kY}% - 62px)`;
+    $('dzone').classList.toggle('on',kY>66);
+    if(kY>=82&&!locked){miss();return}
+    if(!locked)rRAF=requestAnimationFrame(loop);
+  }
+  rRAF=requestAnimationFrame(loop);
+}
+function ans(idx,el){
+  if(locked)return;locked=true;stopRise();
+  const ok=idx===CUR.w.i;RUN.tot++;
+  document.querySelectorAll('.aB').forEach((b,i)=>{b.disabled=true;
+    if(CUR.opts[i].i===CUR.w.i)b.classList.add('good');else if(b===el)b.classList.add('bad')});
+  const fl=$('flash');fl.className=ok?'ok':'no';setTimeout(()=>fl.className='',480);
+  const r=el.getBoundingClientRect();
+  if(ok){
+    RUN.ok++;RUN.combo++;RUN.best=Math.max(RUN.best,RUN.combo);
+    const sb=Math.max(0,Math.round((82-kY)*1.6));
+    const cb=hasMod('chain')?1+RUN.combo*.26:1+RUN.combo*.12;
+    const gain=Math.round((90+sb)*RUN.mult*cb);
+    RUN.score+=gain;RUN.kites.push({x:Math.random(),y:Math.random(),c:Math.floor(Math.random()*4)});
+    const lv=MAST[CUR.w.i]||0;
+    if(lv<5){MAST[CUR.w.i]=Math.min(5,lv+(RUN.d.id==='hard'?2:1));
+      if(!RUN.lev.find(x=>x.i===CUR.w.i))RUN.lev.push(CUR.w)}
+    $('kite').classList.add('ok');
+    burst(r.left+r.width/2,r.top+r.height/2,['#6FA294','#C08A2E','#CE4430','#3F6BA8'],44);
+    if(RUN.combo>=3){const c=$('combo');c.textContent='ต่อเนื่อง ×'+RUN.combo+'  +'+gain;
+      c.classList.add('on');c.classList.toggle('hot',RUN.combo>=5);
+      clearTimeout(c._t);c._t=setTimeout(()=>c.classList.remove('on'),1300)}
+    if(RUN.mode==='endless')RUN.up=Math.min(2.4,RUN.up+.045);
+    vib(28);ping(1);
+  }else{
+    $('kite').classList.add('no');RUN.combo=0;$('combo').classList.remove('on');
+    if(RUN.mode==='perfect'){setTimeout(()=>endRun('ตอบผิด'),900);return}
+    if(hasMod('shield')&&!RUN.shield){RUN.shield=1;mini('เกราะกันช่วยไว้!')}else RUN.miss++;
+    document.querySelector('.dock').classList.add('shk');
+    setTimeout(()=>document.querySelector('.dock').classList.remove('shk'),350);
+    vib([20,50,20]);ping(0);
+  }
+  hud();
+  setTimeout(()=>{
+    if(RUN.miss>=3){endRun('พลาดครบ 3 ครั้ง');return}
+    RUN.qIn++;
+    if(RUN.mode==='risk'&&RUN.qIn>=6){
+      if(RUN.round>=3){endRun('จบครบ 3 รอบ');return}
+      showMods();return}
+    nextQ();
+  },ok?1050:1550);
+}
+function miss(){
+  if(locked)return;locked=true;stopRise();RUN.tot++;
+  $('kite').classList.add('no');
+  const fl=$('flash');fl.className='no';setTimeout(()=>fl.className='',480);
+  RUN.combo=0;$('combo').classList.remove('on');
+  document.querySelectorAll('.aB').forEach((b,i)=>{b.disabled=true;
+    if(CUR.opts[i].i===CUR.w.i)b.classList.add('good')});
+  if(RUN.mode==='perfect'){setTimeout(()=>endRun('ปล่อยว่าวหลุด'),1000);return}
+  if(hasMod('shield')&&!RUN.shield){RUN.shield=1;mini('เกราะกันช่วยไว้!')}else RUN.miss++;
+  hud();vib([30,60,30]);ping(0);
+  setTimeout(()=>{
+    if(RUN.miss>=3){endRun('พลาดครบ 3 ครั้ง');return}
+    RUN.qIn++;
+    if(RUN.mode==='risk'&&RUN.qIn>=6){
+      if(RUN.round>=3){endRun('จบครบ 3 รอบ');return}
+      showMods();return}
+    nextQ();
+  },1500);
+}
+function showMods(){
+  stopRise();$('modRound').textContent='จบรอบที่ '+RUN.round;
+  const av=MODS.filter(m=>!RUN.mods.includes(m.id)).slice().sort(()=>Math.random()-.5).slice(0,3);
+  $('mcards').innerHTML=av.map((m,i)=>`
+   <button class="mk" style="--c:${m.c};--rot:${(i-1)*1.4}deg;animation-delay:${i*120}ms"
+     onclick="takeMod('${m.id}')">
+    <div class="mz">${m.zh}</div><div class="mt">${m.nm}</div>
+    <div class="md2">${m.d}</div>
+    <div class="mx2 ${m.x<1?'dn':''}">คูณ ×${m.x.toFixed(1)}</div></button>`).join('');
+  go('mod');
+}
+function takeMod(id){
+  const m=MODS.find(x=>x.id===id);RUN.mods.push(id);RUN.mult=+(RUN.mult*m.x).toFixed(2);
+  if(id==='shield')RUN.shield=0;
+  RUN.round++;RUN.qIn=0;ping(1);go('play');nextQ();
+}
+
+
+/* ════════════ SPECIAL QUESTION TYPES ════════════ */
+function commonStart(){locked=false;const k=$('kite');k.className='';kY=-26;k.style.bottom=kY+'%';hud();startRise();}
+function arrowSVG(dx,dy,c){
+  const rot=dx>0?0:dx<0?180:dy>0?90:270;
+  /* path is symmetric about (32,32): x 18..46, y 20..44 */
+  return `<svg viewBox="0 0 64 64" style="transform:rotate(${rot}deg)"><path d="M46 32L34 44v-7H18v-10h16v-7z" fill="${c||'#3F6BA8'}" stroke="${c||'#3F6BA8'}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+/* 1. COMPASS — direction word, tap the matching arrow */
+function renderCompass(){
+  const pool=V.filter(v=>v.cat==='dir'&&DIRV[v.h]);
+  if(!pool.length)return false;
+  const w=pool[Math.floor(Math.random()*pool.length)];
+  CUR={w,kind:'compass'};
+  const pin=RUN.d.pin&&!hasMod('nopin');
+  $('kbody').innerHTML=`<div class="hint">กดลูกศรตามทิศที่คำนี้บอก</div>
+    ${pin?`<div class="py">${w.p}</div>`:''}<div class="zh2">${w.h}</div>`;
+  const v=DIRV[w.h];
+  $('aGrid').innerHTML=`<div class="cpad" id="cpad" style="grid-column:1/-1">
+    <div class="sp"></div><button data-d="0,-1">${arrowSVG(0,-1)}</button><div class="sp"></div>
+    <button data-d="-1,0">${arrowSVG(-1,0)}</button><div class="core">?</div><button data-d="1,0">${arrowSVG(1,0)}</button>
+    <div class="sp"></div><button data-d="0,1">${arrowSVG(0,1)}</button><div class="sp"></div></div>`;
+  $('cpad').querySelectorAll('button').forEach(b=>{
+    b.onclick=()=>{
+      if(locked)return;
+      const d=b.dataset.d.split(',').map(Number);
+      const ok=d[0]===v[0]&&d[1]===v[1];
+      $('cpad').querySelectorAll('button').forEach(x=>{
+        const xd=x.dataset.d.split(',').map(Number);
+        if(xd[0]===v[0]&&xd[1]===v[1])x.classList.add('good');
+        else if(x===b)x.classList.add('bad');
+      });
+      resolve(ok,b);
+    };
+  });
+  commonStart();return true;
+}
+/* 2. CLOCK — read time expression, pick the clock */
+function renderClock(){
+  const pick=CLOCKS.slice().sort(()=>Math.random()-.5).slice(0,4);
+  const w=pick[0];
+  CUR={w:{i:-1,h:w[0],p:w[1],t:w[0],cat:'time',ic:'dian'},kind:'clock'};
+  const pin=RUN.d.pin&&!hasMod('nopin');
+  $('kbody').innerHTML=`<div class="hint">เวลานี้ตรงกับนาฬิกาเรือนไหน</div>
+    ${pin?`<div class="py">${w[1]}</div>`:''}<div class="zh2">${w[0]}</div>`;
+  const shuffled=pick.slice().sort(()=>Math.random()-.5);
+  $('aGrid').innerHTML=`<div class="clocks" style="grid-column:1/-1">${
+    shuffled.map((c,i)=>`<button class="clk" data-i="${i}">${clockSVG(c[2],c[3])}</button>`).join('')}</div>`;
+  $('aGrid').querySelectorAll('.clk').forEach((b,i)=>{
+    b.onclick=()=>{
+      if(locked)return;
+      const ok=shuffled[i][0]===w[0];
+      $('aGrid').querySelectorAll('.clk').forEach((x,j)=>{
+        if(shuffled[j][0]===w[0])x.classList.add('good');else if(j===i)x.classList.add('bad')});
+      resolve(ok,b);
+    };
+  });
+  commonStart();return true;
+}
+/* 3. ORDER — tap items in the right order */
+function renderOrder(){
+  const pool=SEQS.filter(q=>SEL.cats.includes(q.cat));
+  if(!pool.length)return false;
+  const q=pool[Math.floor(Math.random()*pool.length)];
+  CUR={w:{i:-1,h:q.items[0][0],p:'',t:q.t,cat:q.cat,ic:'order'},kind:'order',q};
+  $('kbody').innerHTML=`<div class="hint">${q.t}</div>
+    <div class="zh2" style="font-size:28px">排序</div>`;
+  const shuffled=q.items.map((x,i)=>({x,i})).sort(()=>Math.random()-.5);
+  /* placed[k] = index ของชิปที่วางในช่องที่ k, null = ว่าง */
+  let placed=q.items.map(()=>null);
+  $('aGrid').innerHTML=`<div style="grid-column:1/-1">
+    <div class="seqSlots" id="sqSlots">${q.items.map((_,i)=>
+      `<button class="seqSlot" data-s="${i}"></button>`).join('')}</div>
+    <div class="seqHint" id="sqHint">แตะคำเพื่อวางลงช่อง แตะช่องอีกครั้งเพื่อเอาออก</div>
+    <div class="seqPool" id="sqPool">${shuffled.map((o,i)=>
+      `<button class="seqChip" data-i="${i}"><div class="z">${o.x[0]}</div><div class="t">${o.x[1]}</div></button>`).join('')}</div>
+    <button class="btn blk" id="sqCheck" disabled style="margin-top:16px">ตรวจคำตอบ</button></div>`;
+  const slots=[...$('sqSlots').children], chips=[...$('sqPool').children];
+  function paint(){
+    slots.forEach((sl,k)=>{
+      const pi=placed[k];
+      sl.classList.toggle('f',pi!==null);
+      sl.innerHTML=pi===null?'':`<span class="sv">${shuffled[pi].x[0]}</span><span class="sx">×</span>`;
+    });
+    chips.forEach((c,i)=>c.classList.toggle('used',placed.includes(i)));
+    const full=placed.every(v=>v!==null);
+    $('sqCheck').disabled=!full;
+    $('sqCheck').classList.toggle('pulse',full);
+  }
+  chips.forEach((b,i)=>{
+    b.onclick=()=>{
+      if(locked||placed.includes(i))return;
+      const k=placed.indexOf(null);
+      if(k<0)return;
+      placed[k]=i;paint();ping();
+    };
+  });
+  slots.forEach((sl,k)=>{
+    sl.onclick=()=>{
+      if(locked||placed[k]===null)return;
+      /* เอาชิปออกแล้วเลื่อนตัวที่เหลือขึ้นมาชิด ไม่ให้เกิดช่องโหว่กลางแถว */
+      placed.splice(k,1);placed.push(null);
+      paint();ping();
+    };
+  });
+  $('sqCheck').onclick=()=>{
+    if(locked)return;
+    const ok=placed.every((pi,k)=>shuffled[pi].i===k);
+    slots.forEach((sl,k)=>{
+      sl.classList.add(shuffled[placed[k]].i===k?'right':'wrongS');
+      const x=sl.querySelector('.sx');if(x)x.remove();
+    });
+    chips.forEach(c=>c.style.pointerEvents='none');
+    $('sqCheck').disabled=true;$('sqCheck').classList.remove('pulse');
+    resolve(ok,$('sqSlots'));
+  };
+  paint();commonStart();return true;
+}
+/* 4. MATCH — pair image cards with word cards */
+function renderMatch(){
+  const pool=V.filter(v=>SEL.cats.includes(v.cat)&&hasArt(v));
+  if(pool.length<6)return false;
+  const picks=pool.slice().sort(()=>Math.random()-.5).slice(0,3);
+  CUR={w:picks[0],kind:'match'};
+  $('kbody').innerHTML=`<div class="hint">จับคู่ภาพกับคำให้ครบ 3 คู่</div>
+    <div class="zh2" style="font-size:28px">配对</div>`;
+  const cells=[];
+  picks.forEach(p=>{cells.push({id:p.i,type:'img',v:p});cells.push({id:p.i,type:'word',v:p})});
+  cells.sort(()=>Math.random()-.5);
+  $('aGrid').innerHTML=`<div class="mgridq" style="grid-column:1/-1">${cells.map((c,i)=>
+    c.type==='img'
+      ? `<button class="mcell" data-i="${i}"><div class="im" style="--bg:${BGC[c.v.cat]}">${ART[c.v.ic]||''}</div></button>`
+      : `<button class="mcell" data-i="${i}"><div><div class="z">${c.v.h}</div><div class="p">${c.v.p}</div></div></button>`
+  ).join('')}</div>`;
+  let sel=null,found=0,wrongs=0;
+  $('aGrid').querySelectorAll('.mcell').forEach((b,i)=>{
+    b.onclick=()=>{
+      if(locked||b.classList.contains('done'))return;
+      if(sel===null){sel=i;b.classList.add('sel');ping();return}
+      if(sel===i){b.classList.remove('sel');sel=null;return}
+      const a=cells[sel],c=cells[i];
+      const els=$('aGrid').querySelectorAll('.mcell');
+      if(a.id===c.id&&a.type!==c.type){
+        els[sel].classList.remove('sel');els[sel].classList.add('done');b.classList.add('done');
+        found++;ping(1);
+        const r=b.getBoundingClientRect();
+        burst(r.left+r.width/2,r.top+r.height/2,['#6FA294','#C08A2E'],20);
+        if(found===3)resolve(wrongs<=1,b);
+      }else{
+        wrongs++;els[sel].classList.remove('sel');
+        els[sel].classList.add('wrong');b.classList.add('wrong');
+        setTimeout(()=>{els[sel]&&els[sel].classList.remove('wrong');b.classList.remove('wrong')},400);
+        ping(0);vib(20);
+      }
+      sel=null;
+    };
+  });
+  commonStart();return true;
+}
+/* shared resolver for special types */
+function resolve(ok,el){
+  if(locked)return;locked=true;stopRise();RUN.tot++;
+  const fl=$('flash');fl.className=ok?'ok':'no';setTimeout(()=>fl.className='',480);
+  const r=el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  if(ok){
+    RUN.ok++;RUN.combo++;RUN.best=Math.max(RUN.best,RUN.combo);
+    const sb=Math.max(0,Math.round((82-kY)*1.6));
+    const cb=hasMod('chain')?1+RUN.combo*.26:1+RUN.combo*.12;
+    const gain=Math.round((110+sb)*RUN.mult*cb);
+    RUN.score+=gain;RUN.kites.push({x:Math.random(),y:Math.random(),c:Math.floor(Math.random()*4)});
+    if(CUR.w&&CUR.w.i>=0){const lv=MAST[CUR.w.i]||0;
+      if(lv<5){MAST[CUR.w.i]=Math.min(5,lv+(RUN.d.id==='hard'?2:1));
+        if(!RUN.lev.find(x=>x.i===CUR.w.i))RUN.lev.push(CUR.w)}}
+    $('kite').classList.add('ok');
+    burst(r.left+r.width/2,r.top+r.height/2,['#6FA294','#C08A2E','#CE4430','#3F6BA8'],44);
+    if(RUN.combo>=3){const c=$('combo');c.textContent='ต่อเนื่อง ×'+RUN.combo+'  +'+gain;
+      c.classList.add('on');c.classList.toggle('hot',RUN.combo>=5);
+      clearTimeout(c._t);c._t=setTimeout(()=>c.classList.remove('on'),1300)}
+    if(RUN.mode==='endless')RUN.up=Math.min(2.4,RUN.up+.045);
+    vib(28);ping(1);
+  }else{
+    $('kite').classList.add('no');RUN.combo=0;$('combo').classList.remove('on');
+    if(RUN.mode==='perfect'){setTimeout(()=>endRun('ตอบผิด'),900);return}
+    if(hasMod('shield')&&!RUN.shield){RUN.shield=1;mini('เกราะกันช่วยไว้!')}else RUN.miss++;
+    vib([20,50,20]);ping(0);
+  }
+  hud();
+  setTimeout(()=>{
+    if(RUN.miss>=3){endRun('พลาดครบ 3 ครั้ง');return}
+    RUN.qIn++;
+    if(RUN.mode==='risk'&&RUN.qIn>=6){
+      if(RUN.round>=3){endRun('จบครบ 3 รอบ');return}
+      showMods();return}
+    nextQ();
+  },ok?1150:1650);
+}
+
+/* ════════════ MAZE MODE ════════════ */
+let MZ=null;
+const MZ_CMD=[
+ ['向上走','xiàng shàng zǒu',0,-1],['向下走','xiàng xià zǒu',0,1],
+ ['向左走','xiàng zuǒ zǒu',-1,0],['向右走','xiàng yòu zǒu',1,0],
+ ['往前走','wǎng qián zǒu',0,-1],['往后退','wǎng hòu tuì',0,1],
+ ['往东走','wǎng dōng zǒu',1,0],['往西走','wǎng xī zǒu',-1,0],
+];
+function startMaze(){
+  MZ={lv:1,score:0,steps:0,miss:0};
+  buildMaze();go('maze');
+}
+function buildMaze(){
+  const n=4+Math.min(2,Math.floor(MZ.lv/2));
+  const walls=new Set();
+  const cnt=Math.floor(n*n*0.16);
+  while(walls.size<cnt){
+    const r=Math.floor(Math.random()*n),c=Math.floor(Math.random()*n);
+    if((r===0&&c===0)||(r===n-1&&c===n-1))continue;
+    walls.add(r+','+c);
+  }
+  MZ.n=n;MZ.walls=walls;MZ.pos=[0,0];MZ.goal=[n-1,n-1];
+  drawMaze();newCmd();
+}
+function drawMaze(){
+  const n=MZ.n,b=$('mzBoard');
+  b.style.gridTemplateColumns=`repeat(${n},1fr)`;
+  let h='';
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){
+    const k=r+','+c;
+    let cls='mzCell';
+    if(MZ.walls.has(k))cls+=' wall';
+    if(r===MZ.goal[0]&&c===MZ.goal[1])cls+=' goal';
+    if(r===MZ.pos[0]&&c===MZ.pos[1])cls+=' you';
+    h+=`<div class="${cls}"></div>`;
+  }
+  b.innerHTML=h;
+  $('mzStep').textContent=MZ.steps;
+  $('mzScore').textContent=MZ.score;
+  $('mzLv').textContent=MZ.lv;
+}
+function newCmd(){
+  const valid=MZ_CMD.filter(c=>{
+    const r=MZ.pos[0]+c[3],cc=MZ.pos[1]+c[2];
+    return r>=0&&r<MZ.n&&cc>=0&&cc<MZ.n&&!MZ.walls.has(r+','+cc);
+  });
+  const pool=valid.length?valid:MZ_CMD;
+  MZ.cmd=pool[Math.floor(Math.random()*pool.length)];
+  $('mzCmd').textContent=MZ.cmd[0];
+  $('mzPy').textContent=MZ.cmd[1];
+  $('mzPad').innerHTML=`
+    <div class="sp"></div><button data-d="0,-1">${arrowSVG(0,-1)}</button><div class="sp"></div>
+    <button data-d="-1,0">${arrowSVG(-1,0)}</button><div class="core">走</div><button data-d="1,0">${arrowSVG(1,0)}</button>
+    <div class="sp"></div><button data-d="0,1">${arrowSVG(0,1)}</button><div class="sp"></div>`;
+  $('mzPad').querySelectorAll('button').forEach(b=>{
+    b.onclick=()=>mzMove(b.dataset.d.split(',').map(Number),b);
+  });
+}
+function mzMove(d,btn){
+  const want=[MZ.cmd[2],MZ.cmd[3]];
+  if(d[0]!==want[0]||d[1]!==want[1]){
+    btn.classList.add('bad');setTimeout(()=>btn.classList.remove('bad'),420);
+    MZ.miss++;MZ.score=Math.max(0,MZ.score-30);drawMaze();ping(0);vib([20,50,20]);
+    const fl=$('flash');fl.className='no';setTimeout(()=>fl.className='',420);
+    return;
+  }
+  btn.classList.add('good');
+  const nr=MZ.pos[0]+want[1],nc=MZ.pos[1]+want[0];
+  if(nr<0||nr>=MZ.n||nc<0||nc>=MZ.n||MZ.walls.has(nr+','+nc)){
+    mini('ทางนั้นตัน ลองคำสั่งถัดไป');ping(0);
+    setTimeout(()=>newCmd(),500);return;
+  }
+  MZ.pos=[nr,nc];MZ.steps++;MZ.score+=60;drawMaze();ping(1);vib(24);
+  const bd=$('mzBoard').getBoundingClientRect();
+  burst(bd.left+bd.width/2,bd.top+bd.height/2,['#6FA294','#C08A2E'],14);
+  if(nr===MZ.goal[0]&&nc===MZ.goal[1]){
+    MZ.score+=300;drawMaze();
+    burst(innerWidth/2,innerHeight*.4,['#6FA294','#C08A2E','#CE4430','#3F6BA8'],70);
+    setTimeout(()=>conf('ถึงธงแล้ว','ได้โบนัส 300 คะแนน ไปด่านถัดไปกันต่อ','ไปด่านถัดไป',()=>{
+      closeOv();MZ.lv++;buildMaze()}),700);
+    return;
+  }
+  setTimeout(()=>newCmd(),480);
+}
+function quitMaze(){
+  conf('ออกจากเขาวงกต?',`คะแนนที่ได้ ${MZ?MZ.score:0} จะไม่ถูกบันทึก`,'ออกเลย',
+    ()=>{closeOv();go('setup')});
+}
+
+/* ════════════ RESULT ════════════ */
+function endRun(reason){
+  if(RUN.end)return;RUN.end=1;stopRise();
+  const acc=RUN.tot?Math.round(RUN.ok/RUN.tot*100):0;
+  $('rGrade').textContent=acc>=90?'优':acc>=75?'良':acc>=50?'中':'加';
+  $('rScore').textContent=RUN.score;
+  $('rLabel').textContent=reason+' · คะแนนรวม';
+  $('rStats').innerHTML=`
+   <div class="stat"><b>${RUN.ok}/${RUN.tot}</b><span>ตอบถูก</span></div>
+   <div class="stat"><b>${acc}%</b><span>ความแม่นยำ</span></div>
+   <div class="stat"><b>${RUN.best}</b><span>คอมโบสูงสุด</span></div>
+   <div class="stat"><b>${RUN.mult.toFixed(1)}</b><span>ตัวคูณสุดท้าย</span></div>`;
+  $('rWords').innerHTML=RUN.lev.length
+   ? RUN.lev.slice(0,12).map(w=>{const lv=MAST[w.i]||0;
+      return `<div class="wc"><div class="im" style="--bg:${BGC[w.cat]}">${ART[w.ic]||''}</div>
+       <div class="h">${w.h}</div><div class="t">${w.t}</div>
+       <div class="dots">${[1,2,3,4,5].map(n=>`<i class="${n<=lv?'f':''}"></i>`).join('')}</div></div>`}).join('')
+   : '<div class="empty" style="grid-column:1/-1">ยังไม่มีคำที่เลื่อนขั้นในรอบนี้</div>';
+  $('resCap').textContent=`คุณปล่อยว่าวได้ ${RUN.kites.length} ตัวในวันนี้`;
+  let isNew=false;
+  if(RUN.mode!=='zen'&&RUN.score>0){
+    const mn=MODES.find(m=>m.id===RUN.mode).nm;
+    const stamp=new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+    SEL.cats.forEach(cid=>{
+      const k=cid+'|'+SEL.diff,a=BOARD[k];
+      const prevTop=a.length?a[0].score:0;
+      a.push({name:ME.name,av:ME.av,score:RUN.score,mode:mn,date:stamp,me:1});
+      a.sort((x,y)=>y.score-x.score);
+      if(a.length>20)a.length=20;
+      if(RUN.score>prevTop)isNew=true;
+    });
+  }
+  $('rNew').innerHTML=isNew?'<div class="rnew">สถิติสูงสุดใหม่ของหมวดนี้</div>':'';
+  go('result');
+  setTimeout(drawResSky,80);
+  if(!RM)setTimeout(()=>burst(innerWidth/2,innerHeight*.26,
+    ['#6FA294','#C08A2E','#CE4430','#3F6BA8','#A65682'],76),240);
+}
+const KC=[['#CE4430','#8E2415'],['#6FA294','#3F6D62'],['#C08A2E','#835811'],['#3F6BA8','#24446F']];
+function drawResSky(){
+  const c=$('resC');if(!c)return;
+  const w=c.parentElement.clientWidth,h=250;
+  c.width=w*DPR;c.height=h*DPR;c.style.width=w+'px';c.style.height=h+'px';
+  const g=c.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,w,h);
+  [[40,30,.6],[w-70,58,.5],[w*.5,24,.42]].forEach(p=>cloud(g,p[0],p[1],p[2],.6));
+  RUN.kites.forEach(k=>{
+    const x=24+k.x*(w-48),y=24+k.y*(h-80),s=7+Math.random()*4,col=KC[k.c];
+    g.save();g.translate(x,y);g.rotate((Math.random()-.5)*.4);
+    g.beginPath();g.moveTo(0,-s);g.lineTo(s*.8,0);g.lineTo(0,s*1.25);g.lineTo(-s*.8,0);g.closePath();
+    g.fillStyle=col[0];g.fill();
+    g.beginPath();g.moveTo(0,-s);g.lineTo(s*.8,0);g.lineTo(0,s*1.25);g.closePath();
+    g.fillStyle=col[1];g.fill();
+    g.strokeStyle='rgba(58,51,43,.28)';g.lineWidth=1;
+    g.beginPath();g.moveTo(0,s*1.25);g.quadraticCurveTo(s*.5,s*2,0,s*2.6);g.stroke();
+    g.restore();
+  });
+}
+addEventListener('resize',()=>{if($('v_result').classList.contains('on'))drawResSky()});
+
+/* ════════════ BOARD ════════════ */
+let LB={cat:'greet',diff:'mid'};
+function lbF(){
+  $('lbCats').innerHTML=CATS.map(c=>`<button class="${c.id===LB.cat?'on':''}"
+    onclick="lbP('cat','${c.id}')">${c.nm}</button>`).join('');
+  $('lbDiffs').innerHTML=DIFFS.map(d=>`<button class="${d.id===LB.diff?'on':''}"
+    onclick="lbP('diff','${d.id}')">${d.zh} ${d.th}</button>`).join('');
+}
+function lbP(k,v){LB[k]=v;lbF();lbR();ping()}
+function lbR(){
+  const a=BOARD[LB.cat+'|'+LB.diff]||[];
+  const cn=CATS.find(c=>c.id===LB.cat).nm, dn=DIFFS.find(d=>d.id===LB.diff).th;
+  $('lbList').innerHTML=a.length?a.slice(0,10).map((r,i)=>`
+   <div class="lbRow ${i===0?'me':''} r${i+1}" style="animation-delay:${i*45}ms">
+     <div class="rk">${i+1}</div><div class="av">${AVA[r.av]||AVA.fox}</div>
+     <div class="nm"><b>${r.name}</b><span>${r.mode}${r.date?' · '+r.date:''}</span></div>
+     <div class="pt">${r.score.toLocaleString()}</div></div>`).join('')
+   :`<div class="empty"><b style="display:block;font-size:15px;margin-bottom:6px;color:var(--ink2)">
+      ยังไม่มีสถิติในหมวดนี้</b>
+      ลองเล่นหมวด${cn} ระดับ${dn} ให้จบสักรอบ<br>แล้วคะแนนของคุณจะขึ้นมาที่นี่</div>`;
+}
+
+/* ════════════ NAV ════════════ */
+function go(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  $('v_'+id).classList.add('on');scrollTo(0,0);
+  if(id!=='play')stopRise();
+  if(id==='board'){LB.cat=SEL.cats[0];LB.diff=SEL.diff;lbF();lbR()}
+}
+function conf(t,p,b,fn){
+  $('ovC').innerHTML=`<h3>${t}</h3><p>${p}</p><div style="display:grid;gap:9px">
+    <button class="btn blk" id="ovY">${b}</button>
+    <button class="btn blk g" onclick="closeOv()">ยกเลิก</button></div>`;
+  $('ov').classList.add('on');$('ovY').onclick=fn;
+}
+function closeOv(){$('ov').classList.remove('on')}
+function mini(t){const c=$('combo');c.textContent=t;c.classList.add('on');c.classList.remove('hot');
+  clearTimeout(c._t);c._t=setTimeout(()=>c.classList.remove('on'),1500)}
+function vib(p){if(navigator.vibrate&&!RM)navigator.vibrate(p)}
+let ac;
+function ping(hi){
+  try{ac=ac||new(AudioContext||webkitAudioContext)();
+    const o=ac.createOscillator(),g=ac.createGain();o.type='sine';
+    o.frequency.setValueAtTime(hi?640:320,ac.currentTime);
+    o.frequency.exponentialRampToValueAtTime(hi?880:250,ac.currentTime+.1);
+    o.connect(g);g.connect(ac.destination);
+    g.gain.setValueAtTime(.06,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.22);
+    o.start();o.stop(ac.currentTime+.22)}catch(e){}
+}
+</script>
