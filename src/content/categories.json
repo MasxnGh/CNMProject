@@ -1,0 +1,18 @@
+[
+  { "id": "greet", "zh": "问候", "th": "ทักทาย", "color": "var(--verm)", "colorLight": "var(--verm-l)", "icon": "nihao" },
+  { "id": "person", "zh": "人称", "th": "คนและสรรพนาม", "color": "var(--plum)", "colorLight": "var(--plum-l)", "icon": "pengyou" },
+  { "id": "fam", "zh": "家人", "th": "ครอบครัว", "color": "var(--plum)", "colorLight": "var(--plum-l)", "icon": "jia" },
+  { "id": "num", "zh": "数字", "th": "ตัวเลข", "color": "var(--gold)", "colorLight": "var(--gold-l)", "icon": "qian" },
+  { "id": "food", "zh": "饮食", "th": "อาหาร", "color": "var(--gold)", "colorLight": "var(--gold-l)", "icon": "mifan" },
+  { "id": "animal", "zh": "动物", "th": "สัตว์", "color": "var(--cel)", "colorLight": "var(--cel-l)", "icon": "mao" },
+  { "id": "obj", "zh": "物品", "th": "ของใช้", "color": "var(--lapis)", "colorLight": "var(--lapis-l)", "icon": "shu" },
+  { "id": "place", "zh": "地方", "th": "สถานที่", "color": "var(--lapis)", "colorLight": "var(--lapis-l)", "icon": "xuexiao" },
+  { "id": "nature", "zh": "自然", "th": "ธรรมชาติ", "color": "var(--cel)", "colorLight": "var(--cel-l)", "icon": "taiyang" },
+  { "id": "body", "zh": "身体", "th": "ร่างกาย", "color": "var(--plum)", "colorLight": "var(--plum-l)", "icon": "shou" },
+  { "id": "color", "zh": "颜色", "th": "สี", "color": "var(--gold)", "colorLight": "var(--gold-l)", "icon": "hong" },
+  { "id": "verb", "zh": "动作", "th": "คำกริยา", "color": "var(--verm)", "colorLight": "var(--verm-l)", "icon": "kan" },
+  { "id": "adj", "zh": "形容", "th": "คำคุณศัพท์", "color": "var(--verm)", "colorLight": "var(--verm-l)", "icon": "gaoxing" },
+  { "id": "dir", "zh": "方向", "th": "ทิศทาง", "color": "var(--lapis)", "colorLight": "var(--lapis-l)", "icon": "shang" },
+  { "id": "time", "zh": "时间", "th": "เวลา", "color": "var(--verm)", "colorLight": "var(--verm-l)", "icon": "dian" },
+  { "id": "q", "zh": "疑问", "th": "คำถาม", "color": "var(--cel)", "colorLight": "var(--cel-l)", "icon": "target" }
+]

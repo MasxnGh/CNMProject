@@ -1,0 +1,133 @@
+.mzWrap {
+  display: grid;
+  gap: 16px;
+  place-items: center;
+  padding-top: 8px;
+}
+
+.mzStat {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mzStat .hc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 99px;
+  font-size: 13.5px;
+  font-weight: 500;
+  background: var(--card);
+  box-shadow: var(--e1);
+}
+
+.mzStat .hc .lb {
+  font-size: 10.5px;
+  color: var(--ink3);
+  font-weight: 300;
+}
+
+.mzStat .hc.sc {
+  color: var(--verm);
+}
+
+.mzCard {
+  padding: 18px 22px;
+  border-radius: var(--rl);
+  background: var(--card);
+  box-shadow: var(--e2);
+  text-align: center;
+  min-width: min(300px, 86vw);
+}
+
+.mzCard .cmd {
+  font-family: "Noto Serif SC", serif;
+  font-size: clamp(30px, 8vw, 42px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.mzCard .py2 {
+  font-size: 14px;
+  color: var(--verm);
+  margin-top: 3px;
+}
+
+.mzCard .hint2 {
+  font-size: 12.5px;
+  color: var(--ink3);
+  margin-top: 6px;
+}
+
+.mzBoard {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-radius: var(--rl);
+  background: var(--card);
+  box-shadow: var(--e2);
+}
+
+.mzCell {
+  width: min(56px, 12vw);
+  aspect-ratio: 1;
+  border-radius: 9px;
+  background: var(--shell);
+  display: grid;
+  place-items: center;
+  transition: all var(--b) var(--out);
+  position: relative;
+}
+
+.mzCell.wall {
+  background: var(--ink);
+  opacity: 0.85;
+}
+
+.mzCell.goal {
+  background: var(--cel-l);
+  box-shadow: inset 0 0 0 2px var(--cel);
+}
+
+.mzCell.goal::after {
+  content: "旗";
+  font-family: "Noto Serif SC", serif;
+  font-size: 19px;
+  color: var(--cel-d);
+}
+
+.mzCell.you {
+  background: var(--verm-l);
+  box-shadow: inset 0 0 0 2px var(--verm);
+}
+
+.mzCell.you::after {
+  content: "";
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #e05c46, var(--verm-d));
+  box-shadow: 0 3px 8px rgba(206, 68, 48, 0.4);
+}
+
+.mz-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--b);
+}
+
+.mz-flash.ok {
+  opacity: 1;
+  background: radial-gradient(130% 44% at 50% 110%, rgba(111, 162, 148, 0.34), transparent 60%);
+}
+
+.mz-flash.no {
+  opacity: 1;
+  box-shadow: inset 0 0 100px 14px rgba(206, 68, 48, 0.24);
+}

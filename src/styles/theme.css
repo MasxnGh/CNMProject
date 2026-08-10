@@ -1,108 +1,51 @@
-/* Design tokens and global base — values copied verbatim from design/prototype.html */
-
 :root {
-  --night: #0E1428;
-  --night2: #1A2340;
-  --night3: #25325A;
-  --lantern: #FF9E2C;
-  --lantern-dk: #B5610A;
-  --seal: #E23B2E;
-  --seal-dk: #96190F;
-  --jade: #35D6A4;
-  --jade-dk: #127A59;
-  --paper: #F4EAD6;
-  --dim: #7C88AE;
-  /* Deep gold — distinct from --lantern's orange, used only for the unlock
-     -test progress bar so it reads as a different, higher-stakes mode. */
-  --gold: #C9A227;
-  --gold-dk: #8F6F14;
+  --ivory: #fcfaf5;
+  --shell: #f5f0e6;
+  --sand: #ede5d6;
+  --line: #e3daca;
+  --card: #ffffff;
 
-  /* One-off shades from design/prototype.html — gradient stops and state
-     colors that aren't part of the 11-color named palette above, but still
-     must not be hardcoded anywhere outside this file. */
-  --shadow-card: #101838;
-  --shadow-disabled: #121A32;
-  --btn-ink: #3A1D00;
-  --lock-glass: #1E2846;
-  --lock-trim: #4A2A24;
-  --lock-icon: #46557E;
-  --done-glass-start: #7BF0CB;
-  --done-glass-end: #189B72;
-  --done-icon: #0A4234;
-  --done-label: #9DE9CE;
-  --now-glass-start: #FFCE86;
-  --now-glass-end: #D0740F;
-  --now-icon: #66330A;
-  --seal-text: #FFE3DE;
-  --seal-badge-text: #FFD9D2;
-  --wrong-accent: #FF8878;
-  --rail-bg: #0A1024;
-  --progress-highlight: #FFD08A;
-  --gold-highlight: #E8CE7A;
-  --opt-sel-bg: #2A2F1E;
-  --opt-good-bg: #12332A;
-  --opt-bad-bg: #33161A;
-  --hero-lantern-start: #FFC470;
-  --hero-lantern-end: #D9741A;
-  --hero-trim: #8E2B1E;
-  --hero-glyph: #7A1F13;
-  --stamp-off-bg: #141C36;
-  --stamp-off-text: #2E3A5E;
+  --ink: #241f1a;
+  --ink2: #5c5348;
+  --ink3: #96897a;
 
-  --r: 18px;
-  --rail: 0px;
-  --pad: 20px;
+  --cel: #6fa294;
+  --cel-l: #dceae5;
+  --cel-d: #3f6d62;
 
-  /* Exercise text sizing - one scale for every exercise component, so a
-     readability pass never means hunting through 9+ component stylesheets.
-     Three tiers (mobile default, tablet at 720px, desktop at 1080px),
-     matching the breakpoints already used everywhere else in this file. */
-  --fs-hanzi-lg: 48px;   /* big prompt 汉字, e.g. the word header in Lesson */
-  --fs-pinyin: 17px;     /* pinyin annotating that prompt */
-  --fs-ask: 17px;        /* .ask instruction line */
-  --fs-opt-th: 16px;     /* choice buttons showing Thai text */
-  --fs-opt-zh: 24px;     /* choice buttons showing a Chinese sentence/word */
-  --fs-opt-zh-py: 14px;  /* pinyin inside those Chinese-text choices */
-  --fs-chip-zh: 22px;    /* draggable/fixed Chinese word chips */
-  --fs-chip-zh-py: 13px; /* pinyin on a Chinese chip, if ever shown */
-  --fs-chip-th: 17px;    /* draggable/fixed Thai word chips */
-  --fs-feedback: 15px;   /* FeedbackBar recap line (pinyin / th) */
-  --fs-feedback-hanzi: 26px; /* the 汉字 within that recap line */
-}
+  --verm: #ce4430;
+  --verm-l: #fae3de;
+  --verm-d: #8e2415;
 
-@media (min-width: 720px) {
-  :root {
-    --pad: 32px;
-    --fs-hanzi-lg: 60px;
-    --fs-pinyin: 19px;
-    --fs-ask: 18px;
-    --fs-opt-th: 17px;
-    --fs-opt-zh: 28px;
-    --fs-opt-zh-py: 15px;
-    --fs-chip-zh: 24px;
-    --fs-chip-zh-py: 14px;
-    --fs-chip-th: 18px;
-    --fs-feedback: 16px;
-    --fs-feedback-hanzi: 30px;
-  }
-}
+  --gold: #c08a2e;
+  --gold-l: #f7ebd4;
+  --gold-d: #835811;
 
-@media (min-width: 1080px) {
-  :root {
-    --rail: 104px;
-    --pad: 40px;
-    --fs-hanzi-lg: 76px;
-    --fs-pinyin: 22px;
-    --fs-ask: 20px;
-    --fs-opt-th: 18px;
-    --fs-opt-zh: 32px;
-    --fs-opt-zh-py: 16px;
-    --fs-chip-zh: 26px;
-    --fs-chip-zh-py: 15px;
-    --fs-chip-th: 19px;
-    --fs-feedback: 17px;
-    --fs-feedback-hanzi: 34px;
-  }
+  --lapis: #3f6ba8;
+  --lapis-l: #dee8f5;
+  --lapis-d: #24446f;
+
+  --plum: #a65682;
+  --plum-l: #f4e2ec;
+  --plum-d: #733755;
+
+  --acc: var(--verm);
+  --acc-l: var(--verm-l);
+  --acc-d: var(--verm-d);
+
+  --r: 14px;
+  --rl: 22px;
+  --pad: 18px;
+
+  --out: cubic-bezier(0.16, 1, 0.3, 1);
+  --back: cubic-bezier(0.34, 1.7, 0.5, 1);
+  --f: 160ms;
+  --b: 340ms;
+  --s: 600ms;
+
+  --e1: 0 1px 2px rgba(36, 31, 26, 0.05), 0 2px 8px rgba(36, 31, 26, 0.05);
+  --e2: 0 2px 4px rgba(36, 31, 26, 0.05), 0 8px 24px rgba(36, 31, 26, 0.08);
+  --e3: 0 4px 8px rgba(36, 31, 26, 0.06), 0 18px 44px rgba(36, 31, 26, 0.12);
 }
 
 * {
@@ -114,47 +57,99 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: "Kanit", sans-serif;
+  font-family: Kanit, sans-serif;
   font-weight: 300;
-  background: var(--night);
-  color: var(--paper);
-  min-height: 100vh;
-  /* Thai text must break at word boundaries, never mid-word. */
-  word-break: normal;
-  overflow-wrap: break-word;
-}
-
-#app {
-  position: relative;
-  min-height: 100vh;
+  color: var(--ink);
+  background: var(--ivory);
   overflow-x: hidden;
-  background: radial-gradient(120% 55% at 50% 0%, #1D2748 0%, var(--night) 62%);
+  overscroll-behavior-y: none;
 }
 
-main {
+button {
+  font-family: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+input {
+  font-family: inherit;
+}
+
+.zh {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 600;
+}
+
+.zhb {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+}
+
+.ser {
+  font-family: "Cormorant Garamond", serif;
+}
+
+::selection {
+  background: var(--gold-l);
+}
+
+svg {
+  display: block;
+}
+
+.rev {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.9s var(--out),
+    transform 0.9s var(--out);
+}
+
+.rev.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ═══ GAME SHELL ═══ */
+.gwrap {
   position: relative;
   z-index: 1;
-  padding-left: var(--rail);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 18px var(--pad) 60px;
 }
 
-/* Shared hover states — grouped here (not in each component's own CSS file)
-   so import order can't accidentally put a component's :active rule before
-   its :hover rule; theme.css is always the first stylesheet loaded. Held
-   presses must sink, never lift, so :active always overrides :hover. */
-@media (hover: hover) {
-  .btn:not([disabled]):hover { filter: brightness(1.08); }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 9px 0 var(--shadow-card); }
-  .lamp:hover .glass { filter: brightness(1.18); }
-  .opt:hover { border-color: var(--night3); }
-  .rail a:hover, .rail button:hover { color: var(--paper); }
+.kk2 {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: 99px;
+  font-size: 11.5px;
+  letter-spacing: 2px;
+  background: var(--acc-l);
+  color: var(--acc-d);
+}
+
+.screenTitle {
+  font-size: clamp(25px, 6vw, 34px);
+  font-weight: 500;
+  margin-top: 13px;
+}
+
+.screenSub {
+  color: var(--ink2);
+  font-size: 14px;
+  margin-top: 8px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation: none !important;
-    transition: none !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

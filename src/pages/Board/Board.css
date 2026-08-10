@@ -1,0 +1,142 @@
+.lbF {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+
+.lbF::-webkit-scrollbar {
+  display: none;
+}
+
+.lbF button {
+  flex: none;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  border-radius: 99px;
+  font-size: 13.5px;
+  background: var(--card);
+  color: var(--ink2);
+  box-shadow: var(--e1);
+  transition: all var(--f);
+}
+
+.lbF button.on {
+  background: var(--acc);
+  color: #fff;
+}
+
+.lbRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r);
+  background: var(--card);
+  box-shadow: var(--e1);
+  margin-bottom: 9px;
+  opacity: 0;
+  transform: translateX(-14px);
+  animation: lrIn 0.44s var(--out) forwards;
+}
+
+@keyframes lrIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.lbRow.r1 {
+  box-shadow:
+    inset 0 0 0 2px var(--gold),
+    var(--e2);
+  background: var(--gold-l);
+}
+
+.lbRow .rk {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 500;
+  font-size: 14px;
+  background: var(--shell);
+}
+
+.lbRow.r1 .rk {
+  background: var(--gold);
+  color: #fff;
+}
+
+.lbRow.r2 .rk {
+  background: #c8cdd4;
+  color: #fff;
+}
+
+.lbRow.r3 .rk {
+  background: #c99263;
+  color: #fff;
+}
+
+.lbRow .av {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--shell);
+}
+
+.lbRow .av svg {
+  width: 22px;
+  height: 22px;
+}
+
+.lbRow .nm {
+  flex: 1;
+  min-width: 0;
+}
+
+.lbRow .nm b {
+  font-size: 15px;
+  font-weight: 500;
+  display: block;
+}
+
+.lbRow .nm span {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.lbRow .pt {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--verm);
+}
+
+.empty {
+  padding: 32px 18px;
+  text-align: center;
+  border-radius: var(--rl);
+  color: var(--ink3);
+  font-size: 14px;
+  background: var(--shell);
+}
+
+.empty b {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: var(--ink2);
+}

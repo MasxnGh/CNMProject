@@ -1,0 +1,97 @@
+.modW {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.mcards {
+  display: grid;
+  gap: 15px;
+  margin: 24px 0;
+}
+
+@media (min-width: 760px) {
+  .mcards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mk {
+  position: relative;
+  padding: 26px 18px;
+  border-radius: var(--rl);
+  text-align: center;
+  background: var(--card);
+  box-shadow: var(--e2);
+  overflow: hidden;
+  transition: all var(--b) var(--out);
+  opacity: 0;
+  transform: translateY(24px) rotate(var(--rot));
+  animation: mkIn 0.58s var(--back) forwards;
+  width: 100%;
+}
+
+@keyframes mkIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot));
+  }
+}
+
+.mk::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--c);
+}
+
+.mk:active {
+  transform: translateY(2px) rotate(var(--rot));
+}
+
+@media (hover: hover) {
+  .mk:hover {
+    transform: translateY(-8px) rotate(0);
+    box-shadow: var(--e3);
+  }
+}
+
+.mk .mz {
+  font-family: "Noto Serif SC", serif;
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--c);
+  line-height: 1;
+  margin: 8px 0 10px;
+}
+
+.mk .mt {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.mk .md2 {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.8;
+  margin-top: 8px;
+  min-height: 46px;
+}
+
+.mk .mx2 {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 17px;
+  border-radius: 99px;
+  font-weight: 500;
+  font-size: 15px;
+  background: var(--c);
+  color: #fff;
+}
+
+.mk .mx2.dn {
+  background: var(--shell);
+  color: var(--ink2);
+}

@@ -1,0 +1,48 @@
+.gbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 12px var(--pad);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: rgba(252, 250, 245, 0.86);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.gbar .ico {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  background: var(--card);
+  box-shadow: var(--e1);
+  transition: transform var(--f);
+}
+
+.gbar .ico:active {
+  transform: scale(0.94);
+}
+
+.gbar .tt {
+  flex: 1;
+  min-width: 0;
+}
+
+.gbar .tz {
+  font-family: "Noto Serif SC", serif;
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--acc);
+  line-height: 1.1;
+}
+
+.gbar .tn {
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: 0.5px;
+}

@@ -1,0 +1,202 @@
+{
+  "landingSampleWords": [
+    "v_nihao", "v_xiexie", "v_wo", "v_shi2", "v_you", "v_shenme",
+    "v_duoshao", "v_hao", "v_chi", "v_qu", "v_jintian", "v_dian",
+    "v_ren", "v_qian", "v_da", "v_bukeqi"
+  ],
+
+  "difficulties": [
+    {
+      "id": "easy",
+      "zh": "易",
+      "th": "ง่าย",
+      "color": "var(--cel)",
+      "colorLight": "var(--cel-l)",
+      "multiplier": 1.0,
+      "riseSeconds": 15,
+      "options": 3,
+      "pinyin": true,
+      "description": "มีพินอินตลอด · มีเวลาคิดพอสมควร · ตัวเลือก 3 ข้อ"
+    },
+    {
+      "id": "mid",
+      "zh": "中",
+      "th": "กลาง",
+      "color": "var(--gold)",
+      "colorLight": "var(--gold-l)",
+      "multiplier": 1.7,
+      "riseSeconds": 10,
+      "options": 4,
+      "pinyin": true,
+      "description": "พินอินเฉพาะโจทย์ · ต้องตอบไว · ตัวเลือก 4 ข้อ"
+    },
+    {
+      "id": "hard",
+      "zh": "难",
+      "th": "ยาก",
+      "color": "var(--verm)",
+      "colorLight": "var(--verm-l)",
+      "multiplier": 2.6,
+      "riseSeconds": 7,
+      "options": 4,
+      "pinyin": false,
+      "description": "ไม่มีพินอิน · ลอยเร็วมาก · ตัวลวงคล้ายมาก"
+    }
+  ],
+
+  "modes": [
+    {
+      "id": "risk",
+      "zh": "险",
+      "pinyin": "XIAN LU",
+      "th": "เส้นทางเสี่ยง",
+      "badge": "แนะนำ",
+      "color": "var(--verm)",
+      "colorLight": "var(--verm-l)",
+      "icon": "cards",
+      "rounds": 3,
+      "questionsPerRound": 6,
+      "description": "เล่น 3 รอบ จบแต่ละรอบได้เลือกการ์ดพลิกกติกา ยิ่งเสี่ยงยิ่งคูณคะแนนสูง",
+      "tags": ["3 รอบ", "การ์ดสุ่ม", "ขึ้นกระดาน"]
+    },
+    {
+      "id": "endless",
+      "zh": "天",
+      "pinyin": "CHANG TIAN",
+      "th": "ฟ้ากว้าง",
+      "color": "var(--cel)",
+      "colorLight": "var(--cel-l)",
+      "icon": "sky",
+      "description": "ไม่จำกัดจำนวนข้อ ว่าวลอยเร็วขึ้นเรื่อยๆ เล่นจนพลาดครบ 3 ครั้ง",
+      "tags": ["ไม่จำกัดข้อ", "เร่งขึ้นเรื่อยๆ"]
+    },
+    {
+      "id": "perfect",
+      "zh": "瑕",
+      "pinyin": "WU XIA",
+      "th": "ไร้ที่ติ",
+      "color": "var(--gold)",
+      "colorLight": "var(--gold-l)",
+      "icon": "target",
+      "description": "ตอบผิดข้อเดียวจบทันที ไม่มีการ์ดช่วย วัดกันที่ความแม่นล้วนๆ",
+      "tags": ["ผิดครั้งเดียวจบ", "คูณสูงสุด"]
+    },
+    {
+      "id": "zen",
+      "zh": "静",
+      "pinyin": "JING XIN",
+      "th": "ฝึกสงบ",
+      "color": "var(--lapis)",
+      "colorLight": "var(--lapis-l)",
+      "icon": "kiteIcon",
+      "description": "ว่าวลอยช้ามาก ไม่มีคะแนน ไม่ขึ้นกระดาน เหมาะกับตอนอยากทบทวนคำใหม่",
+      "tags": ["ไม่กดดัน", "ไม่บันทึกสถิติ"]
+    },
+    {
+      "id": "maze",
+      "zh": "宫",
+      "pinyin": "MI GONG",
+      "th": "เขาวงกต",
+      "badge": "ใหม่",
+      "color": "var(--plum)",
+      "colorLight": "var(--plum-l)",
+      "icon": "maze",
+      "wide": true,
+      "description": "อ่านคำสั่งทิศทางภาษาจีนแล้วเดินให้ถึงธง เดินผิดทางเสียคะแนน โหมดนี้ใช้หมวดทิศทางโดยอัตโนมัติ ไม่ต้องเลือกหมวดเอง",
+      "tags": ["ใช้หมวดทิศทาง", "มีกำแพงกั้น", "ด่านยากขึ้นเรื่อยๆ"]
+    }
+  ],
+
+  "modifiers": [
+    { "id": "nopin", "zh": "无拼", "th": "ไร้พินอิน", "description": "ซ่อนพินอินทั้งหมด", "multiplier": 1.5, "color": "var(--lapis)" },
+    { "id": "noimg", "zh": "无画", "th": "ไร้ภาพ", "description": "ไม่มีภาพช่วยเลย อ่านตัวอักษรล้วน", "multiplier": 1.7, "color": "var(--plum)" },
+    { "id": "rush", "zh": "急风", "th": "ลมแรง", "description": "ว่าวลอยเร็วขึ้นเท่าตัว", "multiplier": 2.0, "color": "var(--verm)" },
+    { "id": "twin", "zh": "双生", "th": "คู่แฝด", "description": "ตัวลวงคล้ายคำตอบมาก", "multiplier": 1.8, "color": "var(--gold)" },
+    { "id": "blind", "zh": "盲打", "th": "มืดบอด", "description": "เหลือแต่ภาพ ไม่มีตัวอักษรจีนช่วย", "multiplier": 2.2, "color": "var(--plum)" },
+    { "id": "chain", "zh": "连环", "th": "ลูกโซ่", "description": "คอมโบให้คะแนนทวีคูณ", "multiplier": 1.3, "color": "var(--cel)" },
+    { "id": "shield", "zh": "护身", "th": "เกราะกัน", "description": "พลาดได้ฟรี 1 ครั้ง", "multiplier": 0.8, "color": "var(--cel)" },
+    { "id": "slow", "zh": "缓风", "th": "ลมสงบ", "description": "ว่าวลอยช้าลงครึ่งหนึ่ง", "multiplier": 0.75, "color": "var(--cel)" }
+  ],
+
+  "sequences": [
+    {
+      "cat": "time",
+      "title": "เรียงตามลำดับเวลา",
+      "items": [
+        { "hanzi": "昨天", "thai": "เมื่อวาน" },
+        { "hanzi": "今天", "thai": "วันนี้" },
+        { "hanzi": "明天", "thai": "พรุ่งนี้" }
+      ]
+    },
+    {
+      "cat": "time",
+      "title": "เรียงตามลำดับของวัน",
+      "items": [
+        { "hanzi": "早上", "thai": "เช้า" },
+        { "hanzi": "中午", "thai": "เที่ยง" },
+        { "hanzi": "晚上", "thai": "เย็น" }
+      ]
+    },
+    {
+      "cat": "num",
+      "title": "เรียงจากน้อยไปมาก",
+      "items": [
+        { "hanzi": "一", "thai": "1" },
+        { "hanzi": "三", "thai": "3" },
+        { "hanzi": "五", "thai": "5" },
+        { "hanzi": "十", "thai": "10" }
+      ]
+    },
+    {
+      "cat": "num",
+      "title": "เรียงจากน้อยไปมาก",
+      "items": [
+        { "hanzi": "二", "thai": "2" },
+        { "hanzi": "四", "thai": "4" },
+        { "hanzi": "六", "thai": "6" },
+        { "hanzi": "八", "thai": "8" }
+      ]
+    },
+    {
+      "cat": "num",
+      "title": "เรียงจากน้อยไปมาก",
+      "items": [
+        { "hanzi": "七", "thai": "7" },
+        { "hanzi": "八", "thai": "8" },
+        { "hanzi": "九", "thai": "9" },
+        { "hanzi": "十", "thai": "10" }
+      ]
+    },
+    {
+      "cat": "dir",
+      "title": "เรียงจากบนลงล่าง",
+      "items": [
+        { "hanzi": "上", "thai": "บน" },
+        { "hanzi": "中", "thai": "กลาง" },
+        { "hanzi": "下", "thai": "ล่าง" }
+      ]
+    }
+  ],
+
+  "clocks": [
+    { "hanzi": "三点", "pinyin": "sān diǎn", "hour": 3, "minute": 0 },
+    { "hanzi": "三点半", "pinyin": "sān diǎn bàn", "hour": 3, "minute": 30 },
+    { "hanzi": "七点", "pinyin": "qī diǎn", "hour": 7, "minute": 0 },
+    { "hanzi": "七点半", "pinyin": "qī diǎn bàn", "hour": 7, "minute": 30 },
+    { "hanzi": "九点一刻", "pinyin": "jiǔ diǎn yí kè", "hour": 9, "minute": 15 },
+    { "hanzi": "十二点", "pinyin": "shí èr diǎn", "hour": 12, "minute": 0 },
+    { "hanzi": "五点四十五", "pinyin": "wǔ diǎn sì shí wǔ", "hour": 5, "minute": 45 },
+    { "hanzi": "八点十分", "pinyin": "bā diǎn shí fēn", "hour": 8, "minute": 10 }
+  ],
+
+  "mazeCommands": [
+    { "hanzi": "向上走", "pinyin": "xiàng shàng zǒu", "dx": 0, "dy": -1 },
+    { "hanzi": "向下走", "pinyin": "xiàng xià zǒu", "dx": 0, "dy": 1 },
+    { "hanzi": "向左走", "pinyin": "xiàng zuǒ zǒu", "dx": -1, "dy": 0 },
+    { "hanzi": "向右走", "pinyin": "xiàng yòu zǒu", "dx": 1, "dy": 0 },
+    { "hanzi": "往前走", "pinyin": "wǎng qián zǒu", "dx": 0, "dy": -1 },
+    { "hanzi": "往后退", "pinyin": "wǎng hòu tuì", "dx": 0, "dy": 1 },
+    { "hanzi": "往东走", "pinyin": "wǎng dōng zǒu", "dx": 1, "dy": 0 },
+    { "hanzi": "往西走", "pinyin": "wǎng xī zǒu", "dx": -1, "dy": 0 }
+  ]
+}

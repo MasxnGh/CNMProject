@@ -1,0 +1,73 @@
+.nameW {
+  min-height: 82svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.nameKite {
+  width: 96px;
+  margin: 0 auto 22px;
+}
+
+.nin {
+  width: 100%;
+  max-width: 400px;
+  margin: 24px auto 18px;
+}
+
+.nin input {
+  width: 100%;
+  padding: 17px 20px;
+  border-radius: var(--r);
+  font-size: 18px;
+  font-weight: 400;
+  background: var(--card);
+  color: var(--ink);
+  outline: 0;
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    var(--e1);
+  transition: box-shadow var(--b);
+}
+
+.nin input:focus {
+  box-shadow:
+    inset 0 0 0 2px var(--verm),
+    0 4px 18px rgba(206, 68, 48, 0.14);
+}
+
+.nin input::placeholder {
+  color: var(--ink3);
+}
+
+.avp {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.avp button {
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
+  background: var(--card);
+  box-shadow: var(--e1);
+  transition: all var(--f) var(--out);
+  display: grid;
+  place-items: center;
+}
+
+.avp button svg {
+  width: 32px;
+  height: 32px;
+}
+
+.avp button.on {
+  box-shadow:
+    inset 0 0 0 2px var(--verm),
+    0 6px 18px rgba(206, 68, 48, 0.22);
+  transform: translateY(-4px);
+}
