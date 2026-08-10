@@ -1,0 +1,32 @@
+.toast {
+  position: fixed;
+  top: 104px;
+  left: 50%;
+  z-index: 90;
+  padding: 9px 20px;
+  border-radius: 99px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(174deg, #d9a448, var(--gold-d));
+  box-shadow: 0 6px 22px rgba(192, 138, 46, 0.4);
+  transform: translateX(-50%) translateY(-14px) scale(0.86);
+  opacity: 0;
+  transition: all var(--b) var(--back);
+  pointer-events: none;
+}
+
+.toast.open {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.toast.tone-success {
+  background: linear-gradient(174deg, #84b7a9, var(--cel-d));
+  box-shadow: 0 6px 22px rgba(111, 162, 148, 0.4);
+}
+
+.toast.tone-error {
+  background: linear-gradient(174deg, #e05c46, var(--verm-d));
+  box-shadow: 0 6px 22px rgba(206, 68, 48, 0.42);
+}

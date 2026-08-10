@@ -1,0 +1,180 @@
+.resSky {
+  position: relative;
+  height: 250px;
+  border-radius: var(--rl);
+  overflow: hidden;
+  margin-bottom: 18px;
+  background: linear-gradient(180deg, #b9daef, #dfedf6 52%, #fbf6ea);
+  box-shadow: var(--e1);
+}
+
+.resSky canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.resSky .cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.rHero {
+  text-align: center;
+  padding: 26px 18px;
+  border-radius: var(--rl);
+  margin-bottom: 16px;
+  background: var(--card);
+  box-shadow: var(--e2);
+}
+
+.rHero .rz {
+  font-family: "Noto Serif SC", serif;
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--verm);
+  line-height: 1;
+}
+
+.rHero .rs {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(52px, 14vw, 80px);
+  font-weight: 600;
+  line-height: 1;
+  margin: 4px 0 2px;
+}
+
+.rHero .rl {
+  font-size: 13.5px;
+  color: var(--ink3);
+}
+
+.rHero .rnew {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 18px;
+  border-radius: 99px;
+  background: var(--gold);
+  color: #fff;
+  font-weight: 500;
+  font-size: 13px;
+  animation: pp 0.9s var(--back);
+}
+
+@keyframes pp {
+  0% {
+    transform: scale(0) rotate(-16deg);
+  }
+  60% {
+    transform: scale(1.13) rotate(5deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  margin-bottom: 18px;
+}
+
+@media (min-width: 620px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat {
+  padding: 16px;
+  border-radius: var(--r);
+  background: var(--card);
+  text-align: center;
+  box-shadow: var(--e1);
+}
+
+.stat b {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stat span {
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.panel {
+  padding: 20px;
+  border-radius: var(--rl);
+  background: var(--card);
+  box-shadow: var(--e1);
+  margin-bottom: 18px;
+}
+
+.panel h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.wgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.wc {
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: var(--shell);
+  text-align: center;
+}
+
+.wc .illus {
+  margin: 0 auto 6px;
+}
+
+.wc .h {
+  font-family: "Noto Serif SC", serif;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.wc .t {
+  font-size: 11.5px;
+  color: var(--ink2);
+}
+
+.wc .dots {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.wc .dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  font-style: normal;
+}
+
+.wc .dots i.f {
+  background: var(--cel);
+}
+
+.rActions {
+  display: grid;
+  gap: 11px;
+}

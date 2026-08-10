@@ -1,45 +1,58 @@
-.dim {
+.sheet-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(6, 10, 22, .72);
-  z-index: 20;
+  z-index: 80;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
+  padding: 20px;
+  background: rgba(36, 31, 26, 0.34);
+  backdrop-filter: blur(4px);
+  animation: sheet-fade 0.26s;
+}
+
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sheet {
   width: 100%;
-  max-width: 430px;
-  background: var(--night2);
-  border-radius: 26px 26px 0 0;
-  padding: 24px 20px 30px;
-  animation: up .28s cubic-bezier(.2, .9, .3, 1);
+  max-width: 420px;
+  padding: 26px;
+  border-radius: var(--rl);
+  background: var(--card);
+  box-shadow: var(--e3);
+  animation: sheet-in 0.42s var(--back);
 }
 
-@keyframes up {
-  from { transform: translateY(100%); }
-  to { transform: none; }
+@keyframes sheet-in {
+  from {
+    transform: scale(0.9) translateY(18px);
+  }
+  to {
+    transform: none;
+  }
 }
 
 .sheet h3 {
   font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .sheet p {
   font-size: 14px;
-  color: var(--dim);
-  line-height: 1.6;
-  margin-bottom: 18px;
+  color: var(--ink2);
+  line-height: 1.85;
+  margin-bottom: 20px;
 }
 
-.sheet .btn {
-  margin-bottom: 9px;
-}
-
-@media (min-width: 720px) {
-  .dim { align-items: center; }
-  .sheet { border-radius: 26px; max-width: 520px; margin-bottom: 40px; }
+.sheet-actions {
+  display: grid;
+  gap: 9px;
 }
