@@ -4,43 +4,13 @@ import GameNav from "../../components/ui/GameNav.jsx";
 import DirectionPad from "../../components/ui/DirectionPad.jsx";
 import Sheet from "../../components/ui/Sheet.jsx";
 import Button from "../../components/ui/Button.jsx";
-import Toast from "../../components/ui/Toast.jsx";
 import { useBurst } from "../../state/BurstContext.jsx";
 import { vibrate } from "../../lib/vibrate.js";
+import { initMaze, commandFor } from "../../lib/maze.js";
 import CONFIG from "../../content/config.json";
 import "./Maze.css";
 
-const gridSize = (level) => 4 + Math.min(2, Math.floor(level / 2));
-
-function buildWalls(n) {
-  const walls = new Set();
-  const count = Math.floor(n * n * 0.16);
-  while (walls.size < count) {
-    const r = Math.floor(Math.random() * n);
-    const c = Math.floor(Math.random() * n);
-    if ((r === 0 && c === 0) || (r === n - 1 && c === n - 1)) continue;
-    walls.add(`${r},${c}`);
-  }
-  return walls;
-}
-
-/** Always prefer a command that's actually walkable from here; a true dead end falls back to any command. */
-function pickCommand(pos, walls, n) {
-  const walkable = CONFIG.mazeCommands.filter((cmd) => {
-    const r = pos[0] + cmd.dy;
-    const c = pos[1] + cmd.dx;
-    return r >= 0 && r < n && c >= 0 && c < n && !walls.has(`${r},${c}`);
-  });
-  const pool = walkable.length ? walkable : CONFIG.mazeCommands;
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function initMaze(level) {
-  const n = gridSize(level);
-  const walls = buildWalls(n);
-  const pos = [0, 0];
-  return { n, walls, pos, command: pickCommand(pos, walls, n) };
-}
+const { levels: MAX_LEVEL, maxWrong: MAX_WRONG } = CONFIG.maze;
 
 export default function Maze() {
   const navigate = useNavigate();
@@ -50,16 +20,19 @@ export default function Maze() {
   const [maze, setMaze] = useState(() => initMaze(1));
   const [score, setScore] = useState(0);
   const [steps, setSteps] = useState(0);
+  const [wrong, setWrong] = useState(0);
   const [busy, setBusy] = useState(false);
   const [wrongDir, setWrongDir] = useState(null);
   const [flash, setFlash] = useState(null);
-  const [toastMsg, setToastMsg] = useState(null);
   const [victoryOpen, setVictoryOpen] = useState(false);
+  const [clearedOpen, setClearedOpen] = useState(false);
+  const [overOpen, setOverOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
+
+  const gameOver = clearedOpen || overOpen;
 
   const wrongTimerRef = useRef(null);
   const flashTimerRef = useRef(null);
-  const toastTimerRef = useRef(null);
   const stepTimerRef = useRef(null);
 
   useEffect(() => {
@@ -70,7 +43,6 @@ export default function Maze() {
     () => () => {
       clearTimeout(wrongTimerRef.current);
       clearTimeout(flashTimerRef.current);
-      clearTimeout(toastTimerRef.current);
       clearTimeout(stepTimerRef.current);
     },
     [],
@@ -80,12 +52,6 @@ export default function Maze() {
     setFlash(kind);
     clearTimeout(flashTimerRef.current);
     flashTimerRef.current = setTimeout(() => setFlash(null), 420);
-  }
-
-  function showToast(msg) {
-    setToastMsg(msg);
-    clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => setToastMsg(null), 1500);
   }
 
   function handlePress(dir, el) {
@@ -100,22 +66,21 @@ export default function Maze() {
       setScore((s) => Math.max(0, s - 30));
       flashFor("no");
       vibrate([20, 50, 20]);
+
+      // wrong presses accumulate across the whole run, not per level — without
+      // a cap the 4-button pad can just be brute-forced until it's right
+      const nextWrong = wrong + 1;
+      setWrong(nextWrong);
+      if (nextWrong >= MAX_WRONG) {
+        setBusy(true); // freeze the pad so the run can't continue past its own ending
+        stepTimerRef.current = setTimeout(() => setOverOpen(true), 620);
+      }
       return;
     }
 
-    const nr = maze.pos[0] + want.dy;
-    const nc = maze.pos[1] + want.dx;
-    const blocked = nr < 0 || nr >= maze.n || nc < 0 || nc >= maze.n || maze.walls.has(`${nr},${nc}`);
-
-    if (blocked) {
-      showToast("ทางนั้นตัน ลองคำสั่งถัดไป");
-      setBusy(true);
-      stepTimerRef.current = setTimeout(() => {
-        setMaze((m) => ({ ...m, command: pickCommand(m.pos, m.walls, m.n) }));
-        setBusy(false);
-      }, 500);
-      return;
-    }
+    // the route is planned at level start and never crosses a wall, so a
+    // correct press simply advances one step along it
+    const nextIdx = maze.idx + 1;
 
     const rect = el.getBoundingClientRect();
     setSteps((s) => s + 1);
@@ -124,16 +89,16 @@ export default function Maze() {
     vibrate(24);
     triggerBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, ["#6FA294", "#C08A2E"], 14);
 
-    const isGoal = nr === maze.n - 1 && nc === maze.n - 1;
-    setMaze((m) => ({ ...m, pos: [nr, nc] }));
+    setMaze((m) => ({ ...m, idx: nextIdx, pos: m.route[nextIdx] }));
     setBusy(true);
 
-    if (isGoal) {
+    if (nextIdx === maze.route.length - 1) {
       setScore((s) => s + 300);
-      stepTimerRef.current = setTimeout(() => setVictoryOpen(true), 600);
+      const clearedLast = level >= MAX_LEVEL;
+      stepTimerRef.current = setTimeout(() => (clearedLast ? setClearedOpen(true) : setVictoryOpen(true)), 600);
     } else {
       stepTimerRef.current = setTimeout(() => {
-        setMaze((m) => ({ ...m, command: pickCommand(m.pos, m.walls, m.n) }));
+        setMaze((m) => ({ ...m, command: commandFor(m.route, m.idx) }));
         setBusy(false);
       }, 480);
     }
@@ -144,6 +109,19 @@ export default function Maze() {
     const nextLevel = level + 1;
     setLevel(nextLevel);
     setMaze(initMaze(nextLevel));
+    setBusy(false);
+  }
+
+  /** Full reset — wrong presses carry across levels, so they have to clear here too. */
+  function handleRestart() {
+    setClearedOpen(false);
+    setOverOpen(false);
+    setLevel(1);
+    setMaze(initMaze(1));
+    setScore(0);
+    setSteps(0);
+    setWrong(0);
+    setWrongDir(null);
     setBusy(false);
   }
 
@@ -178,7 +156,15 @@ export default function Maze() {
             </div>
             <div className="hc">
               <span className="lb">ด่าน</span>
-              <span>{level}</span>
+              <span>
+                {level}/{MAX_LEVEL}
+              </span>
+            </div>
+            <div className="hc">
+              <span className="lb">พลาด</span>
+              <span>
+                {wrong}/{MAX_WRONG}
+              </span>
             </div>
           </div>
 
@@ -192,18 +178,47 @@ export default function Maze() {
             {cells}
           </div>
 
-          <DirectionPad core="走" onPick={handlePress} cellClassName={cellClass} />
+          <DirectionPad core="走" onPick={handlePress} cellClassName={cellClass} disabled={gameOver} />
         </div>
       </div>
 
       <div className={`mz-flash${flash ? ` ${flash}` : ""}`} />
-      <Toast open={!!toastMsg} message={toastMsg} tone="error" />
 
       <Sheet open={victoryOpen} title="ถึงธงแล้ว">
-        <p>ได้โบนัส 300 คะแนน ไปด่านถัดไปกันต่อ</p>
+        <p>
+          ได้โบนัส 300 คะแนน · ผ่านด่าน {level}/{MAX_LEVEL} แล้ว
+        </p>
         <Sheet.Actions>
           <Button block onClick={handleNextLevel}>
             ไปด่านถัดไป
+          </Button>
+        </Sheet.Actions>
+      </Sheet>
+
+      <Sheet open={clearedOpen} title={`ผ่านครบ ${MAX_LEVEL} ด่านแล้ว`}>
+        <p>
+          เดินถึงธงครบทุกด่าน ใช้ไป {steps} ก้าว พลาด {wrong}/{MAX_WRONG} ครั้ง · คะแนนรวม {score}
+        </p>
+        <Sheet.Actions>
+          <Button block onClick={handleRestart}>
+            เล่นอีกครั้ง
+          </Button>
+          <Button block variant="ghost" onClick={() => navigate("/setup")}>
+            กลับไปเลือกโหมด
+          </Button>
+        </Sheet.Actions>
+      </Sheet>
+
+      <Sheet open={overOpen} title={`กดผิดครบ ${MAX_WRONG} ครั้ง`}>
+        <p>
+          ไปได้ถึงด่าน {level}/{MAX_LEVEL} · คะแนนรวม {score}
+        </p>
+        <Sheet.Actions>
+          <Button block onClick={handleRestart}>
+            เริ่มใหม่
+          </Button>
+          <Button block variant="ghost" onClick={() => navigate("/setup")}>
+            กลับไปเลือกโหมด
           </Button>
         </Sheet.Actions>
       </Sheet>
