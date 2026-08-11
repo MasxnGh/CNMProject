@@ -221,10 +221,10 @@
 }
 
 .secH p {
-  font-size: clamp(13.5px, 3.4vw, 16px);
+  font-size: clamp(15px, 3.6vw, 18px);
   color: var(--ink2);
   margin-top: 13px;
-  line-height: 1.9;
+  line-height: 1.8;
   max-width: 580px;
   margin-left: auto;
   margin-right: auto;

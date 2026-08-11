@@ -15,11 +15,25 @@ import { useBurst } from "../../state/BurstContext.jsx";
 import { generateQuestion, KINDS, RISE_MULTIPLIER } from "../../lib/question.js";
 import { decideAfterQuestion } from "../../lib/runFlow.js";
 import { vibrate } from "../../lib/vibrate.js";
+import { playWord, playClock, stop as stopSpeech } from "../../lib/speech.js";
 import VOCAB from "../../content/vocab.json";
 import CONFIG from "../../content/config.json";
 import "./Play.css";
 
 const BURST_COLORS = ["#6FA294", "#C08A2E", "#CE4430", "#3F6BA8"];
+
+// kinds where the full Chinese text is already shown as the *prompt*, not
+// the thing being tested — safe to speak (auto or via the speaker button)
+// without handing over the answer. This is deliberately the ONE list used
+// for both: a kind that isn't safe to auto-speak isn't safe for a manual
+// button either, since pressing it would just read the answer out loud.
+const SPEAKABLE_KINDS = new Set(["zh2th", "zh2img", "compass", "clock"]);
+
+function speakTarget(q) {
+  if (!q || !SPEAKABLE_KINDS.has(q.kind)) return;
+  if (q.kind === "clock") playClock(q.clock);
+  else playWord(q.word.id);
+}
 
 export default function Play() {
   const navigate = useNavigate();
@@ -103,6 +117,8 @@ export default function Play() {
     if (spkRef.current) spkRef.current.style.bottom = "calc(-26% - 62px)";
     if (dzRef.current) dzRef.current.classList.remove("on");
 
+    speakTarget(question);
+
     let seconds = diff.riseSeconds * (RISE_MULTIPLIER[question.kind] || 1);
     if (hasMod("rush")) seconds /= 2;
     if (hasMod("slow")) seconds *= 2;
@@ -131,6 +147,7 @@ export default function Play() {
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopSpeech();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question, run]);
@@ -141,6 +158,7 @@ export default function Play() {
       clearTimeout(flashTimerRef.current);
       clearTimeout(shakeTimerRef.current);
       clearTimeout(toastTimerRef.current);
+      stopSpeech();
     },
     [],
   );
@@ -337,28 +355,12 @@ export default function Play() {
             <div className="hint">ภาพนี้คือคำจีนคำไหน</div>
           </>
         );
-      case "img2th":
-        return (
-          <>
-            <div className="im">
-              <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={130} alt={w.hanzi} />
-            </div>
-            <div className="hint">ภาพนี้แปลว่าอะไร</div>
-          </>
-        );
       case "zh2img":
         return (
           <>
             {pin && <div className="py">{w.pinyin}</div>}
             <div className="zh2 zh">{w.hanzi}</div>
             <div className="hint">เลือกภาพที่ตรงกับคำนี้</div>
-          </>
-        );
-      case "th2img":
-        return (
-          <>
-            <div className="th">{w.thai}</div>
-            <div className="hint">เลือกภาพที่ตรงกับความหมายนี้</div>
           </>
         );
       case "zh2th":
@@ -395,19 +397,15 @@ export default function Play() {
       case "order":
         return (
           <>
+            <div className="kindGlyph">🔢</div>
             <div className="hint">{question.sequence.title}</div>
-            <div className="zh2 zh" style={{ fontSize: 28 }}>
-              排序
-            </div>
           </>
         );
       case "match":
         return (
           <>
+            <div className="kindGlyph">🧩</div>
             <div className="hint">จับคู่ภาพกับคำให้ครบ 3 คู่</div>
-            <div className="zh2 zh" style={{ fontSize: 28 }}>
-              配对
-            </div>
           </>
         );
       default:
@@ -423,7 +421,7 @@ export default function Play() {
         </div>
       );
     }
-    if (question.kind === "img2th" || question.kind === "zh2th") {
+    if (question.kind === "zh2th") {
       return <div className="at">{opt.thai}</div>;
     }
     return (
@@ -486,9 +484,11 @@ export default function Play() {
         </div>
       </div>
 
-      <button type="button" className="spkB" ref={spkRef} onClick={() => {}} aria-label="ฟังเสียงอ่าน">
-        🔊
-      </button>
+      {SPEAKABLE_KINDS.has(question.kind) && (
+        <button type="button" className="spkB" ref={spkRef} onClick={() => speakTarget(question)} aria-label="ฟังเสียงอ่าน">
+          🔊
+        </button>
+      )}
 
       <div className="dock">
         {question.kind === "compass" && (

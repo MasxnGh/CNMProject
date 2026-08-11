@@ -91,7 +91,10 @@ export default function Setup() {
 
           <div className={`cats lockable${isMaze ? " locked" : ""}`}>
             {CATEGORIES.map((c) => {
-              const on = selection.catIds.includes(c.id);
+              // maze always uses "dir" regardless of what's selected here — showing
+              // the old selection as "on" underneath the locked overlay would wrongly
+              // suggest maze is about to use that category
+              const on = !isMaze && selection.catIds.includes(c.id);
               return (
                 <button
                   key={c.id}

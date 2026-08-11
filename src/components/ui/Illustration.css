@@ -5,12 +5,28 @@
   background: var(--bg);
   overflow: hidden;
   flex: none;
+  /* font-size is set inline from the `size` prop — every child below sizes
+     itself in em against that, not against whatever ancestor font-size this
+     circle happens to be nested inside */
+}
+
+.illus.photo {
+  /* photos already render on their own white background (see the image
+     pipeline) — matching it here means the 88%-sized <img> below doesn't
+     show as a visible white square against the category tint */
+  background: #fff;
 }
 
 .illus-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  /* a square subject filling 80% of its source frame has corners
+     0.8*sqrt(2)/2 = 56.6% of the frame's half-diagonal from center — that
+     exceeds a circle's 50% radius and gets clipped by `.illus`'s
+     overflow:hidden. Shrinking the image to 88% and using `contain` instead
+     of `cover` brings the subject to 0.8*0.88 = 70.4%, under the circle's
+     max inscribed-square fraction (1/sqrt(2) ≈ 70.7%), so it never clips. */
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
   border-radius: 50%;
 }
 
@@ -26,7 +42,12 @@
 }
 
 .illus-char {
-  font-size: 46%;
+  font-size: 0.6em;
   font-weight: 900;
+  line-height: 1;
+}
+
+.illus-emoji {
+  font-size: 0.62em;
   line-height: 1;
 }

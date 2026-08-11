@@ -21,7 +21,6 @@ export default function Gallery() {
       <Reveal className="secH">
         <div className="kk">ILLUSTRATIONS</div>
         <h2>ทุกคำมีภาพของตัวเอง</h2>
-        <p>ภาพทั้งหมดวาดขึ้นใหม่เป็นเวกเตอร์ สไตล์เดียวกันทั้งชุด คมชัดทุกขนาดหน้าจอ</p>
       </Reveal>
       <Reveal className="gal">
         {words.map((w) => (

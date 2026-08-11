@@ -464,3 +464,11 @@ export function vocabImageSrc(key) {
 export function hasSvgArt(key) {
   return Boolean(key && ART[key]);
 }
+
+// asset keys are always plain lowercase identifiers ("nihao", "shu2"); a word's
+// `art` field can also hold a literal emoji glyph for words with no photo/SVG yet —
+// this tells the two apart without a separate field, so every place that already
+// keys off `art` (image-question eligibility, art-collision checks) keeps working
+export function isEmojiArt(key) {
+  return Boolean(key) && !/^[a-z][a-z0-9]*$/i.test(key);
+}

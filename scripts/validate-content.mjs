@@ -5,6 +5,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { isEmojiArt } from "../src/lib/art.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const contentDir = path.join(root, "src/content");
@@ -17,6 +18,16 @@ const config = readJson("config.json");
 
 const errors = [];
 const warnings = [];
+
+// Words with no picture at all — every one is here because a picture would be
+// actively misleading (abstract copula/existential verbs, directional 来/去 that
+// look identical without context, question words, bare measure words). Any word
+// not on this list MUST have art: sharing another word's picture ("borrowing")
+// is not an allowed way to get around that — see the art-uniqueness check below.
+const TEXT_ONLY_IDS = new Set([
+  "v_kuai", "v_ge", "v_shi2", "v_you", "v_jiao2", "v_lai", "v_qu", "v_hao2",
+  "v_shenme", "v_shei", "v_nar", "v_ji", "v_duoshao", "v_zenme", "v_zenmeyang", "v_weishenme",
+]);
 
 const catIds = new Set(categories.map((c) => c.id));
 
@@ -37,14 +48,61 @@ for (const w of vocab) {
   }
 }
 
-// art file exists for every non-empty art key
+// art file exists for every non-empty art key (emoji values render directly, no file needed)
 const usedArtKeys = new Set();
 for (const w of vocab) {
-  if (w.art) {
+  if (w.art && !isEmojiArt(w.art)) {
     usedArtKeys.add(w.art);
     const file = path.join(imgDir, `${w.art}.webp`);
     if (!existsSync(file)) {
       errors.push(`คำ "${w.hanzi}" (${w.id}) อ้างภาพ "${w.art}.webp" แต่ไม่มีไฟล์จริงใน public/img/vocab/`);
+    }
+  }
+}
+
+// every word either has its own picture or is explicitly declared text-only —
+// no silent "forgot to add art" and no quietly borrowing someone else's picture
+for (const w of vocab) {
+  if (!w.art && !TEXT_ONLY_IDS.has(w.id)) {
+    errors.push(`คำ "${w.hanzi}" (${w.id}) ไม่มี art และไม่ได้อยู่ใน TEXT_ONLY_IDS ที่ประกาศไว้ (validate-content.mjs)`);
+  }
+  if (w.art && TEXT_ONLY_IDS.has(w.id)) {
+    errors.push(`คำ "${w.hanzi}" (${w.id}) อยู่ใน TEXT_ONLY_IDS แต่กลับมี art "${w.art}" — เอาออกจากลิสต์หรือลบ art อันใดอันหนึ่ง`);
+  }
+}
+
+// no two words may share one picture — two different words showing the same
+// image is exactly the "borrowing" pattern this validator exists to prevent
+{
+  const owners = new Map();
+  for (const w of vocab) {
+    if (!w.art) continue;
+    const prior = owners.get(w.art);
+    if (prior) {
+      errors.push(`คำ "${w.hanzi}" (${w.id}) กับ "${prior.hanzi}" (${prior.id}) ใช้ art "${w.art}" ร่วมกัน — ห้ามยืมภาพกัน`);
+    } else {
+      owners.set(w.art, w);
+    }
+  }
+}
+
+// duplicate Thai gloss within the same category makes some questions
+// unanswerable — two options can show the identical Thai text with only one
+// marked correct
+{
+  const byThaiCat = new Map();
+  for (const w of vocab) {
+    const key = `${w.cat}|${w.thai}`;
+    const bucket = byThaiCat.get(key) || [];
+    bucket.push(w);
+    byThaiCat.set(key, bucket);
+  }
+  for (const [key, list] of byThaiCat) {
+    if (list.length > 1) {
+      const [cat] = key.split("|");
+      errors.push(
+        `คำแปลไทย "${list[0].thai}" ซ้ำกันในหมวด "${cat}": ${list.map((w) => w.hanzi).join(", ")} — ผู้เล่นจะตอบไม่ได้ถ้าทั้งคู่โผล่ในข้อเดียวกัน`,
+      );
     }
   }
 }
