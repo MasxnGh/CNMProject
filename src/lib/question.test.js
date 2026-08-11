@@ -120,8 +120,8 @@ describe("Thai-only prompt kinds are gone", () => {
     expect(IMAGE_SIDE.th2img).toBeUndefined();
   });
 
-  it("match's rise-time multiplier was lowered to 1.8", () => {
-    expect(RISE_MULTIPLIER.match).toBe(1.8);
+  it("match has no rise-time multiplier — it never rises at all", () => {
+    expect(RISE_MULTIPLIER.match).toBeUndefined();
   });
 });
 

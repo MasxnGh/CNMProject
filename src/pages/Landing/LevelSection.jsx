@@ -56,7 +56,7 @@ export default function LevelSection() {
           </div>
         </Reveal>
 
-        <Reveal delay={100} style={{ display: "grid", gap: 14 }}>
+        <Reveal delay={100} style={{ display: "grid", gap: 14, gridAutoRows: "1fr" }}>
           <div className="notCard">
             <div className="ni2" dangerouslySetInnerHTML={{ __html: ART.target }} />
             <div>
@@ -88,7 +88,7 @@ export default function LevelSection() {
       <Reveal className="catList">
         {CATEGORIES.map((c) => (
           <div className="catRow" key={c.id} style={{ "--c": c.color, "--cl": c.colorLight }}>
-            <div className="ci2" dangerouslySetInnerHTML={{ __html: ART[c.icon] || "" }} />
+            <div className="ci2">{c.icon}</div>
             <div>
               <div className="cz2">{c.zh}</div>
               <div className="cn2">{c.th}</div>

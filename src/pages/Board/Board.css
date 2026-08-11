@@ -1,3 +1,65 @@
+.lbStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 14px;
+}
+
+.lbDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.lbDot.live {
+  background: var(--cel);
+  box-shadow: 0 0 0 0 rgba(111, 162, 148, 0.6);
+  animation: lbPulse 2s ease-out infinite;
+}
+
+.lbDot.loading {
+  background: var(--gold);
+}
+
+.lbDot.off {
+  background: var(--ink3);
+}
+
+@keyframes lbPulse {
+  70% {
+    box-shadow: 0 0 0 7px rgba(111, 162, 148, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(111, 162, 148, 0);
+  }
+}
+
+.lbLabel {
+  font-size: 14px;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+
+/* a score that arrived live while the board was open */
+.lbRow.fresh {
+  animation:
+    lrIn 0.44s var(--out) forwards,
+    lbFlash 1.6s var(--out);
+}
+
+@keyframes lbFlash {
+  0%,
+  100% {
+    background: var(--card);
+  }
+  25% {
+    background: var(--cel-l);
+  }
+}
+
 .lbF {
   display: flex;
   gap: 8px;
@@ -20,7 +82,7 @@
   justify-content: center;
   padding: 8px 15px;
   border-radius: 99px;
-  font-size: 13.5px;
+  font-size: 15.5px;
   background: var(--card);
   color: var(--ink2);
   box-shadow: var(--e1);
@@ -68,7 +130,7 @@
   display: grid;
   place-items: center;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15.5px;
   background: var(--shell);
 }
 
@@ -108,19 +170,21 @@
 }
 
 .lbRow .nm b {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 500;
   display: block;
 }
 
 .lbRow .nm span {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--ink3);
 }
 
 .lbRow .pt {
   font-family: "Cormorant Garamond", serif;
-  font-size: 22px;
+  /* tabular on top of lining so scores stay right-aligned down the ranking */
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 24px;
   font-weight: 600;
   color: var(--verm);
 }
@@ -130,13 +194,13 @@
   text-align: center;
   border-radius: var(--rl);
   color: var(--ink3);
-  font-size: 14px;
+  font-size: 16px;
   background: var(--shell);
 }
 
 .empty b {
   display: block;
-  font-size: 15px;
+  font-size: 17px;
   margin-bottom: 6px;
   color: var(--ink2);
 }

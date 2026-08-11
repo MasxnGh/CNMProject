@@ -40,13 +40,13 @@
 }
 
 .sheet h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 500;
   margin-bottom: 8px;
 }
 
 .sheet p {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink2);
   line-height: 1.85;
   margin-bottom: 20px;

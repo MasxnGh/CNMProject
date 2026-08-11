@@ -93,6 +93,7 @@
 
 .sg-count {
   font-family: "Cormorant Garamond", serif;
+  font-variant-numeric: lining-nums;
   color: var(--verm);
   font-weight: 600;
 }

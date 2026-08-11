@@ -41,7 +41,7 @@ export default function MatchPad({ words, locked, onResolve }) {
       const rect = el.getBoundingClientRect();
       triggerBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, PAIR_COLORS, 20);
       if (newDone.length === cells.length) {
-        onResolve(wrongCount <= 1, rect);
+        onResolve(wrongCount <= 1, rect, wrongCount);
       }
     } else {
       setWrongPair([selected, i]);
@@ -61,7 +61,7 @@ export default function MatchPad({ words, locked, onResolve }) {
         return (
           <button key={c.id} type="button" className={cls} disabled={locked} onClick={(e) => handleTap(i, e.currentTarget)}>
             {c.type === "img" ? (
-              <Illustration vocabKey={c.word.art} category={c.word.cat} char={c.word.hanzi[0]} size={54} alt={c.word.hanzi} />
+              <Illustration vocabKey={c.word.art} category={c.word.cat} char={c.word.hanzi[0]} size={96} alt={c.word.hanzi} />
             ) : (
               <div>
                 <div className="z zh">{c.word.hanzi}</div>
