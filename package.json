@@ -16,6 +16,7 @@
     "import:photos": "node scripts/import-photos.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "framer-motion": "^11.18.2",

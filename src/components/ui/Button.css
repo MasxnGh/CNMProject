@@ -8,7 +8,7 @@
   position: relative;
   overflow: hidden;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 18px;
   color: #fff;
   letter-spacing: 0.3px;
   background: linear-gradient(174deg, #e05c46, var(--verm) 46%, var(--verm-d));
@@ -71,7 +71,7 @@
 
 .btn.size-sm {
   padding: 9px 19px;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 44px;
 }
 

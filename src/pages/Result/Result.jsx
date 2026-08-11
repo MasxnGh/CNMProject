@@ -7,6 +7,7 @@ import ResultSky from "./ResultSky.jsx";
 import { useGame } from "../../state/GameContext.jsx";
 import { useRun } from "../../state/RunContext.jsx";
 import { loadBoard, saveBoard, recordScore, getEntries } from "../../lib/board.js";
+import { submitScore } from "../../lib/globalBoard.js";
 import VOCAB from "../../content/vocab.json";
 import CONFIG from "../../content/config.json";
 import "./Result.css";
@@ -35,8 +36,10 @@ export default function Result() {
     if (!run) navigate("/setup", { replace: true });
   }, [run, navigate]);
 
-  // Save this run to the local leaderboard, once. Zen mode never scores/records
-  // (per the mode's own rules), and a zero score isn't worth a row.
+  // Record this run once — to the shared leaderboard and to the local one,
+  // which doubles as the offline fallback the Board page reads when Supabase
+  // can't be reached. Zen mode never scores/records (per the mode's own
+  // rules), and a zero score isn't worth a row.
   useEffect(() => {
     if (!run || recordedRef.current) return;
     if (mode.id === "zen" || run.score <= 0) return;
@@ -58,6 +61,18 @@ export default function Result() {
     }
     saveBoard(board);
     setIsNewRecord(beatRecord);
+
+    // fire-and-forget: a failed upload must not block or break the result screen
+    submitScore({
+      name: player.name || "ผู้เล่น",
+      avatar: player.avatar,
+      score: run.score,
+      modeId: mode.id,
+      diffId: selection.diffId,
+      catIds: selection.catIds,
+      accuracy: run.tot ? Math.round((run.ok / run.tot) * 100) : 0,
+      bestCombo: run.best,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [run]);
 
@@ -124,7 +139,7 @@ export default function Result() {
                 const lv = mastery[w.id] || 0;
                 return (
                   <div className="wc" key={w.id}>
-                    <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={42} alt={w.hanzi} />
+                    <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={64} alt={w.hanzi} />
                     <div className="h">{w.hanzi}</div>
                     <div className="t">{w.thai}</div>
                     <div className="dots">

@@ -119,6 +119,12 @@ export default function Play() {
 
     speakTarget(question);
 
+    if (question.kind === "match") {
+      // match is a full-screen, untimed puzzle (see the render below) —
+      // there's no kite to rise, so there's nothing to animate here
+      return () => stopSpeech();
+    }
+
     let seconds = diff.riseSeconds * (RISE_MULTIPLIER[question.kind] || 1);
     if (hasMod("rush")) seconds /= 2;
     if (hasMod("slow")) seconds *= 2;
@@ -266,15 +272,17 @@ export default function Play() {
    * every one of them calls this, and only this, when the question ends.
    * Scoring/combo/mastery/feedback lives here exactly once, not per kind.
    */
-  function resolveSpecial(correct, rect, masteryWordId) {
+  function resolveSpecial(correct, rect, masteryWordId, wrongCount) {
     if (lockedRef.current) return;
     lockedRef.current = true;
     setLocked(true);
     flashFor(correct ? "ok" : "no");
 
     if (correct) {
-      const kY = kitePercentRef.current;
-      const speedBonus = Math.max(0, Math.round((82 - kY) * 1.6));
+      // match never rises, so there's no kite position to reward speed off
+      // of — reward a clean run (zero mismatched taps) instead
+      const speedBonus =
+        question.kind === "match" ? (wrongCount === 0 ? 60 : 0) : Math.max(0, Math.round((82 - kitePercentRef.current) * 1.6));
       const combo = run.combo + 1;
       const comboBonus = 1 + combo * (hasMod("chain") ? 0.26 : 0.12);
       const gain = isZen ? 0 : Math.round((110 + speedBonus) * run.mult * comboBonus);
@@ -350,7 +358,7 @@ export default function Play() {
         return (
           <>
             <div className="im">
-              <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={130} alt={w.hanzi} />
+              <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={150} alt={w.hanzi} />
             </div>
             <div className="hint">ภาพนี้คือคำจีนคำไหน</div>
           </>
@@ -401,13 +409,6 @@ export default function Play() {
             <div className="hint">{question.sequence.title}</div>
           </>
         );
-      case "match":
-        return (
-          <>
-            <div className="kindGlyph">🧩</div>
-            <div className="hint">จับคู่ภาพกับคำให้ครบ 3 คู่</div>
-          </>
-        );
       default:
         return null;
     }
@@ -417,7 +418,7 @@ export default function Play() {
     if (question.imageSide === "a") {
       return (
         <div className="ai big">
-          <Illustration vocabKey={opt.art} category={opt.cat} char={opt.hanzi[0]} size={80} alt={opt.hanzi} />
+          <Illustration vocabKey={opt.art} category={opt.cat} char={opt.hanzi[0]} size={104} alt={opt.hanzi} />
         </div>
       );
     }
@@ -477,77 +478,86 @@ export default function Play() {
         </div>
       )}
 
-      <div className="stage">
-        <div className="kite" ref={kiteRef}>
-          <div className="body">{renderQuestionBody()}</div>
-          <div className="tail" />
-        </div>
-      </div>
-
-      {SPEAKABLE_KINDS.has(question.kind) && (
-        <button type="button" className="spkB" ref={spkRef} onClick={() => speakTarget(question)} aria-label="ฟังเสียงอ่าน">
-          🔊
-        </button>
-      )}
-
-      <div className="dock">
-        {question.kind === "compass" && (
-          <CompassPad
-            key={question.id}
-            vector={question.vector}
-            locked={locked}
-            onResolve={(correct, rect) => resolveSpecial(correct, rect, question.word.id)}
-          />
-        )}
-        {question.kind === "clock" && (
-          <ClockPad
-            key={question.id}
-            clock={question.clock}
-            options={question.options}
-            locked={locked}
-            onResolve={(correct, rect) => resolveSpecial(correct, rect, null)}
-          />
-        )}
-        {question.kind === "order" && (
-          <OrderPad
-            key={question.id}
-            sequence={question.sequence}
-            locked={locked}
-            onResolve={(correct, rect) => resolveSpecial(correct, rect, null)}
-          />
-        )}
-        {question.kind === "match" && (
+      {question.kind === "match" ? (
+        <div className="matchStage">
+          <div className="matchHead">
+            <div className="matchGlyph">🧩</div>
+            <div className="matchHint">จับคู่ภาพกับคำให้ครบ 3 คู่</div>
+          </div>
           <MatchPad
             key={question.id}
             words={question.matchWords}
             locked={locked}
-            onResolve={(correct, rect) => resolveSpecial(correct, rect, question.matchWords[0].id)}
+            onResolve={(correct, rect, wrongCount) => resolveSpecial(correct, rect, question.matchWords[0].id, wrongCount)}
           />
-        )}
-        {KINDS.includes(question.kind) && (
-          <div className={`aGrid${shake ? " shk" : ""}`}>
-            {question.options.map((opt) => {
-              let cls = "aB";
-              if (question.imageSide === "a") cls += " imgOpt";
-              if (answered) {
-                if (opt.id === answered.correctId) cls += " good";
-                else if (opt.id === answered.wrongId) cls += " bad";
-              }
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={cls}
-                  disabled={locked}
-                  onClick={(e) => handleAnswer(opt, e.currentTarget)}
-                >
-                  {renderOptionBody(opt)}
-                </button>
-              );
-            })}
+        </div>
+      ) : (
+        <>
+          <div className="stage">
+            <div className="kite" ref={kiteRef}>
+              <div className="body">{renderQuestionBody()}</div>
+              <div className="tail" />
+            </div>
           </div>
-        )}
-      </div>
+
+          {SPEAKABLE_KINDS.has(question.kind) && (
+            <button type="button" className="spkB" ref={spkRef} onClick={() => speakTarget(question)} aria-label="ฟังเสียงอ่าน">
+              🔊
+            </button>
+          )}
+
+          <div className="dock">
+            {question.kind === "compass" && (
+              <CompassPad
+                key={question.id}
+                vector={question.vector}
+                locked={locked}
+                onResolve={(correct, rect) => resolveSpecial(correct, rect, question.word.id)}
+              />
+            )}
+            {question.kind === "clock" && (
+              <ClockPad
+                key={question.id}
+                clock={question.clock}
+                options={question.options}
+                locked={locked}
+                onResolve={(correct, rect) => resolveSpecial(correct, rect, null)}
+              />
+            )}
+            {question.kind === "order" && (
+              <OrderPad
+                key={question.id}
+                sequence={question.sequence}
+                locked={locked}
+                onResolve={(correct, rect) => resolveSpecial(correct, rect, null)}
+              />
+            )}
+            {KINDS.includes(question.kind) && (
+              <div className={`aGrid${shake ? " shk" : ""}`}>
+                {question.options.map((opt) => {
+                  let cls = "aB";
+                  if (question.imageSide === "a") cls += " imgOpt";
+                  if (answered) {
+                    if (opt.id === answered.correctId) cls += " good";
+                    else if (opt.id === answered.wrongId) cls += " bad";
+                  }
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      className={cls}
+                      disabled={locked}
+                      onClick={(e) => handleAnswer(opt, e.currentTarget)}
+                    >
+                      {renderOptionBody(opt)}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       <div className={`combo${comboBadge ? " on" : ""}${comboBadge?.hot ? " hot" : ""}`}>
         {comboBadge?.text}

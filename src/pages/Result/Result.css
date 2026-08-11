@@ -21,7 +21,7 @@
   right: 0;
   bottom: 12px;
   text-align: center;
-  font-size: 12.5px;
+  font-size: 14.5px;
   color: var(--ink2);
 }
 
@@ -36,7 +36,7 @@
 
 .rHero .rz {
   font-family: "Noto Serif SC", serif;
-  font-size: 52px;
+  font-size: 54px;
   font-weight: 900;
   color: var(--verm);
   line-height: 1;
@@ -44,14 +44,15 @@
 
 .rHero .rs {
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(52px, 14vw, 80px);
+  font-variant-numeric: lining-nums;
+  font-size: clamp(54px, 14vw, 82px);
   font-weight: 600;
   line-height: 1;
   margin: 4px 0 2px;
 }
 
 .rHero .rl {
-  font-size: 13.5px;
+  font-size: 15.5px;
   color: var(--ink3);
 }
 
@@ -63,7 +64,7 @@
   background: var(--gold);
   color: #fff;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14.5px;
   animation: pp 0.9s var(--back);
 }
 
@@ -103,13 +104,14 @@
 .stat b {
   display: block;
   font-family: "Cormorant Garamond", serif;
-  font-size: 30px;
+  font-variant-numeric: lining-nums;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
 }
 
 .stat span {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink3);
 }
 
@@ -122,14 +124,14 @@
 }
 
 .panel h3 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   margin-bottom: 14px;
 }
 
 .wgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
   gap: 10px;
 }
 
@@ -146,12 +148,12 @@
 
 .wc .h {
   font-family: "Noto Serif SC", serif;
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 600;
 }
 
 .wc .t {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--ink2);
 }
 

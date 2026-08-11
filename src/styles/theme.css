@@ -93,6 +93,11 @@ input {
 
 .ser {
   font-family: "Cormorant Garamond", serif;
+  /* Cormorant defaults to old-style figures, where 1 sits at x-height and
+     4/9 drop below the baseline — fine in running prose, but it makes the
+     big stat/score numerals look misaligned. Force lining figures so every
+     digit is the same height. */
+  font-variant-numeric: lining-nums;
 }
 
 ::selection {
@@ -129,21 +134,21 @@ svg {
   display: inline-block;
   padding: 5px 16px;
   border-radius: 99px;
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: 2px;
   background: var(--acc-l);
   color: var(--acc-d);
 }
 
 .screenTitle {
-  font-size: clamp(25px, 6vw, 34px);
+  font-size: clamp(27px, 6.2vw, 36px);
   font-weight: 500;
   margin-top: 13px;
 }
 
 .screenSub {
   color: var(--ink2);
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 8px;
 }
 

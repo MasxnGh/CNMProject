@@ -37,8 +37,10 @@ export const SPECIAL_KINDS = ["compass", "clock", "order", "match"];
 // which side (question "q" or answers "a") carries the image for a given kind
 export const IMAGE_SIDE = { img2zh: "q", zh2img: "a", zh2th: "", th2zh: "" };
 
-// extra rise-time multiplier for question kinds that take multiple taps to resolve
-export const RISE_MULTIPLIER = { order: 2.2, match: 1.8, clock: 1.3 };
+// extra rise-time multiplier for question kinds that take multiple taps to
+// resolve — "match" has no entry because it doesn't rise at all: it's an
+// untimed puzzle with its own full-screen layout (see Play.jsx)
+export const RISE_MULTIPLIER = { order: 2.2, clock: 1.3 };
 
 // hanzi -> [dx, dy] for the compass kind
 export const DIRV = { 上: [0, -1], 下: [0, 1], 左: [-1, 0], 右: [1, 0], 前: [0, -1], 后: [0, 1], 东: [1, 0], 西: [-1, 0] };

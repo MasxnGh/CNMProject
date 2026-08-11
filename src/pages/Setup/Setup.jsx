@@ -104,7 +104,7 @@ export default function Setup() {
                   onClick={() => toggleCategory(c.id)}
                   disabled={isMaze}
                 >
-                  <div className="ci" dangerouslySetInnerHTML={{ __html: ART[c.icon] || "" }} />
+                  <div className="ci">{c.icon}</div>
                   <div className="cz">{c.zh}</div>
                   <div className="cn">{c.th}</div>
                   <div className="cc">{wordCountByCat(c.id)} คำ</div>

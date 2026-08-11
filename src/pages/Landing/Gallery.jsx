@@ -25,7 +25,7 @@ export default function Gallery() {
       <Reveal className="gal">
         {words.map((w) => (
           <div className="gw" key={w.id}>
-            <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={66} alt={w.hanzi} />
+            <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={96} alt={w.hanzi} />
             <div className="h">{w.hanzi}</div>
             <div className="p">{w.pinyin}</div>
             <div className="t">{w.thai}</div>

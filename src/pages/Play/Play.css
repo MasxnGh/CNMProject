@@ -51,7 +51,7 @@
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--verm-d);
   letter-spacing: 2px;
 }
@@ -76,7 +76,7 @@
   gap: 6px;
   padding: 7px 13px;
   border-radius: 99px;
-  font-size: 13.5px;
+  font-size: 15.5px;
   font-weight: 500;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(12px);
@@ -84,7 +84,7 @@
 }
 
 .hc .lb {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink3);
   font-weight: 300;
 }
@@ -118,7 +118,7 @@ button.hc {
 .amod {
   padding: 4px 12px;
   border-radius: 99px;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 500;
   background: var(--cl);
   color: var(--c);
@@ -169,32 +169,32 @@ button.hc {
 }
 
 .kite .kindGlyph {
-  font-size: clamp(30px, 8vw, 42px);
+  font-size: clamp(32px, 8.2vw, 44px);
   line-height: 1.1;
   margin-bottom: 2px;
 }
 
 .kite .zh2 {
   font-family: "Noto Serif SC", serif;
-  font-size: clamp(30px, 8vw, 42px);
+  font-size: clamp(32px, 8.2vw, 44px);
   font-weight: 900;
   line-height: 1.1;
 }
 
 .kite .py {
-  font-size: 13.5px;
+  font-size: 15.5px;
   color: var(--verm);
   margin-top: 2px;
 }
 
 .kite .th {
-  font-size: clamp(19px, 5vw, 25px);
+  font-size: clamp(21px, 5.2vw, 27px);
   font-weight: 500;
   line-height: 1.3;
 }
 
 .kite .hint {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink3);
   margin-top: 4px;
 }
@@ -304,18 +304,18 @@ button.hc {
 
 .aB .az {
   font-family: "Noto Serif SC", serif;
-  font-size: 21px;
+  font-size: 23px;
   font-weight: 600;
   line-height: 1.15;
 }
 
 .aB .ap {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--verm);
 }
 
 .aB .at {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 400;
 }
 
@@ -350,7 +350,7 @@ button.hc {
   z-index: 30;
   padding: 9px 20px;
   border-radius: 99px;
-  font-size: 14.5px;
+  font-size: 16.5px;
   font-weight: 500;
   color: #fff;
   background: linear-gradient(174deg, #d9a448, var(--gold-d));
@@ -494,7 +494,7 @@ button.hc {
 
 .seqSlot .sv {
   font-family: "Noto Serif SC", serif;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
   color: var(--ink);
 }
@@ -536,7 +536,7 @@ button.hc {
 }
 
 .seqHint {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink3);
   text-align: center;
   margin-bottom: 14px;
@@ -570,28 +570,60 @@ button.hc {
 
 .seqChip .z {
   font-family: "Noto Serif SC", serif;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
   line-height: 1.1;
 }
 
 .seqChip .t {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--ink2);
 }
 
-/* ═══ MATCH ═══ */
+/* ═══ MATCH — its own full-screen puzzle, no kite/dock ═══ */
+.matchStage {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 96px var(--pad) 32px;
+  overflow-y: auto;
+}
+
+.matchHead {
+  text-align: center;
+}
+
+.matchGlyph {
+  font-size: clamp(44px, 11vw, 60px);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.matchHint {
+  font-size: clamp(17px, 4.2vw, 21px);
+  font-weight: 500;
+  color: var(--ink2);
+}
+
 .mgridq {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  max-width: 440px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 560px;
   margin: 0 auto;
 }
 
 @media (min-width: 620px) {
   .mgridq {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 720px;
+    gap: 18px;
   }
 }
 
@@ -602,7 +634,7 @@ button.hc {
   box-shadow: var(--e1);
   display: grid;
   place-items: center;
-  padding: 8px;
+  padding: 12px;
   transition: all var(--b) var(--out);
   position: relative;
 }
@@ -613,15 +645,16 @@ button.hc {
 
 .mcell .z {
   font-family: "Noto Serif SC", serif;
-  font-size: 21px;
+  font-size: clamp(28px, 7.4vw, 36px);
   font-weight: 900;
   line-height: 1.1;
   text-align: center;
 }
 
 .mcell .p {
-  font-size: 10.5px;
+  font-size: clamp(13px, 3.4vw, 16px);
   color: var(--verm);
+  margin-top: 2px;
 }
 
 .mcell.sel {
