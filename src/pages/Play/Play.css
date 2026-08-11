@@ -168,6 +168,12 @@ button.hc {
   place-items: center;
 }
 
+.kite .kindGlyph {
+  font-size: clamp(30px, 8vw, 42px);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
 .kite .zh2 {
   font-family: "Noto Serif SC", serif;
   font-size: clamp(30px, 8vw, 42px);

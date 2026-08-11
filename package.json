@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "validate": "node scripts/validate-content.mjs",
     "generate:art": "node scripts/generate-vocab-images.mjs",
+    "generate:audio": "node scripts/generate-audio.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "import:photos": "node scripts/import-photos.mjs"
   },
@@ -30,6 +31,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "jsdom": "^29.1.1",
+    "msedge-tts": "^2.0.7",
     "sharp": "^0.33.5",
     "vitest": "^4.1.10"
   }

@@ -13,7 +13,7 @@ export default function FinalCta() {
           <Button onClick={() => navigate("/name")}>เริ่มเล่นเลย</Button>
         </Reveal>
       </section>
-      <div className="lfoot">纸鸢 Zhi Yuan · ต้นแบบหน้าตาสำหรับโครงงาน · ภาพประกอบวาดขึ้นใหม่ทั้งหมด</div>
+      <div className="lfoot">纸鸢 Zhi Yuan</div>
     </>
   );
 }

@@ -8,10 +8,22 @@
  *     and never reach outside the category.
  *  3. words with no illustration are never used for image-based question kinds.
  *
- * Beyond the 6 "single tap" kinds, four special kinds resolve after several
+ * A fourth, load-bearing rule that isn't optional either: several vocab
+ * words intentionally share one illustration (谢谢/不客气 both mean roughly
+ * "thanks", 弟弟/儿子 are both drawn as a boy, etc). Whenever a question puts
+ * an image up against a *choice* — as the prompt (img2zh) or as the options
+ * (zh2img/match) — every word actually in play must have a distinct art key,
+ * or the picture stops being able to identify one answer. That's enforced
+ * once, here, at generation time, not patched over in the UI.
+ *
+ * Every core kind always keeps Chinese text on screen somewhere (hanzi as the
+ * prompt, or hanzi as the options) — there is no Thai-only prompt/option kind,
+ * so the player is never asked to work purely from a Thai gloss.
+ *
+ * Beyond the 4 "single tap" kinds, four special kinds resolve after several
  * taps: compass (dir category), clock (time category), order (sequences from
- * config.json), match (needs >=6 illustrated words in-category). Each only
- * enters the kind pool when its own data actually exists.
+ * config.json), match (needs >=3 illustrated words with *distinct* art in-
+ * category). Each only enters the kind pool when its own data actually exists.
  *
  * Modifier cards that control which question kinds can appear (noimg, blind)
  * must restrict the kind pool right here, before a word/kind is ever picked —
@@ -19,14 +31,14 @@
  * blank, unanswerable card.
  */
 
-export const KINDS = ["zh2th", "th2zh", "img2zh", "img2th", "zh2img", "th2img"];
+export const KINDS = ["zh2th", "th2zh", "img2zh", "zh2img"];
 export const SPECIAL_KINDS = ["compass", "clock", "order", "match"];
 
 // which side (question "q" or answers "a") carries the image for a given kind
-export const IMAGE_SIDE = { img2zh: "q", img2th: "q", zh2img: "a", th2img: "a", zh2th: "", th2zh: "" };
+export const IMAGE_SIDE = { img2zh: "q", zh2img: "a", zh2th: "", th2zh: "" };
 
 // extra rise-time multiplier for question kinds that take multiple taps to resolve
-export const RISE_MULTIPLIER = { order: 2.2, match: 2.6, clock: 1.3 };
+export const RISE_MULTIPLIER = { order: 2.2, match: 1.8, clock: 1.3 };
 
 // hanzi -> [dx, dy] for the compass kind
 export const DIRV = { 上: [0, -1], 下: [0, 1], 左: [-1, 0], 右: [1, 0], 前: [0, -1], 后: [0, 1], 东: [1, 0], 西: [-1, 0] };
@@ -59,14 +71,19 @@ export function shuffle(list) {
 }
 
 function generateCoreQuestion(word, kind, categoryPool, catIds, optionCount, twin) {
-  const needsArtOptions = kind === "zh2img" || kind === "th2img";
+  const usesImages = IMAGE_SIDE[kind] !== ""; // either of the 2 image kinds
+  const needsArtOptions = kind === "zh2img";
   const inCategory = (w) => w.id !== word.id && catIds.includes(w.cat);
+  // a distractor sharing the target's art key would show the same picture as
+  // the answer — either as a second "correct-looking" option, or (for img2zh)
+  // as a second word the question's own image equally matches
+  const artClash = (w) => usesImages && w.art && w.art === word.art;
 
-  // iron rule 2, step 1: try same-category words that also have art
-  let candidates = categoryPool.filter((w) => inCategory(w) && (!needsArtOptions || hasArt(w)));
-  // step 2: not enough? drop the "must have art" requirement, stay in-category
+  // iron rule 2, step 1: try same-category words that also have art, with no art clash
+  let candidates = categoryPool.filter((w) => inCategory(w) && (!needsArtOptions || hasArt(w)) && !artClash(w));
+  // step 2: not enough? drop the "must have art" requirement, stay in-category (art clash still forbidden)
   if (candidates.length < optionCount - 1) {
-    candidates = categoryPool.filter(inCategory);
+    candidates = categoryPool.filter((w) => inCategory(w) && !artClash(w));
   }
   // step 3: still not enough? shrink the option count — never leave the category
   const n = candidates.length < optionCount - 1 ? Math.max(2, candidates.length + 1) : optionCount;
@@ -80,16 +97,32 @@ function generateCoreQuestion(word, kind, categoryPool, catIds, optionCount, twi
   }
 
   const distractors = [];
-  const used = new Set();
+  const usedIds = new Set();
+  const usedArts = new Set(usesImages && word.art ? [word.art] : []);
   for (const w of pool) {
     if (distractors.length >= n - 1) break;
-    if (used.has(w.id)) continue;
-    used.add(w.id);
+    if (usedIds.has(w.id)) continue;
+    if (usesImages && w.art && usedArts.has(w.art)) continue; // would duplicate a picture already in play
+    usedIds.add(w.id);
+    if (usesImages && w.art) usedArts.add(w.art);
     distractors.push(w);
   }
   const options = shuffle([word, ...distractors]);
 
   return { kind, word, options, imageSide: IMAGE_SIDE[kind] };
+}
+
+/** 3 words with mutually distinct art keys — two cells sharing a picture would be an unsolvable pair. */
+function pickMatchTrio(artPool) {
+  const seenArt = new Set();
+  const picks = [];
+  for (const w of shuffle(artPool)) {
+    if (picks.length >= 3) break;
+    if (seenArt.has(w.art)) continue;
+    seenArt.add(w.art);
+    picks.push(w);
+  }
+  return picks;
 }
 
 /**
@@ -101,6 +134,7 @@ function generateCoreQuestion(word, kind, categoryPool, catIds, optionCount, twi
 export function generateQuestion({ vocab, catIds, optionCount, mastery, sequences = [], clocks = [], mods = [] }) {
   const categoryPool = vocab.filter((w) => catIds.includes(w.cat));
   const artPool = categoryPool.filter(hasArt);
+  const distinctArtCount = new Set(artPool.map((w) => w.art)).size;
   const canImg = artPool.length >= 4; // iron rule 3
 
   const blind = mods.includes("blind");
@@ -108,13 +142,16 @@ export function generateQuestion({ vocab, catIds, optionCount, mastery, sequence
   const twin = mods.includes("twin");
 
   const word = pickWord(categoryPool, mastery, canImg && Math.random() < 0.62);
-  const wordImageKinds = canImg && hasArt(word) ? ["img2zh", "img2th", "zh2img", "th2img"] : [];
+  const wordImageKinds = canImg && hasArt(word) ? ["img2zh", "zh2img"] : [];
 
   let kinds;
   if (blind) {
-    // "blind": only image-based kinds survive (no hanzi shown anywhere) — if
-    // this particular word has no art to blind-test with, fall back to text
-    kinds = wordImageKinds.length ? ["img2th", "th2img"] : ["zh2th", "th2zh"];
+    // "blind": only image-based kinds survive (no hanzi shown anywhere before
+    // an answer is picked) — img2zh is the only one where the image is the
+    // whole prompt with no hanzi hint alongside it (zh2img shows the hanzi
+    // itself as the prompt, which "blind" exists to hide). If this word has
+    // no art to blind-test with, fall back to text.
+    kinds = wordImageKinds.includes("img2zh") ? ["img2zh"] : ["zh2th", "th2zh"];
   } else if (noimg) {
     // "noimg": no illustrations anywhere, full stop
     kinds = ["zh2th", "th2zh"];
@@ -130,7 +167,9 @@ export function generateQuestion({ vocab, catIds, optionCount, mastery, sequence
   const availableSequences = sequences.filter((s) => catIds.includes(s.cat));
   if (availableSequences.length) kinds.push("order");
 
-  if (!noimg && artPool.length >= 6) kinds.push("match");
+  // match needs 3 *distinct* pictures, not just 3 illustrated words — two
+  // words sharing an art key (e.g. 谢谢/不客气) can't both be a match cell
+  if (!noimg && distinctArtCount >= 3) kinds.push("match");
 
   const kind = kinds[Math.floor(Math.random() * kinds.length)];
 
@@ -148,7 +187,7 @@ export function generateQuestion({ vocab, catIds, optionCount, mastery, sequence
       return { kind, sequence };
     }
     case "match":
-      return { kind, matchWords: shuffle(artPool).slice(0, 3) };
+      return { kind, matchWords: pickMatchTrio(artPool) };
     default:
       return generateCoreQuestion(word, kind, categoryPool, catIds, optionCount, twin);
   }

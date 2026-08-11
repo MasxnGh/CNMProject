@@ -21,10 +21,15 @@
  *
  * Safe to re-run whenever more photos are dropped into the source folder —
  * only keys present there are touched.
+ *
+ * After importing, merges the newly-imported keys into scripts/photo-keys.json
+ * — the manifest generate-vocab-images.mjs reads to know which keys already
+ * have real photography and must never be overwritten with a placeholder.
+ *
  * Run via `npm run import:photos [sourceDir]` (defaults to the folder the
  * photos were originally supplied in).
  */
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import sharp from "sharp";
@@ -33,6 +38,7 @@ import { VOCAB_ICON_KEYS } from "../src/lib/art.js";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(root, "public/img/vocab");
 const sourceDir = process.argv[2] || "C:/Users/ASUS/Downloads/picture";
+const photoKeysPath = path.join(root, "scripts/photo-keys.json");
 
 const CANVAS = 400;
 const FILL = 0.8; // subject's longest side, as a fraction of the frame — 0.88 clips against the circular mask
@@ -166,6 +172,17 @@ for (const { key, file } of matched) {
 }
 
 const stillOnSvg = VOCAB_ICON_KEYS.filter((k) => !matched.some((m) => m.key === k));
+
+if (matched.length) {
+  let photoKeys = [];
+  try {
+    photoKeys = JSON.parse(readFileSync(photoKeysPath, "utf8"));
+  } catch {
+    // no manifest yet — start fresh
+  }
+  const merged = Array.from(new Set([...photoKeys, ...matched.map((m) => m.key)])).sort();
+  writeFileSync(photoKeysPath, JSON.stringify(merged, null, 2) + "\n");
+}
 
 console.log(`นำเข้า ${matched.length} ไฟล์จาก ${sourceDir}`);
 console.log(`ขนาดรวม ${(total / 1024).toFixed(1)} KB (เฉลี่ย ${(total / matched.length / 1024).toFixed(1)} KB/ไฟล์)`);
