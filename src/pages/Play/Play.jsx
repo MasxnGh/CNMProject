@@ -16,6 +16,7 @@ import { generateQuestion, KINDS, RISE_MULTIPLIER } from "../../lib/question.js"
 import { decideAfterQuestion } from "../../lib/runFlow.js";
 import { vibrate } from "../../lib/vibrate.js";
 import { playWord, playClock, stop as stopSpeech } from "../../lib/speech.js";
+import { useIsPhone } from "../../lib/useIsPhone.js";
 import VOCAB from "../../content/vocab.json";
 import CONFIG from "../../content/config.json";
 import "./Play.css";
@@ -39,6 +40,7 @@ export default function Play() {
   const { selection, mastery, recordCorrect } = useGame();
   const { run, patchRun, addLeveledWord } = useRun();
   const { triggerBurst } = useBurst();
+  const isPhone = useIsPhone();
 
   const diff = CONFIG.difficulties.find((d) => d.id === selection.diffId);
   const mode = CONFIG.modes.find((m) => m.id === selection.modeId);
@@ -355,7 +357,7 @@ export default function Play() {
         return (
           <>
             <div className="im">
-              <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={150} alt={w.hanzi} />
+              <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={isPhone ? 108 : 150} alt={w.hanzi} />
             </div>
             <div className="hint">ภาพนี้คือคำจีนคำไหน</div>
           </>
@@ -415,7 +417,7 @@ export default function Play() {
     if (question.imageSide === "a") {
       return (
         <div className="ai big">
-          <Illustration vocabKey={opt.art} category={opt.cat} char={opt.hanzi[0]} size={104} alt={opt.hanzi} />
+          <Illustration vocabKey={opt.art} category={opt.cat} char={opt.hanzi[0]} size={isPhone ? 66 : 104} alt={opt.hanzi} />
         </div>
       );
     }
@@ -529,8 +531,10 @@ export default function Play() {
                 onResolve={(correct, rect) => resolveSpecial(correct, rect, null)}
               />
             )}
+            {/* imgGrid lets the CSS lay picture answers out two-up on a phone —
+                stacked full-width they eat most of the screen */}
             {KINDS.includes(question.kind) && (
-              <div className={`aGrid${shake ? " shk" : ""}`}>
+              <div className={`aGrid${question.imageSide === "a" ? " imgGrid" : ""}${shake ? " shk" : ""}`}>
                 {question.options.map((opt) => {
                   let cls = "aB";
                   if (question.imageSide === "a") cls += " imgOpt";

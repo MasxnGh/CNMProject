@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import Reveal from "./Reveal.jsx";
 import Illustration from "../../components/ui/Illustration.jsx";
+import { useIsPhone } from "../../lib/useIsPhone.js";
 import VOCAB from "../../content/vocab.json";
 
 function pickRandom(list, n) {
@@ -14,6 +15,7 @@ function pickRandom(list, n) {
 }
 
 export default function Gallery() {
+  const isPhone = useIsPhone();
   const words = useMemo(() => pickRandom(VOCAB.filter((w) => w.art), 24), []);
 
   return (
@@ -25,7 +27,7 @@ export default function Gallery() {
       <Reveal className="gal">
         {words.map((w) => (
           <div className="gw" key={w.id}>
-            <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={96} alt={w.hanzi} />
+            <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={isPhone ? 72 : 96} alt={w.hanzi} />
             <div className="h">{w.hanzi}</div>
             <div className="p">{w.pinyin}</div>
             <div className="t">{w.thai}</div>

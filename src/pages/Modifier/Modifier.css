@@ -95,3 +95,37 @@
   background: var(--shell);
   color: var(--ink2);
 }
+
+/* ═══ PHONE ═══ three stacked cards at desktop padding overflow the screen */
+@media (max-width: 619px) {
+  .mcards {
+    gap: 11px;
+    margin: 18px 0;
+  }
+
+  .mk {
+    padding: 18px 14px;
+  }
+
+  .mk .mz {
+    font-size: 36px;
+    margin: 4px 0 7px;
+  }
+
+  .mk .mt {
+    font-size: 18px;
+  }
+
+  .mk .md2 {
+    font-size: 13.5px;
+    line-height: 1.65;
+    min-height: 0;
+    margin-top: 6px;
+  }
+
+  .mk .mx2 {
+    font-size: 15px;
+    margin-top: 9px;
+    padding: 5px 14px;
+  }
+}

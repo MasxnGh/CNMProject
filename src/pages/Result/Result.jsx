@@ -8,6 +8,7 @@ import { useGame } from "../../state/GameContext.jsx";
 import { useRun } from "../../state/RunContext.jsx";
 import { loadBoard, saveBoard, recordScore, getEntries } from "../../lib/board.js";
 import { submitScore } from "../../lib/globalBoard.js";
+import { useIsPhone } from "../../lib/useIsPhone.js";
 import VOCAB from "../../content/vocab.json";
 import CONFIG from "../../content/config.json";
 import "./Result.css";
@@ -26,6 +27,7 @@ export default function Result() {
   const location = useLocation();
   const { player, selection, mastery } = useGame();
   const { run, startRun } = useRun();
+  const isPhone = useIsPhone();
   const [isNewRecord, setIsNewRecord] = useState(false);
   const recordedRef = useRef(false);
 
@@ -139,7 +141,7 @@ export default function Result() {
                 const lv = mastery[w.id] || 0;
                 return (
                   <div className="wc" key={w.id}>
-                    <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={64} alt={w.hanzi} />
+                    <Illustration vocabKey={w.art} category={w.cat} char={w.hanzi[0]} size={isPhone ? 48 : 64} alt={w.hanzi} />
                     <div className="h">{w.hanzi}</div>
                     <div className="t">{w.thai}</div>
                     <div className="dots">
