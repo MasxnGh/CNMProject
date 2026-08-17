@@ -1,12 +1,36 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Illustration from "../../components/ui/Illustration.jsx";
 import { useBurst } from "../../state/BurstContext.jsx";
 import { shuffle } from "../../lib/question.js";
 
 const PAIR_COLORS = ["#6FA294", "#C08A2E"];
 
+// keep in step with the 620px breakpoint the match grid uses in Play.css
+const PHONE = "(max-width: 619px)";
+
+/**
+ * Illustration takes a pixel size as a prop and writes it to inline styles,
+ * so a CSS media query can't shrink it — the breakpoint has to be read in JS.
+ */
+function useIsPhone() {
+  const [isPhone, setIsPhone] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia(PHONE).matches,
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(PHONE);
+    const onChange = (e) => setIsPhone(e.matches);
+    setIsPhone(mq.matches); // catch a resize that happened before this ran
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return isPhone;
+}
+
 export default function MatchPad({ words, locked, onResolve }) {
   const { triggerBurst } = useBurst();
+  const isPhone = useIsPhone();
   const cells = useMemo(() => {
     const list = [];
     for (const w of words) {
@@ -61,7 +85,13 @@ export default function MatchPad({ words, locked, onResolve }) {
         return (
           <button key={c.id} type="button" className={cls} disabled={locked} onClick={(e) => handleTap(i, e.currentTarget)}>
             {c.type === "img" ? (
-              <Illustration vocabKey={c.word.art} category={c.word.cat} char={c.word.hanzi[0]} size={96} alt={c.word.hanzi} />
+              <Illustration
+                vocabKey={c.word.art}
+                category={c.word.cat}
+                char={c.word.hanzi[0]}
+                size={isPhone ? 74 : 96}
+                alt={c.word.hanzi}
+              />
             ) : (
               <div>
                 <div className="z zh">{c.word.hanzi}</div>

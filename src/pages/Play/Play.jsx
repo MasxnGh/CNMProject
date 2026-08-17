@@ -22,11 +22,10 @@ import "./Play.css";
 
 const BURST_COLORS = ["#6FA294", "#C08A2E", "#CE4430", "#3F6BA8"];
 
-// kinds where the full Chinese text is already shown as the *prompt*, not
-// the thing being tested — safe to speak (auto or via the speaker button)
-// without handing over the answer. This is deliberately the ONE list used
-// for both: a kind that isn't safe to auto-speak isn't safe for a manual
-// button either, since pressing it would just read the answer out loud.
+// Audio is opt-in only: the player taps the speaker to hear the word, and
+// nothing plays on its own. The button is limited to kinds where the Chinese
+// is already on screen as the *prompt* — on the others (pick the hanzi, pick
+// the picture) hearing the word would simply read out the answer.
 const SPEAKABLE_KINDS = new Set(["zh2th", "zh2img", "compass", "clock"]);
 
 function speakTarget(q) {
@@ -116,8 +115,6 @@ export default function Play() {
     }
     if (spkRef.current) spkRef.current.style.bottom = "calc(-26% - 62px)";
     if (dzRef.current) dzRef.current.classList.remove("on");
-
-    speakTarget(question);
 
     if (question.kind === "match") {
       // match is a full-screen, untimed puzzle (see the render below) —

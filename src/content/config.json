@@ -13,7 +13,7 @@
       "color": "var(--cel)",
       "colorLight": "var(--cel-l)",
       "multiplier": 1.0,
-      "riseSeconds": 15,
+      "riseSeconds": 11,
       "options": 3,
       "pinyin": true,
       "description": "มีพินอินตลอด · มีเวลาคิดพอสมควร · ตัวเลือก 3 ข้อ"
@@ -25,7 +25,7 @@
       "color": "var(--gold)",
       "colorLight": "var(--gold-l)",
       "multiplier": 1.7,
-      "riseSeconds": 10,
+      "riseSeconds": 8,
       "options": 4,
       "pinyin": true,
       "description": "พินอินเฉพาะโจทย์ · ต้องตอบไว · ตัวเลือก 4 ข้อ"
