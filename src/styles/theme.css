@@ -152,6 +152,27 @@ svg {
   margin-top: 8px;
 }
 
+/* ═══ PHONE ═══ shared game-screen shell */
+@media (max-width: 619px) {
+  .gwrap {
+    padding: 14px var(--pad) 48px;
+  }
+
+  .kk2 {
+    font-size: 12px;
+    padding: 4px 13px;
+  }
+
+  .screenTitle {
+    margin-top: 10px;
+  }
+
+  .screenSub {
+    font-size: 14.5px;
+    margin-top: 6px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

@@ -180,3 +180,78 @@
   display: grid;
   gap: 11px;
 }
+
+/* ═══ PHONE ═══ */
+@media (max-width: 619px) {
+  .resSky {
+    height: 180px;
+    margin-bottom: 14px;
+  }
+
+  .resSky .cap {
+    font-size: 13px;
+  }
+
+  .rHero {
+    padding: 20px 14px;
+    margin-bottom: 12px;
+  }
+
+  .rHero .rz {
+    font-size: 42px;
+  }
+
+  .rHero .rl {
+    font-size: 14px;
+  }
+
+  .rHero .rnew {
+    font-size: 13px;
+    padding: 5px 14px;
+    margin-top: 10px;
+  }
+
+  .stats {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .stat {
+    padding: 12px 8px;
+  }
+
+  .stat b {
+    font-size: 27px;
+  }
+
+  .stat span {
+    font-size: 11.5px;
+  }
+
+  .panel {
+    padding: 15px;
+    margin-bottom: 14px;
+  }
+
+  .panel h3 {
+    font-size: 16.5px;
+    margin-bottom: 11px;
+  }
+
+  .wgrid {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+  }
+
+  .wc {
+    padding: 10px 6px;
+  }
+
+  .wc .h {
+    font-size: 19px;
+  }
+
+  .wc .t {
+    font-size: 12px;
+  }
+}

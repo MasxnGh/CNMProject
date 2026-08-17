@@ -204,3 +204,67 @@
   margin-bottom: 6px;
   color: var(--ink2);
 }
+
+/* ═══ PHONE ═══ desktop rows run ~100px tall here, so only 7 fit a screen */
+@media (max-width: 619px) {
+  .lbStatus {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .lbLabel {
+    font-size: 12.5px;
+    margin-bottom: 6px;
+  }
+
+  .lbF {
+    gap: 6px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .lbF button {
+    padding: 7px 12px;
+    font-size: 13.5px;
+  }
+
+  .lbRow {
+    padding: 9px 12px;
+    gap: 10px;
+    margin-bottom: 7px;
+  }
+
+  .lbRow .rk {
+    width: 27px;
+    height: 27px;
+    font-size: 13.5px;
+    border-radius: 8px;
+  }
+
+  .lbRow .av {
+    width: 30px;
+    height: 30px;
+  }
+
+  .lbRow .av svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .lbRow .nm b {
+    font-size: 15px;
+  }
+
+  .lbRow .nm span {
+    font-size: 11.5px;
+  }
+
+  .lbRow .pt {
+    font-size: 21px;
+  }
+
+  .empty {
+    padding: 24px 14px;
+    font-size: 14.5px;
+  }
+}

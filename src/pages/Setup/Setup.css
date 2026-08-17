@@ -445,6 +445,154 @@
   z-index: 6;
 }
 
+/* ═══ PHONE ═══ 24 stacked cards at desktop padding make this page ~3000px
+   of scrolling; tighten every card so the whole flow is reachable faster */
+@media (max-width: 619px) {
+  .secT {
+    margin: 20px 0 10px;
+    gap: 9px;
+  }
+
+  .secT h3 {
+    font-size: 17.5px;
+  }
+
+  .secT .k {
+    width: 23px;
+    height: 23px;
+    font-size: 13px;
+  }
+
+  .catCount {
+    font-size: 13px;
+  }
+
+  .diffs {
+    gap: 9px;
+  }
+
+  .diff {
+    padding: 13px 14px;
+  }
+
+  .diff .dh {
+    gap: 9px;
+    margin-bottom: 5px;
+  }
+
+  .diff .dz {
+    font-size: 24px;
+  }
+
+  .diff .dt {
+    font-size: 18px;
+  }
+
+  .diff .dx {
+    font-size: 13.5px;
+    padding: 3px 11px;
+  }
+
+  .diff .dm {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .cats {
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 9px;
+  }
+
+  .cat {
+    padding: 11px 8px;
+  }
+
+  .cat .ci {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .cat .cz {
+    font-size: 13px;
+  }
+
+  .cat .cn {
+    font-size: 15px;
+  }
+
+  .cat .cc {
+    font-size: 11.5px;
+  }
+
+  .mds {
+    gap: 9px;
+  }
+
+  .md {
+    padding: 14px 14px 12px;
+  }
+
+  .md .mtop {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .md .mi {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    border-radius: 13px;
+  }
+
+  .md .mn {
+    font-size: 17.5px;
+  }
+
+  .md .mpy {
+    font-size: 11px;
+  }
+
+  .md .mm {
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .md .mtags {
+    margin-top: 9px;
+  }
+
+  .md .mtags span {
+    font-size: 12px;
+    padding: 3px 9px;
+  }
+
+  .md .bg {
+    font-size: 11.5px;
+    top: 11px;
+    right: 11px;
+  }
+
+  .md .mart {
+    width: 74px;
+    height: 74px;
+  }
+
+  .lockNote {
+    padding: 12px 13px;
+    gap: 9px;
+  }
+
+  .lockNote b {
+    font-size: 15px;
+  }
+
+  .lockNote p {
+    font-size: 13px;
+  }
+}
+
 @media (min-width: 640px) {
   .diffs {
     grid-template-columns: repeat(3, 1fr);
